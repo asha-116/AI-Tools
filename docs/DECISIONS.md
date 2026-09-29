@@ -162,15 +162,14 @@ Statuses: **Accepted**, **Proposed** (engineer's recommendation, not yet exercis
   `changelense.in` untouched for now.
 - **Status:** Accepted (live 2026-09-29).
 
-### ADR-021 — One website for all tools, including the ChangeLens document compare tool
+### ADR-021 — Keep the tools site separate from the Change Lens product
 
-- **Context:** the existing ChangeLens tool (compare two documents / PDFs / pictures and show
-  the differences) runs as the `changelense` Worker on `changelense.in` and uses R2. The owner
-  wants every tool on one site.
-- **Proposal:** bring the ChangeLens code into this repo as another tool, reuse the same CI,
-  bilingual strings and Lighthouse checks, then point `changelense.in` at this project with
-  redirects for old links. Keep its R2 bucket; paid templates get a separate bucket.
-- **Open points before building:** get the code into the repo; check where documents are
-  processed (in the browser is preferred — documents may contain personal data and must never
-  go to a free LLM tier); review what is stored in R2 and for how long.
-- **Status:** Proposed — waiting for the ChangeLens code.
+- **Context:** the owner's existing product Change Lens (document / PDF / image comparison
+  SaaS with accounts, Dodo Payments, Workers AI, D1 `changelense-saas`, R2 `changelense-memory`)
+  runs as the `changelense` Worker on `changelense.in`. Merging it into this repo was considered
+  (v1.1 and v3.4.2 source reviewed on 2026-09-29).
+- **Decision (owner, 2026-09-29):** do **not** merge. This repo is only the tools site at
+  `tools.changelense.in`. The `changelense` Worker, its D1 database and R2 bucket are out of
+  scope — agents must never deploy to them or change their DNS records.
+- **Alternatives:** one repo with two apps; full rewrite into Astro. Both rejected for now.
+- **Status:** Accepted.

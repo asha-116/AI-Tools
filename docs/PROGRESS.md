@@ -66,8 +66,8 @@ still needs the owner's Cloudflare setup (`docs/SETUP.md` §5).
 
 ## Exact next step
 
-1. Owner: get the ChangeLens compare-tool code into the repo (ADR-021), share
-   https://tools.changelense.in with a few agents, and answer question 9 (stamp-duty states).
+1. Owner: share https://tools.changelense.in with a few agents and answer question 9
+   (stamp-duty states).
 2. Engineer: next Phase 2 PR — **stamp duty** (needs `data/stamp-duty/<STATE>.json` with official sources — question 9;
    defaults to MH, KA, DL, TN, UP if unanswered, every rate marked for owner verification).
 
@@ -105,5 +105,3 @@ still needs the owner's Cloudflare setup (`docs/SETUP.md` §5).
     confirm; every figure is also recomputed independently, so the maths is not at risk.
 15. **TDS on commission** (new): should the commission calculator show TDS? Published sources
     disagree on the current section 194H rate, so it is left out until a CA confirms it.
-16. **ChangeLens code** (new): it was built with Claude and runs as the `changelense` Worker.
-    Please add the files to the repo (or attach them in chat) so it can be merged in (ADR-021).
