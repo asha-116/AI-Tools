@@ -98,6 +98,10 @@ const canonical = new URL(hrefFor(lang), Astro.site);
   * {
     box-sizing: border-box;
   }
+  /* Component display rules (grid/flex) must never override the hidden attribute. */
+  [hidden] {
+    display: none !important;
+  }
   html {
     -webkit-text-size-adjust: 100%;
   }
