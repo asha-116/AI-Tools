@@ -4,14 +4,26 @@ Living status log. Update at the end of every session (see `AGENTS.md` §1).
 
 ## Current phase
 
-**Phase 2 — Free calculators** — EMI calculator PR open. Phase 1 is merged; going live
+**Phase 2 — Free calculators** — EMI merged; commission split PR open. Phase 1 is merged; going live
 still needs the owner's Cloudflare setup (`docs/SETUP.md` §5).
 
 ## Done
 
 - 2026-09-29 — **Phase 0** merged (asha-116/AI-Tools#1): repo layout, rules, docs, CI,
   templates, labels, agent procedures, policy drafts, stamp-duty schema.
-- 2026-09-29 — **Phase 2, part 1: EMI calculator** (this PR):
+- 2026-09-29 — **Phase 2, part 2: commission split calculator** (this PR):
+  - `tools-core/src/commission.ts`, tests first: 10 published worked examples (Indian
+    brokerage + 18% GST; 50/50 and 70/30 splits). All money in whole paise; party shares use
+    largest-remainder allocation so they always add up to the gross exactly.
+  - `/tools/commission/` and `/hi/tools/commission/`: % of deal or fixed amount, optional
+    GST % (user-entered, default 0 — no tax rate is hard-coded), 1–6 people with editable
+    names, live "shares add up to X%" check, shareable hash link.
+  - TDS deliberately left out (sources disagree on the current rate; tax question for a CA).
+  - Fixed a site-wide CSS bug: `display: grid` was overriding the `hidden` attribute.
+  - Verified in Chromium: published case ₹1 crore × 2% + 18% GST = ₹2,36,000; HTML in a name
+    is shown as text (no injection), also via shared link; zero off-site requests.
+    Lighthouse mobile 100/100/100/100 on commission EN/HI.
+- 2026-09-29 — **Phase 2, part 1: EMI calculator** merged (asha-116/AI-Tools#6):
   - `tools-core/src/emi.ts` with tests written first: 12 published Indian EMI examples
     (`tools-core/test/fixtures/emi-known-answers.json`), all recomputed independently and
     matching to the rupee, plus identities (schedule pays off to zero, 0% rate, 1 month).
@@ -35,15 +47,15 @@ still needs the owner's Cloudflare setup (`docs/SETUP.md` §5).
 
 ## In progress
 
-- EMI calculator PR review.
+- Commission split calculator PR review.
 
 ## Exact next step
 
 1. Owner: `docs/SETUP.md` §5 (Cloudflare token, D1 database, GitHub secrets/variables), run
    **Deploy**, sign up once to confirm. Approve or edit the consent/privacy wording and the three ideas.
-2. Engineer: next Phase 2 PR — **commission split calculator** (no state data needed), then
-   **stamp duty** (needs `data/stamp-duty/<STATE>.json` with official sources — question 9),
-   then a Lighthouse CI job (mobile ≥ 90) over every tool page.
+2. Engineer: next Phase 2 PR — **Lighthouse CI job** (mobile ≥ 90) over every tool page, then
+   **stamp duty** (needs `data/stamp-duty/<STATE>.json` with official sources — question 9;
+   defaults to MH, KA, DL, TN, UP if unanswered, every rate marked for owner verification).
 
 ## Blockers
 
@@ -78,3 +90,5 @@ still needs the owner's Cloudflare setup (`docs/SETUP.md` §5).
 14. **EMI sources** (new): the known-answer file lists candidate pages per figure because the
     build environment could not open them directly. Please (or the Verifier) open a few and
     confirm; every figure is also recomputed independently, so the maths is not at risk.
+15. **TDS on commission** (new): should the commission calculator show TDS? Published sources
+    disagree on the current section 194H rate, so it is left out until a CA confirms it.
