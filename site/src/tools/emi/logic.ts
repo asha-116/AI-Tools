@@ -1,4 +1,7 @@
 import { computeEmi, EMI_LIMITS, type EmiResult } from '@toolshop/tools-core';
+import { parseAmount } from '../../lib/format.js';
+
+export { formatInr, parseAmount } from '../../lib/format.js';
 
 /** Everything the page needs, derived from raw form/URL values. Pure — unit-tested. */
 export interface EmiFormState {
@@ -18,12 +21,6 @@ export const DEFAULT_STATE: EmiFormState = {
   tenure: '20',
   unit: 'years',
 };
-
-/** Accepts "25,00,000", "25 00 000" or "2500000". */
-export function parseAmount(raw: string): number {
-  const cleaned = raw.replace(/[,\s₹]/g, '');
-  return cleaned === '' ? Number.NaN : Number(cleaned);
-}
 
 export function evaluate(state: EmiFormState): EmiView {
   const principal = parseAmount(state.principal);
@@ -69,15 +66,4 @@ export function fromHash(hash: string): EmiFormState {
     tenure: pick('t', DEFAULT_STATE.tenure),
     unit: p.get('u') === 'm' ? 'months' : 'years',
   };
-}
-
-const inr = new Intl.NumberFormat('en-IN', {
-  style: 'currency',
-  currency: 'INR',
-  maximumFractionDigits: 0,
-});
-
-/** ₹ with Indian digit grouping (₹25,00,000), rounded to the rupee. */
-export function formatInr(value: number): string {
-  return inr.format(Math.round(value));
 }

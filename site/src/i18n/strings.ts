@@ -41,6 +41,8 @@ const en = {
   toolsTitle: 'Free tools you can use today',
   emiCardTitle: 'EMI calculator',
   emiCardSummary: 'Monthly instalment, total interest and total payment for any loan.',
+  commissionCardTitle: 'Commission split calculator',
+  commissionCardSummary: 'Brokerage, GST and each co-broker’s share — to the paisa.',
   openTool: 'Open',
 };
 
@@ -84,6 +86,8 @@ const hi: Strings = {
   toolsTitle: 'मुफ़्त टूल जो आज ही इस्तेमाल करें',
   emiCardTitle: 'EMI कैलकुलेटर',
   emiCardSummary: 'किसी भी लोन की मासिक किस्त, कुल ब्याज और कुल भुगतान।',
+  commissionCardTitle: 'कमीशन बँटवारा कैलकुलेटर',
+  commissionCardSummary: 'ब्रोकरेज, GST और हर को-ब्रोकर का हिस्सा — पैसे तक सटीक।',
   openTool: 'खोलें',
 };
 

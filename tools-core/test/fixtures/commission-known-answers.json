@@ -1,0 +1,180 @@
+{
+  "$comment": "Known-answer cases for commission + GST + split arithmetic, from published worked examples found via web search on 2026-09-29. As with the EMI file, `sources` lists the candidate pages the search drew on; the exact page per figure is not confirmed (direct fetch blocked in the build environment). US-dollar examples are used for split arithmetic only — the maths is currency-independent. All figures recomputed independently.",
+  "accessed": "2026-09-29",
+  "cases": [
+    {
+      "name": "₹1 crore, 2% brokerage, 18% GST",
+      "input": {
+        "dealValue": 10000000,
+        "commission": { "type": "percent", "percent": 2 },
+        "gstPercent": 18,
+        "parties": [{ "label": "Broker", "percent": 100 }]
+      },
+      "expect": { "gross": 200000, "gst": 36000, "totalPayable": 236000, "parties": [200000] },
+      "sources": [
+        "https://razorpay.com/learn/gst-on-brokerage-and-commission/",
+        "https://www.taxbuddy.com/blog/gst-filing-real-estate-brokers-taxbuddy",
+        "https://realatic.com/tools/commission-calculator/"
+      ],
+      "quote": "On a ₹1 crore deal with a 2% commission of ₹2,00,000, the 18% GST is ₹36,000 … the client pays ₹2,36,000"
+    },
+    {
+      "name": "₹1 crore, 1% brokerage, 18% GST",
+      "input": {
+        "dealValue": 10000000,
+        "commission": { "type": "percent", "percent": 1 },
+        "gstPercent": 18,
+        "parties": [{ "label": "Broker", "percent": 100 }]
+      },
+      "expect": { "gross": 100000, "gst": 18000, "totalPayable": 118000, "parties": [100000] },
+      "sources": [
+        "https://www.gharnmakaan.com/blog/property-broker-commission-india-2026-charges-rules-saving-tips",
+        "https://www.anvirealty.in/brokerage-calculator"
+      ],
+      "quote": "If a broker charges 1% on a Rs 1 crore transaction (Rs 1 lakh brokerage), the buyer also pays Rs 18,000 in GST … effective cost is 1% + 18% of 1% = 1.18% of the property value"
+    },
+    {
+      "name": "₹50 lakh, 1% brokerage, 18% GST",
+      "input": {
+        "dealValue": 5000000,
+        "commission": { "type": "percent", "percent": 1 },
+        "gstPercent": 18,
+        "parties": [{ "label": "Broker", "percent": 100 }]
+      },
+      "expect": { "gross": 50000, "gst": 9000, "totalPayable": 59000, "parties": [50000] },
+      "sources": [
+        "https://www.anvirealty.in/brokerage-calculator",
+        "https://www.urbanmoney.com/calculator/brokerage-calculator",
+        "https://propote.com/glossary/brokerage-commission-india/"
+      ],
+      "quote": "₹50 lakh … Brokerage at 1%: ₹50,000 … GST on Brokerage (18%): ₹9,000 … Total Brokerage Cost: ₹59,000"
+    },
+    {
+      "name": "Fixed 6,000 gross, 50/50 co-brokerage",
+      "input": {
+        "commission": { "type": "fixed", "amount": 6000 },
+        "gstPercent": 0,
+        "parties": [
+          { "label": "Listing", "percent": 50 },
+          { "label": "Selling", "percent": 50 }
+        ]
+      },
+      "expect": { "gross": 6000, "gst": 0, "totalPayable": 6000, "parties": [3000, 3000] },
+      "sources": [
+        "https://apps.carolinarealtors.com/files/Math-Relating-to-Brokerage-Commissions-and-Splits.pdf"
+      ],
+      "quote": "If the split is 50/50 on a $6,000 gross commission, the listing company gets 50% or $3,000 and the selling company gets 50% or $3,000"
+    },
+    {
+      "name": "350,000 sale, 5%, 50/50",
+      "input": {
+        "dealValue": 350000,
+        "commission": { "type": "percent", "percent": 5 },
+        "gstPercent": 0,
+        "parties": [
+          { "label": "Listing", "percent": 50 },
+          { "label": "Buyer side", "percent": 50 }
+        ]
+      },
+      "expect": { "gross": 17500, "gst": 0, "totalPayable": 17500, "parties": [8750, 8750] },
+      "sources": [
+        "https://www.colibrirealestate.com/career-hub/blog/how-to-calculate-real-estate-commission/",
+        "https://www.paperlesspipeline.com/real-estate-commission-calculator"
+      ],
+      "quote": "A home sells for $350,000 with an agreed 5.0% total commission … $17,500 … A 50/50 transaction split allocates $8,750 each"
+    },
+    {
+      "name": "Fixed 15,000 gross, 50/50 broker/agent",
+      "input": {
+        "commission": { "type": "fixed", "amount": 15000 },
+        "gstPercent": 0,
+        "parties": [
+          { "label": "Broker", "percent": 50 },
+          { "label": "Agent", "percent": 50 }
+        ]
+      },
+      "expect": { "gross": 15000, "gst": 0, "totalPayable": 15000, "parties": [7500, 7500] },
+      "sources": [
+        "https://blog.brokermint.com/mint/commission-split-calculator",
+        "https://blog.brokermint.com/mint/commission-split-calculator-1"
+      ],
+      "quote": "If the gross amount of commission collected is $15,000, and the broker offers a 50/50 broker/agent commission split, both will pocket $7,500"
+    },
+    {
+      "name": "400,000 sale, 3%, 70/30",
+      "input": {
+        "dealValue": 400000,
+        "commission": { "type": "percent", "percent": 3 },
+        "gstPercent": 0,
+        "parties": [
+          { "label": "Agent", "percent": 70 },
+          { "label": "Broker", "percent": 30 }
+        ]
+      },
+      "expect": { "gross": 12000, "gst": 0, "totalPayable": 12000, "parties": [8400, 3600] },
+      "sources": [
+        "https://www.colibrirealestate.com/career-hub/blog/how-to-calculate-real-estate-commission/",
+        "https://www.paperlesspipeline.com/real-estate-commission-calculator"
+      ],
+      "quote": "a home sells for $400,000 and the commission rate is 3% … $12,000 … 70/30 … your share is $8,400"
+    },
+    {
+      "name": "300,000 sale, 3%, 70/30",
+      "input": {
+        "dealValue": 300000,
+        "commission": { "type": "percent", "percent": 3 },
+        "gstPercent": 0,
+        "parties": [
+          { "label": "Agent", "percent": 70 },
+          { "label": "Broker", "percent": 30 }
+        ]
+      },
+      "expect": { "gross": 9000, "gst": 0, "totalPayable": 9000, "parties": [6300, 2700] },
+      "sources": [
+        "https://calculator.academy/70-30-commission-split-calculator/",
+        "https://www.raiderx.net/resources/agents/commission-splits-explained"
+      ],
+      "quote": "On a $300,000 sale at 3% commission ($9,000 gross), with a 70/30 split the agent keeps $6,300 and the broker takes $2,700"
+    },
+    {
+      "name": "500,000 sale, 3%, 70/30",
+      "input": {
+        "dealValue": 500000,
+        "commission": { "type": "percent", "percent": 3 },
+        "gstPercent": 0,
+        "parties": [
+          { "label": "Agent", "percent": 70 },
+          { "label": "Brokerage", "percent": 30 }
+        ]
+      },
+      "expect": { "gross": 15000, "gst": 0, "totalPayable": 15000, "parties": [10500, 4500] },
+      "sources": [
+        "https://smartagentalliance.com/blog/brokerage-comparison/commissions/",
+        "https://nbeliterealty.com/real-estate-broker-commission-splits-what-agents-should-know/"
+      ],
+      "quote": "close a deal at $500k at a 3% commission rate, your gross commission per deal will be $15k … 70/30 … your brokerage takes away 30% … $4,500"
+    },
+    {
+      "name": "₹1 crore, 1% + 18% GST = 1.18% of deal value, split 50/50",
+      "input": {
+        "dealValue": 10000000,
+        "commission": { "type": "percent", "percent": 1 },
+        "gstPercent": 18,
+        "parties": [
+          { "label": "Buyer's agent", "percent": 50 },
+          { "label": "Seller's agent", "percent": 50 }
+        ]
+      },
+      "expect": {
+        "gross": 100000,
+        "gst": 18000,
+        "totalPayable": 118000,
+        "parties": [50000, 50000]
+      },
+      "sources": [
+        "https://www.gharnmakaan.com/blog/property-broker-commission-india-2026-charges-rules-saving-tips"
+      ],
+      "quote": "If you are paying 1% brokerage on a ₹1 Cr property, the effective cost is 1% + 18% of 1% = 1.18% of the property value"
+    }
+  ]
+}

@@ -11,6 +11,7 @@
     "site/src/i18n",
     "site/src/scripts",
     "site/src/tools",
+    "site/src/lib",
     "site/test",
     "vitest.config.ts",
     "eslint.config.js"

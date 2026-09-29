@@ -1,0 +1,11 @@
+---
+import Base from '../../../layouts/Base.astro';
+import CommissionCalculator from '../../../tools/commission/CommissionCalculator.astro';
+import { commissionStrings } from '../../../tools/commission/strings';
+
+const t = commissionStrings.en;
+---
+
+<Base lang="en" title={t.metaTitle} description={t.metaDescription} path="/tools/commission/">
+  <CommissionCalculator lang="en" />
+</Base>
