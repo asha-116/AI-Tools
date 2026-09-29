@@ -104,4 +104,10 @@ jobs:
         run: $WRANGLER pages project create "$PAGES_PROJECT" --production-branch=main || true
       - name: Deploy to Cloudflare Pages
         if: steps.cfg.outputs.ready == 'true'
-        run: $WRANGLER pages deploy site/dist --project-name="$PAGES_PROJECT" --branch=main --commit-dirty=true
+        run: |
+          set -o pipefail
+          $WRANGLER pages deploy site/dist --project-name="$PAGES_PROJECT" --branch=main --commit-dirty=true | tee deploy.log
+          # "https://<hash>.<project>.pages.dev" → production address "https://<project>.pages.dev".
+          # It may differ from PAGES_PROJECT when the name was taken (see docs/SETUP.md §5.2).
+          url=$(grep -oE 'https://[a-z0-9]+\.[a-z0-9-]+\.pages\.dev' deploy.log | tail -1 | sed -E 's#https://[a-z0-9]+\.#https://#' || true)
+          echo "::notice title=Site deployed::Pages address: ${url:-unknown}. Public address (SITE_URL): ${SITE_URL:-not set}"
