@@ -1,0 +1,157 @@
+---
+import { BRAND, config } from '../config';
+import { strings, type Lang } from '../i18n/strings';
+
+interface Props {
+  lang: Lang;
+  title: string;
+  description: string;
+}
+
+const { lang, title, description } = Astro.props;
+const t = strings[lang];
+const otherLang: Lang = lang === 'en' ? 'hi' : 'en';
+const hrefFor = (l: Lang) => (l === 'en' ? '/' : '/hi/');
+const canonical = new URL(hrefFor(lang), Astro.site);
+---
+
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title} · {BRAND}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="alternate" hreflang="en" href={new URL('/', Astro.site)} />
+    <link rel="alternate" hreflang="hi" href={new URL('/hi/', Astro.site)} />
+    <link rel="alternate" hreflang="x-default" href={new URL('/', Astro.site)} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta name="theme-color" content="#0f5132" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:locale" content={lang === 'en' ? 'en_IN' : 'hi_IN'} />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="wrap header-row">
+        <a class="brand" href={hrefFor(lang)}>{BRAND}</a>
+        <a class="lang-switch" href={hrefFor(otherLang)} hreflang={otherLang} lang={otherLang}>
+          {t.langSwitchLabel}
+        </a>
+      </div>
+    </header>
+    <main class="wrap">
+      <slot />
+    </main>
+    <footer class="site-footer">
+      <div class="wrap">
+        <p>{t.disclaimer}</p>
+        <p>{t.footerNote}</p>
+      </div>
+    </footer>
+    {
+      config.beaconToken && (
+        <script
+          is:inline
+          defer
+          src="https://static.cloudflareinsights.com/beacon.min.js"
+          data-cf-beacon={JSON.stringify({ token: config.beaconToken })}
+        />
+      )
+    }
+  </body>
+</html>
+
+<style is:global>
+  :root {
+    --bg: #ffffff;
+    --fg: #1a1a1a;
+    --muted: #4a4a4a;
+    --brand: #0f5132;
+    --brand-fg: #ffffff;
+    --card: #f4f7f5;
+    --border: #d0d7d3;
+    --error: #a4161a;
+    --ok: #0f5132;
+    --radius: 12px;
+    color-scheme: light dark;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #121614;
+      --fg: #eceeed;
+      --muted: #b9c0bc;
+      --brand: #6fcf97;
+      --brand-fg: #0b1a12;
+      --card: #1c2320;
+      --border: #34413b;
+      --error: #ff8a8a;
+      --ok: #6fcf97;
+    }
+  }
+  * {
+    box-sizing: border-box;
+  }
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--fg);
+    font-family:
+      system-ui,
+      -apple-system,
+      'Segoe UI',
+      Roboto,
+      'Noto Sans',
+      'Noto Sans Devanagari',
+      sans-serif;
+    font-size: 1.0625rem;
+    line-height: 1.6;
+  }
+  .wrap {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 16px;
+  }
+  a {
+    color: var(--brand);
+  }
+  :focus-visible {
+    outline: 3px solid var(--brand);
+    outline-offset: 2px;
+  }
+  .site-header {
+    border-bottom: 1px solid var(--border);
+  }
+  .header-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 56px;
+    gap: 12px;
+  }
+  .brand {
+    font-weight: 700;
+    font-size: 1.25rem;
+    text-decoration: none;
+    color: var(--fg);
+  }
+  .lang-switch {
+    padding: 8px 12px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    text-decoration: none;
+  }
+  .site-footer {
+    margin-top: 48px;
+    padding: 24px 0 40px;
+    border-top: 1px solid var(--border);
+    color: var(--muted);
+    font-size: 0.9375rem;
+  }
+</style>

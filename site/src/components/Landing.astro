@@ -1,0 +1,240 @@
+---
+import { config } from '../config';
+import { ideas } from '../i18n/ideas';
+import { strings, type Lang } from '../i18n/strings';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = strings[lang];
+const open = config.waitlistUrl.length > 0;
+// Only the strings the browser script needs, so the page ships as little JS/data as possible.
+const clientStrings = {
+  sending: t.formSending,
+  success: t.formSuccess,
+  errorGeneric: t.formErrorGeneric,
+  errorEmail: t.formErrorEmail,
+  errorConsent: t.formErrorConsent,
+  errorRate: t.formErrorRate,
+  submit: t.formSubmit,
+};
+---
+
+<section class="hero">
+  <h1>{t.heroTitle}</h1>
+  <p class="lead">{t.heroLead}</p>
+  <a class="button" href="#waitlist">{t.heroCta}</a>
+</section>
+
+<section aria-labelledby="ideas-title">
+  <h2 id="ideas-title">{t.ideasTitle}</h2>
+  <ul class="ideas">
+    {
+      ideas.map((idea) => (
+        <li class="idea">
+          <p class={`kind kind-${idea.kind}`}>{idea.kind === 'free' ? t.kindFree : t.kindPaid}</p>
+          <h3>{idea.title[lang]}</h3>
+          <p>{idea.summary[lang]}</p>
+          <a class="button secondary" href="#waitlist" data-pick-idea={idea.id}>
+            {t.notifyMe}
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</section>
+
+<section id="waitlist" class="waitlist" aria-labelledby="waitlist-title">
+  <h2 id="waitlist-title">{t.formTitle}</h2>
+  {
+    open ? (
+      <form
+        id="waitlist-form"
+        data-endpoint={config.waitlistUrl}
+        data-lang={lang}
+        data-strings={JSON.stringify(clientStrings)}
+        novalidate
+      >
+        <label for="wl-email">{t.formEmailLabel}</label>
+        <input id="wl-email" name="email" type="email" autocomplete="email" inputmode="email" required />
+
+        <fieldset>
+          <legend>{t.formIdeaLegend}</legend>
+          {ideas.map((idea, i) => (
+            <label class="choice">
+              <input type="radio" name="idea" value={idea.id} checked={i === 0} />
+              <span>{idea.title[lang]}</span>
+            </label>
+          ))}
+        </fieldset>
+
+        <label class="choice consent">
+          <input type="checkbox" name="consent" required />
+          <span>{t.formConsent}</span>
+        </label>
+
+        <div class="hp" aria-hidden="true">
+          <label for="wl-website">Website</label>
+          <input id="wl-website" name="website" type="text" tabindex="-1" autocomplete="off" />
+        </div>
+
+        <button class="button" type="submit">
+          {t.formSubmit}
+        </button>
+        <p class="status" role="status" aria-live="polite" />
+        <noscript>
+          <p class="status error">{t.formNoScript}</p>
+        </noscript>
+      </form>
+    ) : (
+      <p>{t.formClosed}</p>
+    )
+  }
+
+  <details class="privacy">
+    <summary>{t.privacyTitle}</summary>
+    <p>{t.privacyBody}</p>
+    {
+      config.supportEmail && (
+        <p>
+          {t.privacyContact} <a href={`mailto:${config.supportEmail}`}>{config.supportEmail}</a>
+        </p>
+      )
+    }
+  </details>
+</section>
+
+<script>
+  import { initWaitlist } from '../scripts/waitlist';
+  initWaitlist(document);
+</script>
+
+<style>
+  .hero {
+    padding: 40px 0 24px;
+  }
+  h1 {
+    font-size: clamp(1.75rem, 6vw, 2.5rem);
+    line-height: 1.2;
+    margin: 0 0 12px;
+  }
+  h2 {
+    font-size: 1.5rem;
+    margin: 32px 0 16px;
+  }
+  h3 {
+    font-size: 1.1875rem;
+    margin: 4px 0 8px;
+  }
+  .lead {
+    color: var(--muted);
+    max-width: 40em;
+  }
+  .button {
+    display: inline-block;
+    min-height: 48px;
+    padding: 12px 20px;
+    border: 2px solid var(--brand);
+    border-radius: var(--radius);
+    background: var(--brand);
+    color: var(--brand-fg);
+    font: inherit;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  .button.secondary {
+    background: transparent;
+    color: var(--brand);
+  }
+  .button[disabled] {
+    opacity: 0.6;
+    cursor: progress;
+  }
+  .ideas {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 16px;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  }
+  .idea {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 20px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+  }
+  .idea .button {
+    margin-top: auto;
+    align-self: flex-start;
+  }
+  .kind {
+    margin: 0;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--muted);
+  }
+  .waitlist form {
+    display: grid;
+    gap: 12px;
+    max-width: 32rem;
+  }
+  input[type='email'] {
+    min-height: 48px;
+    padding: 10px 12px;
+    font: inherit;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--bg);
+    color: var(--fg);
+  }
+  fieldset {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 12px;
+    margin: 0;
+  }
+  .choice {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    padding: 6px 0;
+  }
+  .choice input {
+    width: 20px;
+    height: 20px;
+    margin-top: 3px;
+    flex: none;
+  }
+  .hp {
+    position: absolute;
+    left: -10000px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+  .status:empty {
+    display: none;
+  }
+  .status.error {
+    color: var(--error);
+  }
+  .status.ok {
+    color: var(--ok);
+    font-weight: 600;
+  }
+  .privacy {
+    margin-top: 16px;
+    color: var(--muted);
+  }
+  .privacy summary {
+    cursor: pointer;
+    min-height: 32px;
+  }
+</style>

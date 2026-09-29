@@ -1,0 +1,21 @@
+# Waitlist API for the Phase 1 demand test. See docs/SETUP.md §5.
+name = "toolshop-waitlist"
+main = "src/index.ts"
+compatibility_date = "2026-09-01"
+workers_dev = true
+
+[triggers]
+crons = ["17 3 * * *"]
+
+[vars]
+# Replaced at deploy time from the repo variable SITE_ORIGINS (comma-separated).
+ALLOWED_ORIGINS = "http://localhost:4321"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "toolshop-waitlist"
+# Replaced at deploy time from the repo variable WAITLIST_D1_ID. Not a secret.
+database_id = "00000000-0000-0000-0000-000000000000"
+migrations_dir = "migrations"
+
+# Secrets (set with `wrangler secret put`, never here): IP_HASH_SECRET

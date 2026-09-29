@@ -18,12 +18,13 @@ Phases and acceptance criteria. Tick items as they land; each phase ends with a 
 
 ## Phase 1 — Demand test
 
-- [ ] Astro site scaffold (EN + HI routing), deploy workflow to Cloudflare Pages
-- [ ] Landing page with 3 candidate tool ideas and "notify me" buttons per idea
-- [ ] Waitlist Worker (+ D1) with validation, rate-limit, honeypot; no PII in logs
-- [ ] Privacy note on the form (DPDP Act consent wording — owner approves)
-- [ ] Cloudflare Web Analytics (cookieless)
+- [x] Astro site scaffold (EN + HI routing), deploy workflow to Cloudflare Pages
+- [x] Landing page with 3 candidate tool ideas and "notify me" buttons per idea
+- [x] Waitlist Worker (+ D1) with validation, rate-limit, honeypot; no PII in logs
+- [x] Privacy note on the form — **draft**, consent wording needs owner approval (DPDP Act)
+- [x] Cloudflare Web Analytics (cookieless) — wired, switched on by the `CF_BEACON_TOKEN` variable
 - [ ] **Done when:** page is live on `*.pages.dev` and sign-ups are recorded
+      (needs the owner's Cloudflare setup, `docs/SETUP.md` §5)
 
 ## Phase 2 — Free calculators
 
