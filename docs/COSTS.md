@@ -34,15 +34,15 @@ Rule: **no paid component without an entry here and an owner-approved Issue.** A
 
 ## Actions minutes budget (private repo)
 
-| Workflow                                     | Runs/month (est.) | Minutes/run (est.)               | Minutes/month     |
-| -------------------------------------------- | ----------------- | -------------------------------- | ----------------- |
-| CI (per PR/push)                             | 120               | 3 (3 parallel jobs, ~1 min each) | 360               |
-| Orchestrator (daily)                         | 30                | 1                                | 30                |
-| Controller (daily)                           | 30                | 1                                | 30                |
-| Demand Researcher (weekly)                   | 4                 | 3                                | 12                |
-| Support (every 2 h)                          | 360               | 1                                | 360               |
-| Builder / SEO / Social / Verifier (per task) | 60                | 3                                | 180               |
-| **Total**                                    |                   |                                  | **≈ 970 / 2,000** |
+| Workflow                                     | Runs/month (est.) | Minutes/run (est.)                     | Minutes/month       |
+| -------------------------------------------- | ----------------- | -------------------------------------- | ------------------- |
+| CI (per PR/push)                             | 120               | 5 (4 parallel jobs; Lighthouse ~2 min) | 600                 |
+| Orchestrator (daily)                         | 30                | 1                                      | 30                  |
+| Controller (daily)                           | 30                | 1                                      | 30                  |
+| Demand Researcher (weekly)                   | 4                 | 3                                      | 12                  |
+| Support (every 2 h)                          | 360               | 1                                      | 360                 |
+| Builder / SEO / Social / Verifier (per task) | 60                | 3                                      | 180                 |
+| **Total**                                    |                   |                                        | **≈ 1,210 / 2,000** |
 
 GitHub bills each job rounded up to the whole minute, so many tiny jobs cost more than they
 look. Keep jobs short, cache `npm`, and combine steps. If usage passes 70%, reduce Support to

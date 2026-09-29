@@ -4,14 +4,19 @@ Living status log. Update at the end of every session (see `AGENTS.md` §1).
 
 ## Current phase
 
-**Phase 2 — Free calculators** — EMI merged; commission split PR open. Phase 1 is merged; going live
+**Phase 2 — Free calculators** — EMI and commission split merged; Lighthouse CI PR open. Phase 1 is merged; going live
 still needs the owner's Cloudflare setup (`docs/SETUP.md` §5).
 
 ## Done
 
 - 2026-09-29 — **Phase 0** merged (asha-116/AI-Tools#1): repo layout, rules, docs, CI,
   templates, labels, agent procedures, policy drafts, stamp-duty schema.
-- 2026-09-29 — **Phase 2, part 2: commission split calculator** (this PR):
+- 2026-09-29 — **Phase 2, part 3: Lighthouse CI** (this PR): new CI job builds the site and runs
+  Lighthouse (mobile emulation) on all 6 pages; fails if performance, accessibility,
+  best practices or SEO drops below 90. Reports uploaded as an artifact on failure. Verified
+  locally that it passes (all 100) and that a failing threshold exits non-zero.
+  **Add a new page's URL to `lighthouserc.json`** whenever a tool is added.
+- 2026-09-29 — **Phase 2, part 2: commission split calculator** merged (asha-116/AI-Tools#7):
   - `tools-core/src/commission.ts`, tests first: 10 published worked examples (Indian
     brokerage + 18% GST; 50/50 and 70/30 splits). All money in whole paise; party shares use
     largest-remainder allocation so they always add up to the gross exactly.
@@ -47,14 +52,13 @@ still needs the owner's Cloudflare setup (`docs/SETUP.md` §5).
 
 ## In progress
 
-- Commission split calculator PR review.
+- Lighthouse CI PR review.
 
 ## Exact next step
 
 1. Owner: `docs/SETUP.md` §5 (Cloudflare token, D1 database, GitHub secrets/variables), run
    **Deploy**, sign up once to confirm. Approve or edit the consent/privacy wording and the three ideas.
-2. Engineer: next Phase 2 PR — **Lighthouse CI job** (mobile ≥ 90) over every tool page, then
-   **stamp duty** (needs `data/stamp-duty/<STATE>.json` with official sources — question 9;
+2. Engineer: next Phase 2 PR — **stamp duty** (needs `data/stamp-duty/<STATE>.json` with official sources — question 9;
    defaults to MH, KA, DL, TN, UP if unanswered, every rate marked for owner verification).
 
 ## Blockers
