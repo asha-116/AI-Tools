@@ -1,0 +1,327 @@
+---
+import { strings, type Lang } from '../../i18n/strings';
+import { formatInrExact } from '../../lib/format';
+import { defaultState, evaluate } from './logic';
+import { commissionStrings } from './strings';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = commissionStrings[lang];
+const common = strings[lang];
+const initialState = defaultState([t.defaultParty1, t.defaultParty2]);
+const initial = evaluate(initialState);
+const r = initial.ok ? initial.result : null;
+const clientStrings = {
+  sharesTotal: t.sharesTotal,
+  share: t.share,
+  shareCopied: t.shareCopied,
+  defaults: [t.defaultParty1, t.defaultParty2],
+};
+---
+
+<article class="tool">
+  <p class="crumb"><a href={lang === 'en' ? '/' : '/hi/'}>← {t.backHome}</a></p>
+  <h1>{t.h1}</h1>
+  <p class="lead">{t.lead}</p>
+
+  <form id="cm-form" class="card" data-strings={JSON.stringify(clientStrings)} novalidate>
+    <fieldset class="modes">
+      <legend>{t.modeLegend}</legend>
+      <label class="choice"
+        ><input type="radio" name="mode" value="percent" checked /> {t.modePercent}</label
+      >
+      <label class="choice"><input type="radio" name="mode" value="fixed" /> {t.modeFixed}</label>
+    </fieldset>
+
+    <div class="field" data-mode="percent">
+      <label for="cm-deal">{t.dealLabel}</label>
+      <input id="cm-deal" name="deal" inputmode="numeric" autocomplete="off" value={initialState.deal} />
+      <p class="error" data-error="deal" hidden>{t.errorDeal}</p>
+    </div>
+    <div class="field" data-mode="percent">
+      <label for="cm-rate">{t.rateLabel}</label>
+      <input id="cm-rate" name="rate" inputmode="decimal" autocomplete="off" value={initialState.rate} />
+      <p class="error" data-error="rate" hidden>{t.errorRate}</p>
+    </div>
+    <div class="field" data-mode="fixed" hidden>
+      <label for="cm-amount">{t.amountLabel}</label>
+      <input id="cm-amount" name="amount" inputmode="numeric" autocomplete="off" value="" />
+      <p class="error" data-error="amount" hidden>{t.errorAmount}</p>
+    </div>
+    <div class="field">
+      <label for="cm-gst">{t.gstLabel}</label>
+      <input
+        id="cm-gst"
+        name="gst"
+        inputmode="decimal"
+        autocomplete="off"
+        value={initialState.gst}
+        aria-describedby="cm-gst-hint"
+      />
+      <p id="cm-gst-hint" class="hint">{t.gstHint}</p>
+      <p class="error" data-error="gst" hidden>{t.errorGst}</p>
+    </div>
+
+    <fieldset>
+      <legend>{t.partiesLegend}</legend>
+      <ol id="cm-parties" class="parties">
+        {
+          initialState.parties.map((p) => (
+            <li class="party">
+              <label>
+                <span>{t.partyName}</span>
+                <input name="label" maxlength="40" autocomplete="off" value={p.label} />
+              </label>
+              <label>
+                <span>{t.partyShare}</span>
+                <input name="share" inputmode="decimal" autocomplete="off" value={p.share} />
+              </label>
+              <button type="button" class="link" data-remove>
+                {t.removeParty}
+              </button>
+            </li>
+          ))
+        }
+      </ol>
+      <template id="cm-party-template">
+        <li class="party">
+          <label>
+            <span>{t.partyName}</span>
+            <input name="label" maxlength="40" autocomplete="off" value="" />
+          </label>
+          <label>
+            <span>{t.partyShare}</span>
+            <input name="share" inputmode="decimal" autocomplete="off" value="0" />
+          </label>
+          <button type="button" class="link" data-remove>{t.removeParty}</button>
+        </li>
+      </template>
+      <p class="hint" data-out="shares-total">{t.sharesTotal.replace('{total}', '100')}</p>
+      <p class="error" data-error="shares" hidden>{t.errorShares}</p>
+      <button type="button" class="button secondary" id="cm-add">{t.addParty}</button>
+    </fieldset>
+  </form>
+
+  <section class="card results" aria-live="polite">
+    <dl>
+      <div class="main">
+        <dt>{t.resultGross}</dt>
+        <dd data-out="gross">{r ? formatInrExact(r.gross) : '—'}</dd>
+      </div>
+      <div>
+        <dt>{t.resultGst}</dt>
+        <dd data-out="gst">{r ? formatInrExact(r.gst) : '—'}</dd>
+      </div>
+      <div>
+        <dt>{t.resultTotal}</dt>
+        <dd data-out="total">{r ? formatInrExact(r.totalPayable) : '—'}</dd>
+      </div>
+    </dl>
+    <h2>{t.resultSplit}</h2>
+    <ul class="split" data-out="split">
+      {
+        r?.parties.map((p) => (
+          <li>
+            <span>
+              {p.label} ({p.percent}%)
+            </span>
+            <strong>{formatInrExact(p.amount)}</strong>
+          </li>
+        ))
+      }
+    </ul>
+    <button type="button" class="button secondary" id="cm-share">{t.share}</button>
+  </section>
+
+  <section class="card">
+    <h2>{t.formulaTitle}</h2>
+    <ul class="formula">
+      {t.formula.map((f) => <li><code>{f}</code></li>)}
+    </ul>
+    <h2>{t.assumptionsTitle}</h2>
+    <ul>
+      {t.assumptions.map((a) => <li>{a}</li>)}
+    </ul>
+    <p class="disclaimer"><strong>{common.toolDisclaimer}</strong></p>
+  </section>
+</article>
+
+<script>
+  import { initCommission } from './client';
+  initCommission(document, window);
+</script>
+
+<style>
+  .tool {
+    max-width: 40rem;
+  }
+  .crumb {
+    margin: 16px 0 0;
+  }
+  h1 {
+    font-size: clamp(1.75rem, 6vw, 2.25rem);
+    line-height: 1.2;
+    margin: 8px 0;
+  }
+  h2 {
+    font-size: 1.1875rem;
+    margin: 16px 0 8px;
+  }
+  .card h2:first-child {
+    margin-top: 0;
+  }
+  .lead,
+  .hint {
+    color: var(--muted);
+  }
+  .hint {
+    margin: 0;
+    font-size: 0.9375rem;
+  }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+    margin: 16px 0;
+  }
+  fieldset {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 12px 12px;
+    margin: 0 0 12px;
+  }
+  .choice {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    min-height: 40px;
+  }
+  .choice input {
+    width: 20px;
+    height: 20px;
+  }
+  .field {
+    display: grid;
+    gap: 4px;
+    margin-bottom: 12px;
+  }
+  input:not([type='radio']) {
+    min-height: 48px;
+    padding: 10px 12px;
+    font: inherit;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--bg);
+    color: var(--fg);
+    width: 100%;
+  }
+  input[aria-invalid='true'] {
+    border-color: var(--error);
+    border-width: 2px;
+  }
+  .error {
+    color: var(--error);
+    margin: 0;
+    font-size: 0.9375rem;
+  }
+  .parties {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 8px;
+    display: grid;
+    gap: 12px;
+  }
+  .party {
+    display: grid;
+    grid-template-columns: 1fr 6.5rem;
+    gap: 8px;
+    align-items: end;
+  }
+  .party label {
+    display: grid;
+    gap: 4px;
+  }
+  .party .link {
+    grid-column: 1 / -1;
+    justify-self: start;
+  }
+  .link {
+    background: none;
+    border: none;
+    color: var(--brand);
+    text-decoration: underline;
+    font: inherit;
+    padding: 8px 0;
+    min-height: 40px;
+    cursor: pointer;
+  }
+  .button {
+    min-height: 48px;
+    padding: 12px 20px;
+    margin-top: 8px;
+    border: 2px solid var(--brand);
+    border-radius: var(--radius);
+    background: transparent;
+    color: var(--brand);
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .button[disabled] {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  dl {
+    display: grid;
+    gap: 8px;
+    margin: 0;
+  }
+  dl div,
+  .split li {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    border-top: 1px solid var(--border);
+    padding-top: 8px;
+  }
+  dl div.main {
+    border-top: none;
+    padding-top: 0;
+    flex-direction: column;
+  }
+  dl div.main dd {
+    font-size: clamp(2rem, 9vw, 2.75rem);
+    line-height: 1.1;
+    color: var(--brand);
+    text-align: left;
+  }
+  dd {
+    margin: 0;
+    font-weight: 600;
+    text-align: right;
+  }
+  .split {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 8px;
+    display: grid;
+    gap: 8px;
+  }
+  .split span {
+    overflow-wrap: anywhere;
+  }
+  .formula {
+    padding-left: 1.2em;
+  }
+  .formula code {
+    font-family: inherit;
+    overflow-wrap: anywhere;
+  }
+  .disclaimer {
+    margin-bottom: 0;
+  }
+</style>
