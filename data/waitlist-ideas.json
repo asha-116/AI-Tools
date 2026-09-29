@@ -1,0 +1,41 @@
+{
+  "$comment": "Candidate tool ideas for the Phase 1 demand test. Shared by the site (cards) and the waitlist Worker (allow-list). Changing ids breaks recorded sign-ups — add, don't rename.",
+  "ideas": [
+    {
+      "id": "stamp-duty",
+      "kind": "free",
+      "title": {
+        "en": "Stamp duty & registration cost calculator",
+        "hi": "स्टांप ड्यूटी और रजिस्ट्रेशन खर्च कैलकुलेटर"
+      },
+      "summary": {
+        "en": "Pick the state, enter the property value, and see the stamp duty, registration fee and total cost for your buyer — with the official source for every rate.",
+        "hi": "राज्य चुनें, प्रॉपर्टी की कीमत डालें, और अपने खरीदार के लिए स्टांप ड्यूटी, रजिस्ट्रेशन फीस और कुल खर्च देखें — हर दर के आधिकारिक स्रोत के साथ।"
+      }
+    },
+    {
+      "id": "lead-tracker",
+      "kind": "paid",
+      "title": {
+        "en": "Lead & site-visit tracker (Google Sheets)",
+        "hi": "लीड और साइट-विज़िट ट्रैकर (Google Sheets)"
+      },
+      "summary": {
+        "en": "One sheet for every enquiry: budget, location, follow-up date and site visits — with a daily \"who to call today\" list.",
+        "hi": "हर पूछताछ के लिए एक शीट: बजट, लोकेशन, फॉलो-अप की तारीख और साइट विज़िट — साथ में रोज़ की \"आज किसे कॉल करना है\" सूची।"
+      }
+    },
+    {
+      "id": "commission-ledger",
+      "kind": "paid",
+      "title": {
+        "en": "Commission ledger & split calculator",
+        "hi": "कमीशन लेजर और बँटवारा कैलकुलेटर"
+      },
+      "summary": {
+        "en": "Track every deal's commission, what is received and pending, and how it is split with co-brokers — in one place.",
+        "hi": "हर डील का कमीशन, कितना मिला और कितना बाकी है, और को-ब्रोकर के साथ बँटवारा — सब एक जगह।"
+      }
+    }
+  ]
+}
