@@ -28,7 +28,9 @@ jobs:
       - run: npm run lint
       - run: npm run format:check
       - run: npm run typecheck
+      - run: npm run check:site
       - run: npm run test:coverage
+      - run: npm run build:site
       - run: npm run check:structure
 
   secrets:

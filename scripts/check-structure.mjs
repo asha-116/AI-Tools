@@ -25,6 +25,10 @@ const requiredFiles = [
   '.github/PULL_REQUEST_TEMPLATE.md',
   '.github/labels.json',
   '.github/workflows/ci.yml',
+  '.github/workflows/deploy.yml',
+  'data/waitlist-ideas.json',
+  'workers/waitlist/wrangler.toml',
+  'site/public/_headers',
 ];
 
 const requiredDirs = [
