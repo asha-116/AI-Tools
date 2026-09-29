@@ -6,7 +6,7 @@ export default defineConfig({
     exclude: ['**/node_modules/**', '**/dist/**'],
     coverage: {
       provider: 'v8',
-      include: ['tools-core/src/**/*.ts', 'workers/*/src/**/*.ts'],
+      include: ['tools-core/src/**/*.ts', 'workers/*/src/**/*.ts', 'site/src/tools/*/logic.ts'],
       reporter: ['text', 'json-summary'],
       // Formula code is money-adjacent: see AGENTS.md ("Tests first").
       thresholds: {

@@ -1,0 +1,7 @@
+{
+  "slug": "emi",
+  "kind": "free",
+  "formula": "EMI = P × r × (1 + r)ⁿ ÷ ((1 + r)ⁿ − 1)",
+  "knownAnswers": "tools-core/test/fixtures/emi-known-answers.json",
+  "lastReviewed": "2026-09-29"
+}

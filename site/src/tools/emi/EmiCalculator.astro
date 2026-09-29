@@ -1,0 +1,226 @@
+---
+import { strings, type Lang } from '../../i18n/strings';
+import meta from './meta.json';
+import { DEFAULT_STATE, evaluate, formatInr } from './logic';
+import { emiStrings } from './strings';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = emiStrings[lang];
+const common = strings[lang];
+// Server-render the default result so the page is useful before (or without) JavaScript.
+const initial = evaluate(DEFAULT_STATE);
+const r = initial.ok ? initial.result : null;
+const clientStrings = {
+  firstMonth: t.resultFirstMonth,
+  share: t.share,
+  shareCopied: t.shareCopied,
+};
+---
+
+<article class="tool">
+  <p class="crumb"><a href={lang === 'en' ? '/' : '/hi/'}>← {t.backHome}</a></p>
+  <h1>{t.h1}</h1>
+  <p class="lead">{t.lead}</p>
+
+  <form id="emi-form" class="card" data-strings={JSON.stringify(clientStrings)} novalidate>
+    <div class="field">
+      <label for="emi-principal">{t.principalLabel}</label>
+      <input
+        id="emi-principal"
+        name="principal"
+        inputmode="numeric"
+        autocomplete="off"
+        value={DEFAULT_STATE.principal}
+        aria-describedby="emi-principal-error"
+      />
+      <p id="emi-principal-error" class="error" data-error="principal" hidden>{t.errorPrincipal}</p>
+    </div>
+    <div class="field">
+      <label for="emi-rate">{t.rateLabel}</label>
+      <input
+        id="emi-rate"
+        name="rate"
+        inputmode="decimal"
+        autocomplete="off"
+        value={DEFAULT_STATE.rate}
+        aria-describedby="emi-rate-error"
+      />
+      <p id="emi-rate-error" class="error" data-error="rate" hidden>{t.errorRate}</p>
+    </div>
+    <div class="field">
+      <label for="emi-tenure">{t.tenureLabel}</label>
+      <div class="row">
+        <input
+          id="emi-tenure"
+          name="tenure"
+          inputmode="decimal"
+          autocomplete="off"
+          value={DEFAULT_STATE.tenure}
+          aria-describedby="emi-tenure-error"
+        />
+        <select name="unit" aria-label={t.tenureLabel}>
+          <option value="years" selected>{t.unitYears}</option>
+          <option value="months">{t.unitMonths}</option>
+        </select>
+      </div>
+      <p id="emi-tenure-error" class="error" data-error="tenure" hidden>{t.errorTenure}</p>
+    </div>
+  </form>
+
+  <section class="card results" aria-live="polite">
+    <p class="result-main">
+      <span>{t.resultEmi}</span>
+      <strong data-out="emi">{r ? formatInr(r.emi) : '—'}</strong>
+    </p>
+    <dl>
+      <div>
+        <dt>{t.resultInterest}</dt>
+        <dd data-out="interest">{r ? formatInr(r.totalInterest) : '—'}</dd>
+      </div>
+      <div>
+        <dt>{t.resultTotal}</dt>
+        <dd data-out="total">{r ? formatInr(r.totalPayment) : '—'}</dd>
+      </div>
+    </dl>
+    <p class="muted" data-out="first-month">
+      {
+        r
+          ? t.resultFirstMonth
+              .replace('{interest}', formatInr(r.firstMonthInterest))
+              .replace('{principal}', formatInr(r.firstMonthPrincipal))
+          : ''
+      }
+    </p>
+    <button type="button" class="button secondary" id="emi-share">{t.share}</button>
+  </section>
+
+  <section class="card">
+    <h2>{t.formulaTitle}</h2>
+    <p class="formula"><code>{meta.formula}</code></p>
+    <p>{t.formulaWhere}</p>
+    <h2>{t.assumptionsTitle}</h2>
+    <ul>
+      {t.assumptions.map((a) => <li>{a}</li>)}
+    </ul>
+    <p class="disclaimer"><strong>{common.toolDisclaimer}</strong></p>
+  </section>
+</article>
+
+<script>
+  import { initEmi } from './client';
+  initEmi(document, window);
+</script>
+
+<style>
+  .tool {
+    max-width: 40rem;
+  }
+  .crumb {
+    margin: 16px 0 0;
+  }
+  h1 {
+    font-size: clamp(1.75rem, 6vw, 2.25rem);
+    line-height: 1.2;
+    margin: 8px 0;
+  }
+  h2 {
+    font-size: 1.1875rem;
+    margin: 0 0 8px;
+  }
+  .lead,
+  .muted {
+    color: var(--muted);
+  }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+    margin: 16px 0;
+  }
+  .card h2 + p,
+  .card ul {
+    margin-top: 0;
+  }
+  .field {
+    display: grid;
+    gap: 4px;
+    margin-bottom: 12px;
+  }
+  .row {
+    display: flex;
+    gap: 8px;
+  }
+  input,
+  select {
+    min-height: 48px;
+    padding: 10px 12px;
+    font: inherit;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--bg);
+    color: var(--fg);
+    width: 100%;
+  }
+  select {
+    width: auto;
+  }
+  input[aria-invalid='true'] {
+    border-color: var(--error);
+    border-width: 2px;
+  }
+  .error {
+    color: var(--error);
+    margin: 0;
+    font-size: 0.9375rem;
+  }
+  .result-main {
+    display: flex;
+    flex-direction: column;
+    margin: 0 0 12px;
+  }
+  .result-main strong {
+    font-size: clamp(2rem, 9vw, 2.75rem);
+    line-height: 1.1;
+    color: var(--brand);
+  }
+  dl {
+    display: grid;
+    gap: 8px;
+    margin: 0 0 12px;
+  }
+  dl div {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    border-top: 1px solid var(--border);
+    padding-top: 8px;
+  }
+  dd {
+    margin: 0;
+    font-weight: 600;
+    text-align: right;
+  }
+  .formula code {
+    font-size: 1.0625rem;
+    overflow-wrap: anywhere;
+  }
+  .button {
+    min-height: 48px;
+    padding: 12px 20px;
+    border: 2px solid var(--brand);
+    border-radius: var(--radius);
+    background: transparent;
+    color: var(--brand);
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .disclaimer {
+    margin-bottom: 0;
+  }
+</style>

@@ -10,6 +10,7 @@
     "workers/*/test",
     "site/src/i18n",
     "site/src/scripts",
+    "site/src/tools",
     "site/test",
     "vitest.config.ts",
     "eslint.config.js"
