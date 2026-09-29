@@ -3,5 +3,15 @@
   "compilerOptions": {
     "noEmit": true
   },
-  "include": ["tools-core/src", "tools-core/test", "vitest.config.ts", "eslint.config.js"]
+  "include": [
+    "tools-core/src",
+    "tools-core/test",
+    "workers/*/src",
+    "workers/*/test",
+    "site/src/i18n",
+    "site/src/scripts",
+    "site/test",
+    "vitest.config.ts",
+    "eslint.config.js"
+  ]
 }
