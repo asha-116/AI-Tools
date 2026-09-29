@@ -1,4 +1,6 @@
-# ToolShop
+# ChangeLens
+
+**Live at https://tools.changelense.in**
 
 Small, practical digital tools for **Indian real-estate agents**: free web calculators
 (EMI, stamp duty + registration, commission split, rental yield, loan eligibility) and low-cost
@@ -8,7 +10,7 @@ The business is run by **AI agents** defined in this repository. One human, the 
 acts as the board: approving money, legal text, public claims and anything irreversible.
 Everything runs on free tiers (GitHub, Cloudflare, free LLM APIs).
 
-> **Status:** Phase 1 (demand test: landing page + waitlist). See [`docs/PROGRESS.md`](docs/PROGRESS.md) for the live
+> **Status:** Phase 1 done (site live, waitlist recording); Phase 2 (free calculators) in progress. See [`docs/PROGRESS.md`](docs/PROGRESS.md) for the live
 > state and the exact next step.
 
 ## How the company maps onto this repo
