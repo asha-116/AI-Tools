@@ -1,0 +1,5 @@
+# The owner reviews everything. Only enforced once branch protection is on (see docs/SETUP.md).
+*                 @asha-116
+/legal/           @asha-116
+/company/policies @asha-116
+/data/            @asha-116

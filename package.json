@@ -1,0 +1,35 @@
+{
+  "name": "toolshop",
+  "version": "0.0.0",
+  "private": true,
+  "description": "ToolShop — AI-agent-run digital tools business for Indian real-estate agents.",
+  "license": "UNLICENSED",
+  "type": "module",
+  "engines": {
+    "node": ">=22.13.0"
+  },
+  "workspaces": [
+    "tools-core"
+  ],
+  "scripts": {
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "check:structure": "node scripts/check-structure.mjs",
+    "ci": "npm run lint && npm run format:check && npm run typecheck && npm run test:coverage && npm run check:structure"
+  },
+  "devDependencies": {
+    "@eslint/js": "10.0.1",
+    "@types/node": "22.20.4",
+    "@vitest/coverage-v8": "5.0.2",
+    "eslint": "10.11.0",
+    "globals": "17.12.0",
+    "prettier": "3.9.9",
+    "typescript": "6.0.3",
+    "typescript-eslint": "8.71.0",
+    "vitest": "5.0.2"
+  }
+}

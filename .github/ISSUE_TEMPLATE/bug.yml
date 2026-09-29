@@ -1,0 +1,21 @@
+name: Bug
+description: Something is wrong (wrong result, broken page, failed delivery).
+labels: ['type:bug']
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: Do NOT paste customer names, emails, phone numbers or payment IDs.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce

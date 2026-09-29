@@ -1,0 +1,73 @@
+[
+  {
+    "name": "needs-owner",
+    "color": "d93f0b",
+    "description": "Blocked on an owner decision or approval"
+  },
+  {
+    "name": "approved-by-owner",
+    "color": "0e8a16",
+    "description": "Owner approved: money, legal, public claims or irreversible action"
+  },
+  {
+    "name": "agent:orchestrator",
+    "color": "5319e7",
+    "description": "Work for the Orchestrator agent"
+  },
+  {
+    "name": "agent:demand-researcher",
+    "color": "5319e7",
+    "description": "Work for the Demand Researcher agent"
+  },
+  { "name": "agent:builder", "color": "5319e7", "description": "Work for the Builder agent" },
+  { "name": "agent:qa", "color": "5319e7", "description": "Work for the QA agent" },
+  { "name": "agent:verifier", "color": "5319e7", "description": "Work for the Verifier agent" },
+  {
+    "name": "agent:seo-listing",
+    "color": "5319e7",
+    "description": "Work for the SEO/Listing agent"
+  },
+  {
+    "name": "agent:social",
+    "color": "5319e7",
+    "description": "Work for the Social agent (drafts only)"
+  },
+  { "name": "agent:support", "color": "5319e7", "description": "Work for the Support agent" },
+  { "name": "agent:controller", "color": "5319e7", "description": "Work for the Controller agent" },
+  { "name": "type:tool", "color": "1d76db", "description": "Free calculator" },
+  { "name": "type:product", "color": "1d76db", "description": "Paid template or Pro tool" },
+  {
+    "name": "type:idea",
+    "color": "1d76db",
+    "description": "Scored product idea from demand research"
+  },
+  {
+    "name": "type:content",
+    "color": "1d76db",
+    "description": "SEO article, listing or social draft"
+  },
+  {
+    "name": "type:data",
+    "color": "1d76db",
+    "description": "Rates or reference data (e.g. stamp duty)"
+  },
+  {
+    "name": "type:legal",
+    "color": "b60205",
+    "description": "Terms, privacy, refund, disclaimers — owner approval required"
+  },
+  {
+    "name": "type:pricing",
+    "color": "b60205",
+    "description": "Price change — owner approval required"
+  },
+  { "name": "type:infra", "color": "1d76db", "description": "CI, deploy, workers, agents runtime" },
+  { "name": "type:bug", "color": "d73a4a", "description": "Something is wrong" },
+  {
+    "name": "type:alert",
+    "color": "d73a4a",
+    "description": "Automated alert: workflow failure or free-tier limit"
+  },
+  { "name": "priority:high", "color": "b60205", "description": "Do next" },
+  { "name": "priority:low", "color": "c5def5", "description": "Nice to have" }
+]

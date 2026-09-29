@@ -1,0 +1,46 @@
+name: Agent task
+description: A unit of work for one agent (usually created by the Orchestrator).
+labels: []
+body:
+  - type: dropdown
+    id: agent
+    attributes:
+      label: Agent
+      description: Also add the matching `agent:<name>` label.
+      options:
+        - orchestrator
+        - demand-researcher
+        - builder
+        - qa
+        - verifier
+        - seo-listing
+        - social
+        - support
+        - controller
+    validations:
+      required: true
+  - type: textarea
+    id: goal
+    attributes:
+      label: Goal
+      description: One outcome, stated so it can be checked.
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      placeholder: |
+        - [ ] ...
+    validations:
+      required: true
+  - type: textarea
+    id: inputs
+    attributes:
+      label: Inputs and sources
+      description: Files, data, URLs (with source for any formula or rate).
+  - type: input
+    id: budget
+    attributes:
+      label: Token budget
+      description: Max LLM tokens for this task (defaults to the agent's PROCEDURE.md budget).
