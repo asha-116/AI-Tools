@@ -1,0 +1,157 @@
+{
+  "$comment": "Known-answer EMI cases from published Indian examples, found via web search on 2026-09-29. The search tool returned a summary quote plus the pages it drew on, so `sources` lists those candidate pages; which page carries each exact figure is NOT confirmed (direct page fetch was blocked in the build environment). Every case was independently recomputed (Python float64) and matches to the rupee. Before launch the Verifier or owner should open the pages and trim each list to the page that shows the figure. Totals are listed only where the source derives them from the unrounded EMI (our convention).",
+  "accessed": "2026-09-29",
+  "cases": [
+    {
+      "principal": 1000000,
+      "annualRatePercent": 10.5,
+      "tenureMonths": 120,
+      "emi": 13493,
+      "totalInterest": 619220,
+      "quote": "If you borrow ₹10,00,000 from the bank at 10.5% annual interest for a period of 10 years (i.e., 120 months), then EMI = … ₹13,493 … includes ₹6,19,220 as interest",
+      "sources": [
+        "https://emicalculator.net/",
+        "https://cleartax.in/s/emi-calculation-formula",
+        "https://groww.in/calculators/emi-calculator"
+      ]
+    },
+    {
+      "principal": 10000000,
+      "annualRatePercent": 10.5,
+      "tenureMonths": 120,
+      "emi": 134935,
+      "totalInterest": 6192200,
+      "quote": "10,000,000 at 10.5% … 120 months … EMI = 134,935 … total amount payable 16,192,200 that includes 6,192,200 as interest",
+      "sources": [
+        "https://en.wikipedia.org/wiki/Equated_monthly_installment",
+        "https://www.wallstreetmojo.com/equated-monthly-installment-emi/"
+      ]
+    },
+    {
+      "principal": 3500000,
+      "annualRatePercent": 8.65,
+      "tenureMonths": 360,
+      "emi": 27285,
+      "quote": "home loan amount of 3,500,000 … 8.65% p.a. … 360 months … the monthly instalment amount comes up to ₹27,285",
+      "sources": [
+        "https://www.godrejcapital.com/media-blog/knowledge-centre/home-loan-emi-calculation-simple-step-by-step-guide",
+        "https://www.bankbazaar.com/home-loan/emi-calculator.html"
+      ]
+    },
+    {
+      "principal": 2000000,
+      "annualRatePercent": 8.5,
+      "tenureMonths": 240,
+      "emi": 17356,
+      "totalInterest": 2165552,
+      "quote": "8.5% p.a. rate, a ₹20,00,000 loan over 240 months carries an EMI of approximately ₹17,356 … total interest of about ₹21,65,552",
+      "sources": [
+        "https://homefirstindia.com/blog/article/20-lakh-home-loan-emi-calculation-20-years/",
+        "https://bankcreds.com/home-loan/20-lakh-home-loan-emi/",
+        "https://calctypes.com/emi-calculator-20-lakh-loan/"
+      ]
+    },
+    {
+      "principal": 6000000,
+      "annualRatePercent": 9,
+      "tenureMonths": 240,
+      "emi": 53984,
+      "quote": "home loan of Rs. 60 Lakh at 9% (0.75% per month) … 240 months … EMI = Rs. 53,984",
+      "sources": ["https://www.paisabazaar.com/sbi-bank/home-loan-emi-calculator/"]
+    },
+    {
+      "principal": 500000,
+      "annualRatePercent": 12,
+      "tenureMonths": 36,
+      "emi": 16607,
+      "quote": "₹5,00,000 personal loan at 12% p.a. for 36 months … approximately ₹16,607 per month",
+      "sources": [
+        "https://loancalculate.in/personal-loan-emi-calculator/",
+        "https://fincalc-blog.in/personal-loan-emi-calculation-formula-examples-excel/",
+        "https://www.paisabazaar.com/personal-loan-emi-calculator/"
+      ]
+    },
+    {
+      "principal": 500000,
+      "annualRatePercent": 14,
+      "tenureMonths": 36,
+      "emi": 17089,
+      "totalInterest": 115197,
+      "quote": "₹5,00,000 personal loan at 14.0% for 3 years, the EMI is ₹17,089/month with total interest of ₹1,15,197",
+      "sources": [
+        "https://thecalcu.com/personal-loan-emi-calculator/",
+        "https://futurecorpus.com/calculators/personal-loan-calculator",
+        "https://www.paisabazaar.com/personal-loan-emi-calculator/"
+      ]
+    },
+    {
+      "principal": 2000000,
+      "annualRatePercent": 7.5,
+      "tenureMonths": 120,
+      "emi": 23740,
+      "quote": "₹20 lakh loan at a 7.5% annual interest rate over 10 years, the EMI would be ₹23,740 per month",
+      "sources": [
+        "https://www.paisabazaar.com/home-loan-emi-calculator/",
+        "https://www.bajajfinserv.in/home-loan-emi-calculator",
+        "https://cleartax.in/s/home-loan-emi-calculator"
+      ]
+    },
+    {
+      "principal": 5000000,
+      "annualRatePercent": 8.5,
+      "tenureMonths": 240,
+      "emi": 43391,
+      "totalInterest": 5413879,
+      "quote": "₹50 Lakh Home Loan EMI Calculator — ₹43,391/month at 8.5% … ₹54,13,879 is interest",
+      "sources": [
+        "https://www.numerral.com/loan-calculators/home-loan-emi/50-lakh",
+        "https://rinmukt.com/50-lakh-home-loan-emi/",
+        "https://stockcalc.in/home-loan-emi/50-lakh-loan"
+      ]
+    },
+    {
+      "principal": 100000,
+      "annualRatePercent": 10,
+      "tenureMonths": 12,
+      "emi": 8792,
+      "quote": "₹1 lakh, 10% interest rate and 12 months tenure … your EMI would be ₹8792",
+      "sources": [
+        "https://www.bajajfinserv.in/emi-calculator",
+        "https://navi.com/calculator/personal-loan-emi-calculator",
+        "https://gocredit.money/hi/1-lakh-loan-monthly-emi-kitni"
+      ]
+    },
+    {
+      "principal": 4000000,
+      "annualRatePercent": 7.75,
+      "tenureMonths": 300,
+      "emi": 30213,
+      "quote": "₹40 lakhs at an estimated interest rate of 7.75% and a tenure of 25 years … approximately ₹30,213",
+      "sources": [
+        "https://homeloans.hdfc.bank.in/housing-loans/home-loans/40-lakh-home-loan-emi",
+        "https://www.kotak.bank.in/en/personal-banking/loans/home-loan/40-lakh-home-loan-emi.html",
+        "https://scripbox.com/plan/emi-calculator/40-lakh-home-loan-emi/"
+      ]
+    },
+    {
+      "principal": 4000000,
+      "annualRatePercent": 9,
+      "tenureMonths": 240,
+      "emi": 35989,
+      "quote": "40 lakh home loan at 9% annual interest rate over 20 years, the typical EMI is ₹35,989 per month",
+      "sources": [
+        "https://homeloans.hdfc.bank.in/housing-loans/home-loans/40-lakh-home-loan-emi",
+        "https://www.bajajhousingfinance.in/home-loan-up-to-40-lakh",
+        "https://navi.com/home-loan/40-lakh-home-loan-emi"
+      ]
+    }
+  ],
+  "rejected": [
+    {
+      "principal": 800000,
+      "annualRatePercent": 9,
+      "tenureMonths": 60,
+      "note": "Two published sources disagree (₹16,610 and ₹16,599); the formula gives ₹16,607. Not used as a known answer."
+    }
+  ]
+}
