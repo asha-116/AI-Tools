@@ -4,14 +4,23 @@ Living status log. Update at the end of every session (see `AGENTS.md` §1).
 
 ## Current phase
 
-**Phase 1 — Demand test** — code complete, PR open. Going live needs the owner's Cloudflare
-setup (`docs/SETUP.md` §5).
+**Phase 2 — Free calculators** — EMI calculator PR open. Phase 1 is merged; going live
+still needs the owner's Cloudflare setup (`docs/SETUP.md` §5).
 
 ## Done
 
 - 2026-09-29 — **Phase 0** merged (asha-116/AI-Tools#1): repo layout, rules, docs, CI,
   templates, labels, agent procedures, policy drafts, stamp-duty schema.
-- 2026-09-29 — **Phase 1** (this PR):
+- 2026-09-29 — **Phase 2, part 1: EMI calculator** (this PR):
+  - `tools-core/src/emi.ts` with tests written first: 12 published Indian EMI examples
+    (`tools-core/test/fixtures/emi-known-answers.json`), all recomputed independently and
+    matching to the rupee, plus identities (schedule pays off to zero, 0% rate, 1 month).
+    One car-loan example was rejected because its sources disagree.
+  - `/tools/emi/` and `/hi/tools/emi/`: live results, inline errors, shareable link (inputs in
+    the URL hash, never sent to a server), formula, assumptions, disclaimer. Linked from home.
+  - Verified in Chromium: shared link restores inputs, zero off-site requests, no console errors.
+    Lighthouse mobile 100/100/100/100 on EMI EN/HI and the home page.
+- 2026-09-29 — **Phase 1** merged (asha-116/AI-Tools#5):
   - Astro 7 static site, `/` (EN) and `/hi/` (HI), mobile-first, system fonts, dark mode,
     strict CSP headers, hreflang/canonical/OG tags.
   - Landing page: 3 candidate ideas from `data/waitlist-ideas.json`, "Notify me" per idea,
@@ -26,15 +35,15 @@ setup (`docs/SETUP.md` §5).
 
 ## In progress
 
-- Phase 1 PR review.
+- EMI calculator PR review.
 
 ## Exact next step
 
 1. Owner: `docs/SETUP.md` §5 (Cloudflare token, D1 database, GitHub secrets/variables), run
    **Deploy**, sign up once to confirm. Approve or edit the consent/privacy wording and the three ideas.
-2. Engineer: once live, add a Lighthouse CI job (mobile ≥ 90) for the landing page, then start
-   **Phase 2** with the EMI calculator — known-answer tests first (cite a bank's published EMI
-   examples), then `tools-core/src/emi.ts`, then `site/src/tools/emi/`.
+2. Engineer: next Phase 2 PR — **commission split calculator** (no state data needed), then
+   **stamp duty** (needs `data/stamp-duty/<STATE>.json` with official sources — question 9),
+   then a Lighthouse CI job (mobile ≥ 90) over every tool page.
 
 ## Blockers
 
@@ -66,3 +75,6 @@ setup (`docs/SETUP.md` §5).
     collect personal data (DPDP Act 2023).
 13. **Candidate ideas** (new, ADR-018): happy with stamp duty calculator / lead tracker /
     commission ledger as the three ideas to test?
+14. **EMI sources** (new): the known-answer file lists candidate pages per figure because the
+    build environment could not open them directly. Please (or the Verifier) open a few and
+    confirm; every figure is also recomputed independently, so the maths is not at risk.
