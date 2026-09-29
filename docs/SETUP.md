@@ -114,18 +114,18 @@ Each job skips itself with a notice until its settings exist, so nothing fails b
 
 ### 5.2 GitHub settings (Settings → Secrets and variables → Actions)
 
-| Kind     | Name                      | Value                                                                                                       |
-| -------- | ------------------------- | ----------------------------------------------------------------------------------------------------------- |
-| Secret   | `CLOUDFLARE_API_TOKEN`    | token from 5.1.1                                                                                            |
-| Secret   | `CLOUDFLARE_ACCOUNT_ID`   | from 5.1.2                                                                                                  |
-| Secret   | `WAITLIST_IP_HASH_SECRET` | output of `openssl rand -base64 48`                                                                         |
-| Variable | `WAITLIST_D1_ID`          | Database ID from 5.1.3                                                                                      |
-| Variable | `PAGES_PROJECT`           | optional, default `toolshop` → site at `https://toolshop.pages.dev`                                         |
-| Variable | `SITE_URL`                | `https://<PAGES_PROJECT>.pages.dev` (or your domain)                                                        |
-| Variable | `SITE_ORIGINS`            | origins allowed to post to the waitlist, comma-separated, e.g. `https://toolshop.pages.dev`                 |
-| Variable | `WAITLIST_URL`            | `https://toolshop-waitlist.<your-subdomain>.workers.dev/api/waitlist` (shown after the first Worker deploy) |
-| Variable | `SUPPORT_EMAIL`           | address shown in the privacy note                                                                           |
-| Variable | `CF_BEACON_TOKEN`         | optional, from 5.1.4                                                                                        |
+| Kind     | Name                      | Value                                                                                                                                                                                                   |
+| -------- | ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Secret   | `CLOUDFLARE_API_TOKEN`    | token from 5.1.1                                                                                                                                                                                        |
+| Secret   | `CLOUDFLARE_ACCOUNT_ID`   | from 5.1.2                                                                                                                                                                                              |
+| Secret   | `WAITLIST_IP_HASH_SECRET` | output of `openssl rand -base64 48`                                                                                                                                                                     |
+| Variable | `WAITLIST_D1_ID`          | Database ID from 5.1.3                                                                                                                                                                                  |
+| Variable | `PAGES_PROJECT`           | optional, default `toolshop`. **If the name is taken on pages.dev, Cloudflare adds a suffix** (ours: `toolshop-elu.pages.dev`) — read the real address from the Deploy log line “Take a peek over at …” |
+| Variable | `SITE_URL`                | the public address, e.g. `https://tools.changelense.in` (used for canonical/share links)                                                                                                                |
+| Variable | `SITE_ORIGINS`            | every address the site is opened from, comma-separated, e.g. `https://tools.changelense.in,https://toolshop-elu.pages.dev` — sign-ups from any other address are refused                                |
+| Variable | `WAITLIST_URL`            | `https://toolshop-waitlist.<your-subdomain>.workers.dev/api/waitlist` (shown after the first Worker deploy)                                                                                             |
+| Variable | `SUPPORT_EMAIL`           | address shown in the privacy note                                                                                                                                                                       |
+| Variable | `CF_BEACON_TOKEN`         | optional, from 5.1.4                                                                                                                                                                                    |
 
 ### 5.3 First deploy
 
@@ -140,7 +140,21 @@ Each job skips itself with a notice until its settings exist, so nothing fails b
 LLM prompt. Delete a person on request with
 `DELETE FROM signups WHERE email = 'their@email';`.
 
-### 5.4 Local development
+### 5.4 Custom domain (current: `tools.changelense.in`)
+
+`changelense.in` is on the owner's Cloudflare account, so Pages manages the DNS itself:
+
+1. Workers & Pages → **toolshop** → **Custom domains** → _Set up a custom domain_ →
+   `tools.changelense.in` → _Continue_ → **Activate domain**.
+2. **Do not add the CNAME in the DNS page yourself first** — Pages then fails with
+   “An A, AAAA, or CNAME record with that host already exists” and the site shows
+   _Error 523_. If that happens: delete the manual record, remove the pending domain in
+   _Custom domains_, and add it again.
+3. Wait for **Active** (minutes), then set `SITE_URL` / `SITE_ORIGINS` (5.2) and run **Deploy**.
+
+⚠️ `toolshop.pages.dev` belongs to **someone else** (a gambling site). Never link to it.
+
+### 5.5 Local development
 
 ```bash
 npm run dev -w @toolshop/site                       # site at http://localhost:4321

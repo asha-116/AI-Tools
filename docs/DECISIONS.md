@@ -142,3 +142,35 @@ Statuses: **Accepted**, **Proposed** (engineer's recommendation, not yet exercis
   site-visit tracker (paid template) and commission ledger & split calculator (paid template),
   stored in `data/waitlist-ideas.json`. No prices are shown until the owner approves them.
 - **Status:** Accepted as a draft; owner may change the ideas or wording before launch.
+
+### ADR-019 — Brand name: ChangeLens
+
+- **Decision (owner, 2026-09-29):** the public brand is **ChangeLens** (replaces the placeholder
+  “ToolShop”). Only user-facing text changed (`site/src/config.ts`, README, docs, favicon).
+- Internal identifiers stay as they are to avoid breaking deploys: npm package names
+  (`toolshop`, `@toolshop/*`), Pages project `toolshop`, Worker `toolshop-waitlist`,
+  D1 database `toolshop-waitlist`.
+- Note: the domain is spelled `changelense.in` (with an “e”); the brand is “ChangeLens”.
+- **Status:** Accepted.
+
+### ADR-020 — Public address: `tools.changelense.in`
+
+- **Context:** `toolshop.pages.dev` was already taken by an unrelated (gambling) site;
+  Cloudflare assigned `toolshop-elu.pages.dev`. The owner already has `changelense.in` on
+  Cloudflare, served by the existing `changelense` Worker.
+- **Decision:** serve the tools site at `tools.changelense.in` (Pages custom domain), leaving
+  `changelense.in` untouched for now.
+- **Status:** Accepted (live 2026-09-29).
+
+### ADR-021 — One website for all tools, including the ChangeLens document compare tool
+
+- **Context:** the existing ChangeLens tool (compare two documents / PDFs / pictures and show
+  the differences) runs as the `changelense` Worker on `changelense.in` and uses R2. The owner
+  wants every tool on one site.
+- **Proposal:** bring the ChangeLens code into this repo as another tool, reuse the same CI,
+  bilingual strings and Lighthouse checks, then point `changelense.in` at this project with
+  redirects for old links. Keep its R2 bucket; paid templates get a separate bucket.
+- **Open points before building:** get the code into the repo; check where documents are
+  processed (in the browser is preferred — documents may contain personal data and must never
+  go to a free LLM tier); review what is stored in R2 and for how long.
+- **Status:** Proposed — waiting for the ChangeLens code.
