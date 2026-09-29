@@ -6,12 +6,15 @@ interface Props {
   lang: Lang;
   title: string;
   description: string;
+  /** English path of this page, e.g. "/" or "/tools/emi/". The Hindi page lives at "/hi" + path. */
+  path?: string;
 }
 
-const { lang, title, description } = Astro.props;
+const { lang, title, description, path = '/' } = Astro.props;
 const t = strings[lang];
 const otherLang: Lang = lang === 'en' ? 'hi' : 'en';
-const hrefFor = (l: Lang) => (l === 'en' ? '/' : '/hi/');
+const hrefFor = (l: Lang) => (l === 'en' ? path : `/hi${path}`);
+const home = lang === 'en' ? '/' : '/hi/';
 const canonical = new URL(hrefFor(lang), Astro.site);
 ---
 
@@ -23,9 +26,9 @@ const canonical = new URL(hrefFor(lang), Astro.site);
     <title>{title} · {BRAND}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
-    <link rel="alternate" hreflang="en" href={new URL('/', Astro.site)} />
-    <link rel="alternate" hreflang="hi" href={new URL('/hi/', Astro.site)} />
-    <link rel="alternate" hreflang="x-default" href={new URL('/', Astro.site)} />
+    <link rel="alternate" hreflang="en" href={new URL(hrefFor('en'), Astro.site)} />
+    <link rel="alternate" hreflang="hi" href={new URL(hrefFor('hi'), Astro.site)} />
+    <link rel="alternate" hreflang="x-default" href={new URL(hrefFor('en'), Astro.site)} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <meta name="theme-color" content="#0f5132" />
     <meta property="og:type" content="website" />
@@ -37,7 +40,7 @@ const canonical = new URL(hrefFor(lang), Astro.site);
   <body>
     <header class="site-header">
       <div class="wrap header-row">
-        <a class="brand" href={hrefFor(lang)}>{BRAND}</a>
+        <a class="brand" href={home}>{BRAND}</a>
         <a class="lang-switch" href={hrefFor(otherLang)} hreflang={otherLang} lang={otherLang}>
           {t.langSwitchLabel}
         </a>

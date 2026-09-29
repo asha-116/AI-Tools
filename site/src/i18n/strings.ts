@@ -37,6 +37,11 @@ const en = {
   disclaimer:
     'Our calculators are for estimation only — verify with a professional. Nothing on this site is legal, tax or financial advice.',
   footerNote: 'Made in India for Indian real-estate agents.',
+  toolDisclaimer: 'For estimation only — verify with a professional.',
+  toolsTitle: 'Free tools you can use today',
+  emiCardTitle: 'EMI calculator',
+  emiCardSummary: 'Monthly instalment, total interest and total payment for any loan.',
+  openTool: 'Open',
 };
 
 export type Strings = typeof en;
@@ -75,6 +80,11 @@ const hi: Strings = {
   disclaimer:
     'हमारे कैलकुलेटर केवल अनुमान के लिए हैं — किसी विशेषज्ञ से पुष्टि करें। इस साइट पर कुछ भी कानूनी, कर या वित्तीय सलाह नहीं है।',
   footerNote: 'भारत में, भारतीय रियल-एस्टेट एजेंटों के लिए बनाया गया।',
+  toolDisclaimer: 'केवल अनुमान के लिए — किसी विशेषज्ञ से पुष्टि करें।',
+  toolsTitle: 'मुफ़्त टूल जो आज ही इस्तेमाल करें',
+  emiCardTitle: 'EMI कैलकुलेटर',
+  emiCardSummary: 'किसी भी लोन की मासिक किस्त, कुल ब्याज और कुल भुगतान।',
+  openTool: 'खोलें',
 };
 
 export const strings = { en, hi } as const;

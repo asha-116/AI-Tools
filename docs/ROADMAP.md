@@ -28,13 +28,14 @@ Phases and acceptance criteria. Tick items as they land; each phase ends with a 
 
 ## Phase 2 — Free calculators
 
-- [ ] EMI calculator
+- [x] EMI calculator — `tools-core/src/emi.ts`, `/tools/emi/` + `/hi/tools/emi/`, 12 published known answers
 - [ ] Stamp duty + registration by state (data in `data/stamp-duty/`, ≥ 5 states to start)
 - [ ] Commission split calculator
 - [ ] Each: bilingual, mobile-first, shareable result link (inputs in URL hash), formula +
       assumptions + disclaimer shown
 - [ ] `tools-core` coverage ≥ 95%; ≥ 10 known-answer cases per tool, each with a source
 - [ ] Lighthouse CI (mobile) ≥ 90 on every tool page; accessibility checks
+      (manual run 2026-09-29: EMI EN/HI and home = 100/100/100/100; CI job still to add)
 - [ ] **Done when:** Lighthouse ≥ 90 mobile for all tools and QA + Verifier pass
 
 ## Phase 3 — Paid products, payment, delivery

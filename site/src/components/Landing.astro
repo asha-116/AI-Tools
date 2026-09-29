@@ -28,6 +28,18 @@ const clientStrings = {
   <a class="button" href="#waitlist">{t.heroCta}</a>
 </section>
 
+<section aria-labelledby="tools-title">
+  <h2 id="tools-title">{t.toolsTitle}</h2>
+  <ul class="ideas">
+    <li class="idea">
+      <p class="kind kind-free">{t.kindFree}</p>
+      <h3>{t.emiCardTitle}</h3>
+      <p>{t.emiCardSummary}</p>
+      <a class="button" href={lang === 'en' ? '/tools/emi/' : '/hi/tools/emi/'}>{t.openTool}</a>
+    </li>
+  </ul>
+</section>
+
 <section aria-labelledby="ideas-title">
   <h2 id="ideas-title">{t.ideasTitle}</h2>
   <ul class="ideas">

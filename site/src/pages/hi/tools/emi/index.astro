@@ -1,0 +1,11 @@
+---
+import Base from '../../../../layouts/Base.astro';
+import EmiCalculator from '../../../../tools/emi/EmiCalculator.astro';
+import { emiStrings } from '../../../../tools/emi/strings';
+
+const t = emiStrings.hi;
+---
+
+<Base lang="hi" title={t.metaTitle} description={t.metaDescription} path="/tools/emi/">
+  <EmiCalculator lang="hi" />
+</Base>
