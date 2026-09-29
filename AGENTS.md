@@ -68,11 +68,12 @@ npm run check:structure   # repo layout + PROCEDURE.md sections + data files
 
 See the tree in `README.md` and the diagrams in `docs/ARCHITECTURE.md`.
 
-| You want to…                         | Go to                                  |
-| ------------------------------------ | -------------------------------------- |
-| add/change a formula                 | `tools-core/src` + `tools-core/test`   |
-| add a calculator page                | `site/src/tools/<slug>/`               |
-| change a rate                        | `data/<dataset>/`                      |
-| change how an agent behaves          | `agents/<name>/PROCEDURE.md` first     |
-| change a policy (refund, pricing, …) | `company/policies/` — owner approval   |
-| see what's happening                 | `docs/PROGRESS.md`, `company/reports/` |
+| You want to…                         | Go to                                        |
+| ------------------------------------ | -------------------------------------------- |
+| add/change a formula                 | `tools-core/src` + `tools-core/test`         |
+| add a calculator page                | `site/src/tools/<slug>/`                     |
+| change a rate                        | `data/<dataset>/`                            |
+| change landing-page ideas / strings  | `data/waitlist-ideas.json`, `site/src/i18n/` |
+| change how an agent behaves          | `agents/<name>/PROCEDURE.md` first           |
+| change a policy (refund, pricing, …) | `company/policies/` — owner approval         |
+| see what's happening                 | `docs/PROGRESS.md`, `company/reports/`       |

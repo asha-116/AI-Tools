@@ -97,11 +97,59 @@ Names match `.env.example`. **Never** paste a value into an Issue, PR, commit or
 
 Generate random keys with `openssl rand -base64 48`.
 
-## 5. Deploy (Phase 1+)
+## 5. Deploy the site and waitlist (Phase 1)
 
-Deploys run from `.github/workflows/deploy.yml` on every push to `main` once
-`CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` exist. First deploy creates the Pages
-project; the site is then live at `https://<project>.pages.dev`. Details added in Phase 1.
+`.github/workflows/deploy.yml` runs on every push to `main` (and manually via _Run workflow_).
+Each job skips itself with a notice until its settings exist, so nothing fails before setup.
+
+### 5.1 One-time Cloudflare setup (owner, ~15 min)
+
+1. Cloudflare dashboard → _My Profile → API Tokens → Create Token → Custom token_ with:
+   **Account · Cloudflare Pages · Edit**, **Account · Workers Scripts · Edit**,
+   **Account · D1 · Edit**. Limit it to your account. Copy the token.
+2. Note your **Account ID** (Workers & Pages overview, right sidebar).
+3. Create the database: _Storage & Databases → D1 → Create_ named `toolshop-waitlist`.
+   Copy its **Database ID** (not a secret).
+4. Optional: _Analytics & Logs → Web Analytics → Add a site_ (free, cookieless). Copy the token.
+
+### 5.2 GitHub settings (Settings → Secrets and variables → Actions)
+
+| Kind     | Name                      | Value                                                                                                       |
+| -------- | ------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| Secret   | `CLOUDFLARE_API_TOKEN`    | token from 5.1.1                                                                                            |
+| Secret   | `CLOUDFLARE_ACCOUNT_ID`   | from 5.1.2                                                                                                  |
+| Secret   | `WAITLIST_IP_HASH_SECRET` | output of `openssl rand -base64 48`                                                                         |
+| Variable | `WAITLIST_D1_ID`          | Database ID from 5.1.3                                                                                      |
+| Variable | `PAGES_PROJECT`           | optional, default `toolshop` → site at `https://toolshop.pages.dev`                                         |
+| Variable | `SITE_URL`                | `https://<PAGES_PROJECT>.pages.dev` (or your domain)                                                        |
+| Variable | `SITE_ORIGINS`            | origins allowed to post to the waitlist, comma-separated, e.g. `https://toolshop.pages.dev`                 |
+| Variable | `WAITLIST_URL`            | `https://toolshop-waitlist.<your-subdomain>.workers.dev/api/waitlist` (shown after the first Worker deploy) |
+| Variable | `SUPPORT_EMAIL`           | address shown in the privacy note                                                                           |
+| Variable | `CF_BEACON_TOKEN`         | optional, from 5.1.4                                                                                        |
+
+### 5.3 First deploy
+
+1. Actions → **Deploy** → _Run workflow_. The Worker job prints its `*.workers.dev` URL.
+2. Put that URL (+ `/api/waitlist`) into `WAITLIST_URL`, then run **Deploy** again so the site
+   is rebuilt with the form switched on (without it the page shows "waitlist opens soon").
+3. Open the site, sign up with your own email, and check it arrived:
+   Cloudflare dashboard → D1 → `toolshop-waitlist` → _Console_:
+   `SELECT idea, lang, COUNT(*) FROM signups GROUP BY idea, lang;`
+
+**Privacy:** the `signups` table holds email addresses. Never export it into git, Issues or any
+LLM prompt. Delete a person on request with
+`DELETE FROM signups WHERE email = 'their@email';`.
+
+### 5.4 Local development
+
+```bash
+npm run dev -w @toolshop/site                       # site at http://localhost:4321
+cd workers/waitlist
+printf 'IP_HASH_SECRET=local-dev-secret\n' > .dev.vars  # git-ignored
+npx wrangler@4.143.0 d1 migrations apply toolshop-waitlist --local
+npx wrangler@4.143.0 dev --port 8787
+# then run the site with PUBLIC_WAITLIST_URL=http://localhost:8787/api/waitlist
+```
 
 ## 6. Razorpay (Phase 3)
 

@@ -28,13 +28,13 @@ Statuses: **Accepted**, **Proposed** (engineer's recommendation, not yet exercis
 - **Decision:** Astro static output; calculators as small vanilla-TS islands importing `tools-core`.
 - **Alternatives:** plain Vite + vanilla TS (no content collections/i18n routing), Next.js
   (heavier, server features we don't want), Eleventy (weaker TS story).
-- **Status:** Proposed — exercised in Phase 1.
+- **Status:** Accepted (2026-09-29, Phase 1). Astro 7, static output, `i18n` routing (`/` EN, `/hi/` HI).
 
 ### ADR-004 — Deploy to Cloudflare Pages from GitHub Actions (direct upload)
 
 - **Decision:** `deploy.yml` builds and runs `wrangler pages deploy` on push to `main`; skipped when secrets are missing.
 - **Alternatives:** Cloudflare's Git integration (builds outside our CI, counts against 500 builds/month, less control).
-- **Status:** Proposed — Phase 1.
+- **Status:** Accepted (2026-09-29, Phase 1). Wrangler pinned to 4.143.0 via `npx`, not a repo dependency, to keep `npm ci` fast.
 
 ### ADR-005 — Secret scanning with the gitleaks container
 
@@ -82,7 +82,8 @@ Statuses: **Accepted**, **Proposed** (engineer's recommendation, not yet exercis
 
 - **Decision:** Cloudflare Worker + D1 (free: 100k row writes/day) with honeypot + per-IP rate limit.
 - **Alternatives:** KV (1,000 writes/day free — enough, but no querying), Google Forms (third-party PII, off-brand).
-- **Status:** Proposed — Phase 1.
+- **Status:** Accepted (2026-09-29, Phase 1). Duplicates (same email + idea) are ignored; the client IP is
+  never stored — only an HMAC of IP + hour, deleted daily by a cron trigger.
 
 ### ADR-012 — Schema validation with zod
 
@@ -116,3 +117,28 @@ Statuses: **Accepted**, **Proposed** (engineer's recommendation, not yet exercis
   `issues` write — but, per ADR-009, cannot bypass protection on `main`.
 - **Alternatives:** a fine-grained PAT (tied to the owner's personal account, long-lived).
 - **Status:** Proposed — Phase 4.
+
+### ADR-016 — Waitlist as a third Worker (`workers/waitlist/`)
+
+- **Context:** the brief lists only `payment-webhook` and `download` Workers, but Phase 1 needs
+  somewhere to record sign-ups.
+- **Decision:** a separate `toolshop-waitlist` Worker on `*.workers.dev`, called cross-origin from
+  the site with a CORS allow-list (`SITE_ORIGINS`). Handler logic is pure and unit-tested; SQL is
+  tested against real SQLite (`node:sqlite`) using the same migration file D1 runs.
+- **Alternatives:** Cloudflare Pages Functions (same origin, but server code would live under
+  `site/`, against AGENTS.md rule 5); a third-party form service (customer PII leaves our control).
+- **Status:** Accepted (2026-09-29).
+
+### ADR-017 — Strict CSP, no inline scripts
+
+- **Decision:** `site/public/_headers` sets a CSP allowing scripts only from `'self'` and
+  Cloudflare Web Analytics; Astro is configured never to inline scripts
+  (`vite.build.assetsInlineLimit: 0`). Styles allow `'unsafe-inline'` (Astro scoped styles).
+- **Status:** Accepted (2026-09-29).
+
+### ADR-018 — Landing-page candidate ideas
+
+- **Decision:** the three ideas shown are stamp duty & registration calculator (free), lead &
+  site-visit tracker (paid template) and commission ledger & split calculator (paid template),
+  stored in `data/waitlist-ideas.json`. No prices are shown until the owner approves them.
+- **Status:** Accepted as a draft; owner may change the ideas or wording before launch.
