@@ -23,8 +23,8 @@ Phases and acceptance criteria. Tick items as they land; each phase ends with a 
 - [x] Waitlist Worker (+ D1) with validation, rate-limit, honeypot; no PII in logs
 - [x] Privacy note on the form — **draft**, consent wording needs owner approval (DPDP Act)
 - [x] Cloudflare Web Analytics (cookieless) — wired, switched on by the `CF_BEACON_TOKEN` variable
-- [ ] **Done when:** page is live on `*.pages.dev` and sign-ups are recorded
-      (needs the owner's Cloudflare setup, `docs/SETUP.md` §5)
+- [x] **Done when:** page is live and sign-ups are recorded — ✅ 2026-09-29, live at
+      https://tools.changelense.in, first sign-up confirmed in D1
 
 ## Phase 2 — Free calculators
 
@@ -34,7 +34,8 @@ Phases and acceptance criteria. Tick items as they land; each phase ends with a 
 - [ ] Each: bilingual, mobile-first, shareable result link (inputs in URL hash), formula +
       assumptions + disclaimer shown
 - [ ] `tools-core` coverage ≥ 95%; ≥ 10 known-answer cases per tool, each with a source
-- [ ] Lighthouse CI (mobile) ≥ 90 on every tool page; accessibility checks
+- [x] Lighthouse CI (mobile) ≥ 90 on every tool page; accessibility checks — `lighthouse` job in CI,
+      pages listed in `lighthouserc.json`
       (manual run 2026-09-29: EMI + commission EN/HI and home = 100/100/100/100; CI job still to add)
 - [ ] **Done when:** Lighthouse ≥ 90 mobile for all tools and QA + Verifier pass
 

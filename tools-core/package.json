@@ -2,7 +2,7 @@
   "name": "@toolshop/tools-core",
   "version": "0.0.0",
   "private": true,
-  "description": "Pure TypeScript formula functions for ToolShop calculators. No UI, no I/O.",
+  "description": "Pure TypeScript formula functions for ChangeLens calculators. No UI, no I/O.",
   "license": "UNLICENSED",
   "type": "module",
   "exports": {

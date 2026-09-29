@@ -2,7 +2,7 @@
   "name": "toolshop",
   "version": "0.0.0",
   "private": true,
-  "description": "ToolShop \u2014 AI-agent-run digital tools business for Indian real-estate agents.",
+  "description": "ChangeLens \u2014 AI-agent-run digital tools business for Indian real-estate agents.",
   "license": "UNLICENSED",
   "type": "module",
   "engines": {

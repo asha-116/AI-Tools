@@ -142,3 +142,34 @@ Statuses: **Accepted**, **Proposed** (engineer's recommendation, not yet exercis
   site-visit tracker (paid template) and commission ledger & split calculator (paid template),
   stored in `data/waitlist-ideas.json`. No prices are shown until the owner approves them.
 - **Status:** Accepted as a draft; owner may change the ideas or wording before launch.
+
+### ADR-019 — Brand name: ChangeLens
+
+- **Decision (owner, 2026-09-29):** the public brand is **ChangeLens** (replaces the placeholder
+  “ToolShop”). Only user-facing text changed (`site/src/config.ts`, README, docs, favicon).
+- Internal identifiers stay as they are to avoid breaking deploys: npm package names
+  (`toolshop`, `@toolshop/*`), Pages project `toolshop`, Worker `toolshop-waitlist`,
+  D1 database `toolshop-waitlist`.
+- Note: the domain is spelled `changelense.in` (with an “e”); the brand is “ChangeLens”.
+- **Status:** Accepted.
+
+### ADR-020 — Public address: `tools.changelense.in`
+
+- **Context:** `toolshop.pages.dev` was already taken by an unrelated (gambling) site;
+  Cloudflare assigned `toolshop-elu.pages.dev`. The owner already has `changelense.in` on
+  Cloudflare, served by the existing `changelense` Worker.
+- **Decision:** serve the tools site at `tools.changelense.in` (Pages custom domain), leaving
+  `changelense.in` untouched for now.
+- **Status:** Accepted (live 2026-09-29).
+
+### ADR-021 — Keep the tools site separate from the Change Lens product
+
+- **Context:** the owner's existing product Change Lens (document / PDF / image comparison
+  SaaS with accounts, Dodo Payments, Workers AI, D1 `changelense-saas`, R2 `changelense-memory`)
+  runs as the `changelense` Worker on `changelense.in`. Merging it into this repo was considered
+  (v1.1 and v3.4.2 source reviewed on 2026-09-29).
+- **Decision (owner, 2026-09-29):** do **not** merge. This repo is only the tools site at
+  `tools.changelense.in`. The `changelense` Worker, its D1 database and R2 bucket are out of
+  scope — agents must never deploy to them or change their DNS records.
+- **Alternatives:** one repo with two apps; full rewrite into Astro. Both rejected for now.
+- **Status:** Accepted.

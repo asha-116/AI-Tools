@@ -8,7 +8,7 @@ import {
 } from '../src/handler.js';
 import type { Signup, WaitlistStore } from '../src/store.js';
 
-const ORIGIN = 'https://toolshop.pages.dev';
+const ORIGIN = 'https://tools.changelense.in';
 
 function memoryStore(): WaitlistStore & { signups: Signup[]; counts: Map<string, number> } {
   const signups: Signup[] = [];

@@ -59,3 +59,28 @@ jobs:
         with:
           args: --offline --no-progress --include-fragments './**/*.md'
           fail: true
+
+  lighthouse:
+    name: Lighthouse (mobile, every page ≥ 90)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npm run build:site
+      # Uses the Chrome preinstalled on the runner. Pages and thresholds: lighthouserc.json.
+      # 3 runs per page, judged on the median run, so one slow moment on a shared runner
+      # cannot fail the check while a real regression still does.
+      - run: npx --yes @lhci/cli@0.15.1 autorun
+      - name: Upload Lighthouse reports
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lighthouse-reports
+          path: .lighthouseci
+          include-hidden-files: true
+          retention-days: 7

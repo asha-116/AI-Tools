@@ -3,7 +3,7 @@ import { defineConfig } from 'astro/config';
 
 // SITE_URL is set by deploy.yml from the repo variable of the same name.
 export default defineConfig({
-  site: process.env.SITE_URL || 'https://toolshop.pages.dev',
+  site: process.env.SITE_URL || 'http://localhost:4321',
   output: 'static',
   trailingSlash: 'always',
   build: {

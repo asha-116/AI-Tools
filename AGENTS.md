@@ -36,6 +36,9 @@ new "Questions for owner". Record non-trivial choices in `docs/DECISIONS.md`.
 8. **No spam, no scraping against terms.** Respect robots.txt and site terms. No cold bulk
    email or WhatsApp. Growth is inbound only.
 9. **No tax, legal or investment advice** in any output. Point to a CA / lawyer.
+10. **Stay in scope.** This repo is the tools site at `tools.changelense.in` only. Never deploy
+    to, or change DNS for, `changelense.in` or the `changelense` Worker (a separate product —
+    ADR-021).
 
 ## 3. How to work
 

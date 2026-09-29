@@ -12,7 +12,7 @@ export const IDEA_IDS: ReadonlySet<string> = new Set(ideasFile.ideas.map((i) => 
 
 export interface HandlerConfig {
   store: WaitlistStore;
-  /** Comma-separated list of origins allowed to call the API, e.g. https://toolshop.pages.dev */
+  /** Comma-separated list of origins allowed to call the API, e.g. https://tools.changelense.in */
   allowedOrigins: string;
   /** Secret used to HMAC client IPs for rate limiting. */
   ipHashSecret: string;
