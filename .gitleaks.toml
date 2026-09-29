@@ -1,0 +1,7 @@
+# Extends gitleaks' default rules. Add allowlist entries only with a comment explaining why.
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Placeholder-only files"
+paths = ['''\.env\.example$''']

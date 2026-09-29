@@ -1,0 +1,22 @@
+name: Owner decision
+description: Something only the owner can decide (money, legal, public claims, irreversible).
+labels: ['needs-owner']
+body:
+  - type: textarea
+    id: question
+    attributes:
+      label: Decision needed
+    validations:
+      required: true
+  - type: textarea
+    id: options
+    attributes:
+      label: Options and recommendation
+      description: Each option with cost, risk and what happens next. Put the recommendation first.
+    validations:
+      required: true
+  - type: input
+    id: deadline
+    attributes:
+      label: Needed by
+      description: Date, and what is blocked until then.
