@@ -1,0 +1,244 @@
+---
+import { strings, type Lang } from '../../i18n/strings';
+import { ALL_STATES } from './data';
+import { sdStrings } from './strings';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = sdStrings[lang];
+const common = strings[lang];
+const published = ALL_STATES.filter((s) => s.status === 'verified');
+// JSON for the browser script; "<" escaped so the data can never close the tag.
+const dataJson = JSON.stringify(ALL_STATES).replace(/</g, '\\u003c');
+const clientStrings = {
+  resultRule: t.resultRule,
+  lastVerified: t.lastVerified,
+  share: t.share,
+  shareCopied: t.shareCopied,
+  stampDuty: t.resultStampDuty,
+  registration: t.resultRegistration,
+  draftSuffix: t.draftSuffix,
+  lang,
+};
+---
+
+<article class="tool">
+  <p class="crumb"><a href={lang === 'en' ? '/' : '/hi/'}>← {t.backHome}</a></p>
+  <h1>{t.h1}</h1>
+  <p class="lead">{t.lead}</p>
+
+  <p id="sd-draft-banner" class="banner" role="alert" hidden>{t.draftBanner}</p>
+  <p id="sd-coming-soon" class="card" hidden={published.length > 0}>{t.comingSoon}</p>
+
+  <div id="sd-app" hidden={published.length === 0}>
+    <form id="sd-form" class="card" data-strings={JSON.stringify(clientStrings)} novalidate>
+      <div class="field">
+        <label for="sd-state">{t.stateLabel}</label>
+        <select id="sd-state" name="state">
+          {
+            published.map((s) => (
+              <option value={s.state_code}>
+                {lang === 'hi' && s.state_name_hi ? s.state_name_hi : s.state}
+              </option>
+            ))
+          }
+        </select>
+      </div>
+      <div class="field" id="sd-area-field">
+        <label for="sd-area">{t.areaLabel}</label>
+        <select id="sd-area" name="area"></select>
+      </div>
+      <fieldset>
+        <legend>{t.buyerLegend}</legend>
+        <label class="choice"
+          ><input type="radio" name="buyer" value="male" checked /> {t.buyerMale}</label
+        >
+        <label class="choice"
+          ><input type="radio" name="buyer" value="female" /> {t.buyerFemale}</label
+        >
+        <label class="choice"><input type="radio" name="buyer" value="joint" /> {t.buyerJoint}</label>
+      </fieldset>
+      <div class="field">
+        <label for="sd-value">{t.valueLabel}</label>
+        <input
+          id="sd-value"
+          name="value"
+          inputmode="numeric"
+          autocomplete="off"
+          value="5000000"
+          aria-describedby="sd-value-hint"
+        />
+        <p id="sd-value-hint" class="hint">{t.valueHint}</p>
+        <p class="error" data-error="value" hidden>{t.errorValue}</p>
+      </div>
+    </form>
+
+    <section class="card results" aria-live="polite">
+      <dl id="sd-lines"></dl>
+      <p class="total"><span>{t.resultTotal}</span><strong data-out="total">—</strong></p>
+      <p class="hint" data-out="rule"></p>
+      <p class="hint" data-out="verified"></p>
+      <button type="button" class="button" id="sd-share">{t.share}</button>
+    </section>
+
+    <section class="card">
+      <h2>{t.sourcesTitle}</h2>
+      <ul id="sd-sources"></ul>
+      <p class="hint">
+        <span>{t.officialSource}: </span><a id="sd-official" href="#" rel="noopener"></a>
+      </p>
+      <div id="sd-conflicts" hidden>
+        <h2>{t.conflictsTitle}</h2>
+        <ul></ul>
+      </div>
+    </section>
+  </div>
+
+  <section class="card">
+    <h2>{t.formulaTitle}</h2>
+    <ul>{t.formula.map((f) => <li>{f}</li>)}</ul>
+    <h2>{t.assumptionsTitle}</h2>
+    <ul>{t.assumptions.map((a) => <li>{a}</li>)}</ul>
+    <p class="disclaimer"><strong>{common.toolDisclaimer}</strong></p>
+  </section>
+</article>
+
+<script type="application/json" id="sd-data" is:inline set:html={dataJson} />
+
+<script>
+  import { initStampDuty } from './client';
+  initStampDuty(document, window);
+</script>
+
+<style>
+  .tool {
+    max-width: 40rem;
+  }
+  .crumb {
+    margin: 16px 0 0;
+  }
+  h1 {
+    font-size: clamp(1.75rem, 6vw, 2.25rem);
+    line-height: 1.2;
+    margin: 8px 0;
+  }
+  h2 {
+    font-size: 1.1875rem;
+    margin: 16px 0 8px;
+  }
+  .card h2:first-child {
+    margin-top: 0;
+  }
+  .lead,
+  .hint {
+    color: var(--muted);
+  }
+  .hint {
+    margin: 0;
+    font-size: 0.9375rem;
+  }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+    margin: 16px 0;
+  }
+  .banner {
+    background: var(--error);
+    color: var(--bg);
+    font-weight: 700;
+    padding: 12px 16px;
+    border-radius: var(--radius);
+  }
+  .field {
+    display: grid;
+    gap: 4px;
+    margin-bottom: 12px;
+  }
+  fieldset {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 12px 12px;
+    margin: 0 0 12px;
+  }
+  .choice {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    min-height: 40px;
+  }
+  .choice input {
+    width: 20px;
+    height: 20px;
+  }
+  input:not([type='radio']),
+  select {
+    min-height: 48px;
+    padding: 10px 12px;
+    font: inherit;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--bg);
+    color: var(--fg);
+    width: 100%;
+  }
+  input[aria-invalid='true'] {
+    border-color: var(--error);
+    border-width: 2px;
+  }
+  .error {
+    color: var(--error);
+    margin: 0;
+    font-size: 0.9375rem;
+  }
+  dl {
+    display: grid;
+    gap: 8px;
+    margin: 0 0 12px;
+  }
+  dl :global(div) {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    border-top: 1px solid var(--border);
+    padding-top: 8px;
+  }
+  dl :global(dd) {
+    margin: 0;
+    font-weight: 600;
+    text-align: right;
+  }
+  .total {
+    display: flex;
+    flex-direction: column;
+    margin: 0 0 8px;
+  }
+  .total strong {
+    font-size: clamp(2rem, 9vw, 2.75rem);
+    line-height: 1.1;
+    color: var(--brand);
+  }
+  .button {
+    min-height: 48px;
+    padding: 12px 20px;
+    margin-top: 8px;
+    border: 2px solid var(--brand);
+    border-radius: var(--radius);
+    background: transparent;
+    color: var(--brand);
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  #sd-sources :global(a),
+  #sd-official {
+    overflow-wrap: anywhere;
+  }
+  .disclaimer {
+    margin-bottom: 0;
+  }
+</style>
