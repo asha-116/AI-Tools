@@ -7,3 +7,13 @@ export {
   type CommissionParty,
   type CommissionResult,
 } from './commission.js';
+export {
+  computeStampDuty,
+  STAMP_DUTY_LIMITS,
+  type BuyerGender,
+  type RateRule,
+  type StampDutyInput,
+  type StampDutyResult,
+  type StateRates,
+  type Surcharge,
+} from './stampDuty.js';
