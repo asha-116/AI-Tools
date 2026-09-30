@@ -29,7 +29,8 @@ Phases and acceptance criteria. Tick items as they land; each phase ends with a 
 ## Phase 2 — Free calculators
 
 - [x] EMI calculator — `tools-core/src/emi.ts`, `/tools/emi/` + `/hi/tools/emi/`, 12 published known answers
-- [ ] Stamp duty + registration by state (data in `data/stamp-duty/`, ≥ 5 states to start)
+- [~] Stamp duty + registration by state — engine, page and **draft** data for MH, KA, DL, TN, UP done;
+  **not live until the owner verifies each state** against its official site (ADR-022)
 - [x] Commission split calculator — `tools-core/src/commission.ts`, `/tools/commission/` + `/hi/tools/commission/`, 10 published known answers
 - [ ] Each: bilingual, mobile-first, shareable result link (inputs in URL hash), formula +
       assumptions + disclaimer shown

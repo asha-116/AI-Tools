@@ -39,3 +39,15 @@ anything irreversible. Everything you need arrives as a GitHub notification.
 - **Wrong calculator result live:** revert the PR on `main` (GitHub "Revert" button), then
   open a `type:bug` Issue.
 - **Agents misbehaving:** disable the workflow (Actions → workflow → "Disable workflow").
+
+## Verifying a state's stamp duty rates (≈ 15 min per state, when you have time)
+
+1. Open the draft on your phone: `https://tools.changelense.in/tools/stamp-duty/#drafts`
+   and pick the state. The red banner means it is not published yet.
+2. Open the **official site** shown under _Sources_ and check every rate: each area, man /
+   woman / joint, value slabs, surcharges, registration % and cap.
+3. Check each item under _Open questions in the sources_.
+4. Tell the engineer (or edit `data/stamp-duty/<STATE>.json` yourself): the correct numbers,
+   the official page/notification you used, and your name. The engineer sets
+   `status: "verified"`, clears `conflicts`, and opens a PR; merging it publishes that state.
+5. Re-verify every state at least every 6 months (the Orchestrator will remind you).

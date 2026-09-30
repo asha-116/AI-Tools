@@ -173,3 +173,17 @@ Statuses: **Accepted**, **Proposed** (engineer's recommendation, not yet exercis
   scope — agents must never deploy to them or change their DNS records.
 - **Alternatives:** one repo with two apps; full rewrite into Astro. Both rejected for now.
 - **Status:** Accepted.
+
+### ADR-022 — Stamp duty rates: draft until verified by a human
+
+- **Context:** stamp duty rules differ by state, area, buyer and value, change often, and
+  published secondary sources disagree (e.g. Tamil Nadu registration 2% vs 4%, Karnataka 1% vs
+  2%). Official state portals could not be opened from the build environment.
+- **Decision:** each `data/stamp-duty/<STATE>.json` has `status: draft | verified`, an
+  `official_source`, and a `conflicts` list. The live page shows **only verified states**; while
+  none are verified it shows “coming soon” and is `noindex`. Adding `#drafts` to the URL shows
+  drafts under a red NOT-VERIFIED banner for owner review. CI refuses `verified` while
+  `conflicts` remain or `verified_by` does not name a person.
+- **Alternatives:** publish with a disclaimer only (rejected: wrong tax numbers harm agents'
+  credibility); hard-code rates (forbidden by AGENTS.md rule 6).
+- **Status:** Accepted.

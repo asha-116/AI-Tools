@@ -4,7 +4,7 @@ Living status log. Update at the end of every session (see `AGENTS.md` §1).
 
 ## Current phase
 
-**Phase 2 — Free calculators.** Phase 1 is done: the site is live at
+**Phase 2 — Free calculators.** EMI and commission live; stamp duty built, waiting for rate verification. Phase 1 is done: the site is live at
 **https://tools.changelense.in** and the waitlist records sign-ups (first one confirmed
 2026-09-29). Brand is now **ChangeLens** (ADR-019). Phase 1 is merged; going live
 still needs the owner's Cloudflare setup (`docs/SETUP.md` §5).
@@ -13,7 +13,19 @@ still needs the owner's Cloudflare setup (`docs/SETUP.md` §5).
 
 - 2026-09-29 — **Phase 0** merged (asha-116/AI-Tools#1): repo layout, rules, docs, CI,
   templates, labels, agent procedures, policy drafts, stamp-duty schema.
-- 2026-09-29 — **Go-live + rebrand** (this PR, together with Lighthouse CI):
+- 2026-09-29 — **Phase 2, part 4: stamp duty calculator** (this PR):
+  - `tools-core/src/stampDuty.ts`: data-driven rules (area, buyer, value slabs, surcharges on
+    value or on duty, registration % with cap/min/fixed fee); tests first with hand-checked
+    fixture cases.
+  - Draft data for MH, KA, DL, TN, UP from web-search summaries, each with `official_source`
+    and the conflicts found between sources. **Not verified** — official portals were blocked
+    from the build environment (ADR-022).
+  - `/tools/stamp-duty/` (EN + HI): live site shows “coming soon” (noindex) until a state is
+    verified; `#drafts` shows drafts under a red banner for owner review.
+  - Lighthouse CI covers the page (SEO excluded while noindex). 182 tests.
+  - Known gap: rule descriptions and surcharge names come from the data files in English;
+    add Hindi fields before publishing.
+- 2026-09-29 — **Go-live + rebrand** merged (asha-116/AI-Tools#8, together with Lighthouse CI):
   - Owner deployed via `docs/SETUP.md` §5; custom domain `tools.changelense.in` active;
     sign-up round trip verified in D1.
   - Brand renamed to ChangeLens (user-facing only; internal ids unchanged — ADR-019).
@@ -62,14 +74,15 @@ still needs the owner's Cloudflare setup (`docs/SETUP.md` §5).
 
 ## In progress
 
-- Review of the PR with Lighthouse CI + go-live/rebrand docs.
+- Stamp duty calculator PR review; owner verification of state rates (RUNBOOK).
 
 ## Exact next step
 
-1. Owner: share https://tools.changelense.in with a few agents and answer question 9
-   (stamp-duty states).
-2. Engineer: next Phase 2 PR — **stamp duty** (needs `data/stamp-duty/<STATE>.json` with official sources — question 9;
-   defaults to MH, KA, DL, TN, UP if unanswered, every rate marked for owner verification).
+1. Owner: verify stamp duty rates for at least one state (`docs/RUNBOOK.md`), starting with
+   the state where most of your agents work; share https://tools.changelense.in with agents.
+2. Engineer: add Hindi fields for rule descriptions/surcharge names in the stamp-duty data;
+   publish each state as the owner verifies it (remove noindex + add SEO back to Lighthouse
+   when the first state goes live); then start **Phase 3** (paid templates + payments).
 
 ## Blockers
 
