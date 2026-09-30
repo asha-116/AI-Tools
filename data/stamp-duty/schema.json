@@ -2,13 +2,19 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "toolshop/data/stamp-duty/state.schema.json",
   "title": "Stamp duty and registration charges for one Indian state/UT",
-  "description": "One file per state: data/stamp-duty/<state_code>.json (e.g. MH.json). Rates are data, never hard-coded in logic. Every rate must trace to an official source.",
+  "description": "One file per state: data/stamp-duty/<state_code>.json (e.g. MH.json). Rates are data, never hard-coded in logic. Every rate must trace to an official source. Rules are evaluated in order; the first whose conditions all match is used.",
   "type": "object",
-  "required": ["state", "state_code", "sources", "last_verified", "verified_by", "rates"],
+  "required": ["state", "state_code", "status", "sources", "last_verified", "verified_by", "rates"],
   "additionalProperties": false,
   "properties": {
-    "state": { "type": "string", "description": "Official English name, e.g. Maharashtra" },
-    "state_name_hi": { "type": "string", "description": "Hindi name, e.g. महाराष्ट्र" },
+    "state": {
+      "type": "string",
+      "description": "Official English name, e.g. Maharashtra"
+    },
+    "state_name_hi": {
+      "type": "string",
+      "description": "Hindi name, e.g. महाराष्ट्र"
+    },
     "state_code": {
       "type": "string",
       "pattern": "^[A-Z]{2}$",
@@ -22,18 +28,31 @@
         "required": ["url", "title", "accessed"],
         "additionalProperties": false,
         "properties": {
-          "url": { "type": "string", "pattern": "^https://" },
-          "title": { "type": "string" },
-          "accessed": { "type": "string", "format": "date" }
+          "url": {
+            "type": "string",
+            "pattern": "^https://"
+          },
+          "title": {
+            "type": "string"
+          },
+          "accessed": {
+            "type": "string",
+            "format": "date"
+          }
         }
       }
     },
-    "last_verified": { "type": "string", "format": "date" },
+    "last_verified": {
+      "type": "string",
+      "format": "date"
+    },
     "verified_by": {
       "type": "string",
       "description": "Who checked the numbers against the source: 'owner', or an agent name plus the verifier model family"
     },
-    "notes": { "type": "string" },
+    "notes": {
+      "type": "string"
+    },
     "rates": {
       "type": "array",
       "minItems": 1,
@@ -43,8 +62,12 @@
         "required": ["id", "description", "stamp_duty_percent", "registration"],
         "additionalProperties": false,
         "properties": {
-          "id": { "type": "string" },
-          "description": { "type": "string" },
+          "id": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
           "conditions": {
             "type": "object",
             "additionalProperties": false,
@@ -53,22 +76,50 @@
                 "type": "string",
                 "description": "e.g. 'urban', 'rural', or a named municipal area"
               },
-              "buyer_gender": { "enum": ["male", "female", "joint", "any"] },
-              "property_type": { "enum": ["residential", "commercial", "land", "any"] },
-              "min_value_inr": { "type": "number", "minimum": 0 },
-              "max_value_inr": { "type": "number", "minimum": 0 }
+              "buyer_gender": {
+                "enum": ["male", "female", "joint", "any"]
+              },
+              "property_type": {
+                "enum": ["residential", "commercial", "land", "any"]
+              },
+              "min_value_inr": {
+                "type": "number",
+                "minimum": 0,
+                "description": "Rule applies when value > this (exclusive)."
+              },
+              "max_value_inr": {
+                "type": "number",
+                "minimum": 0,
+                "description": "Rule applies when value <= this (inclusive)."
+              }
             }
           },
-          "stamp_duty_percent": { "type": "number", "minimum": 0, "maximum": 100 },
+          "stamp_duty_percent": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 100
+          },
           "surcharges_percent": {
             "type": "array",
             "items": {
               "type": "object",
               "required": ["name", "percent"],
               "properties": {
-                "name": { "type": "string", "description": "e.g. metro cess, local body tax" },
-                "percent": { "type": "number", "minimum": 0, "maximum": 100 }
-              }
+                "name": {
+                  "type": "string",
+                  "description": "e.g. metro cess, local body tax"
+                },
+                "percent": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 100
+                },
+                "base": {
+                  "enum": ["value", "stamp_duty"],
+                  "description": "What the percent applies to. Default: value."
+                }
+              },
+              "additionalProperties": false
             }
           },
           "registration": {
@@ -76,10 +127,62 @@
             "required": ["percent"],
             "additionalProperties": false,
             "properties": {
-              "percent": { "type": "number", "minimum": 0, "maximum": 100 },
-              "cap_inr": { "type": ["number", "null"], "minimum": 0 },
-              "min_inr": { "type": ["number", "null"], "minimum": 0 }
+              "percent": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 100
+              },
+              "cap_inr": {
+                "type": ["number", "null"],
+                "minimum": 0
+              },
+              "min_inr": {
+                "type": ["number", "null"],
+                "minimum": 0
+              },
+              "fixed_fee_inr": {
+                "type": "number",
+                "minimum": 0,
+                "description": "Flat fee added on top, e.g. pasting/scanning fee."
+              }
             }
+          }
+        }
+      }
+    },
+    "status": {
+      "enum": ["draft", "verified"],
+      "description": "Only 'verified' states are shown on the live site. 'verified' means a human checked every rate against official_source."
+    },
+    "official_source": {
+      "type": "string",
+      "pattern": "^https://",
+      "description": "The government page/notification to verify the rates against."
+    },
+    "conflicts": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Where published sources disagree; must be resolved before status can become 'verified'."
+    },
+    "areas": {
+      "type": "array",
+      "description": "Areas the buyer picks from; rules refer to these ids in conditions.area.",
+      "items": {
+        "type": "object",
+        "required": ["id", "label_en", "label_hi"],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]+$"
+          },
+          "label_en": {
+            "type": "string"
+          },
+          "label_hi": {
+            "type": "string"
           }
         }
       }

@@ -1,0 +1,38 @@
+{
+  "state": "Tamil Nadu",
+  "state_name_hi": "तमिलनाडु",
+  "state_code": "TN",
+  "status": "draft",
+  "official_source": "https://tnreginet.gov.in/",
+  "sources": [
+    {
+      "url": "https://cleartax.in/s/stamp-duty-and-registration-charges-in-tamil-nadu",
+      "title": "ClearTax — Tamil Nadu 2026",
+      "accessed": "2026-09-29"
+    },
+    {
+      "url": "https://homefirstindia.com/blog/article/stamp-duty-registration-charges-tamil-nadu/",
+      "title": "HomeFirst — Tamil Nadu 2026",
+      "accessed": "2026-09-29"
+    },
+    {
+      "url": "https://www.bankbazaar.com/home-loan/stamp-duty-and-property-registration-charges-chennai.html",
+      "title": "BankBazaar — Chennai 2026",
+      "accessed": "2026-09-29"
+    }
+  ],
+  "last_verified": "2026-09-29",
+  "verified_by": "NOT VERIFIED — compiled from web search summaries on 2026-09-29; official site could not be opened from the build environment",
+  "notes": "Charged on the higher of market value and guideline value. Same rate for all buyers.",
+  "conflicts": ["Registration fee: 2% in the most recent source vs 4% in several others."],
+  "rates": [
+    {
+      "id": "all",
+      "description": "All buyers",
+      "stamp_duty_percent": 7,
+      "registration": {
+        "percent": 2
+      }
+    }
+  ]
+}

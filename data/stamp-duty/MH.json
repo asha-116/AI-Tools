@@ -1,0 +1,230 @@
+{
+  "state": "Maharashtra",
+  "state_name_hi": "महाराष्ट्र",
+  "state_code": "MH",
+  "status": "draft",
+  "official_source": "https://igrmaharashtra.gov.in/",
+  "sources": [
+    {
+      "url": "https://cleartax.in/s/stamp-duty-and-registration-charges-in-maharashtra",
+      "title": "ClearTax — Maharashtra 2026",
+      "accessed": "2026-09-29"
+    },
+    {
+      "url": "https://homefirstindia.com/blog/article/stamp-duty-registration-charges-maharashtra",
+      "title": "HomeFirst — Maharashtra 2026",
+      "accessed": "2026-09-29"
+    },
+    {
+      "url": "https://1acre.in/stamp-duty-calculator/maharashtra",
+      "title": "1acre.in — Maharashtra calculator",
+      "accessed": "2026-09-29"
+    }
+  ],
+  "last_verified": "2026-09-29",
+  "verified_by": "NOT VERIFIED — compiled from web search summaries on 2026-09-29; official site could not be opened from the build environment",
+  "notes": "Stamp duty is charged on the higher of agreement value and ready reckoner value. Women's 1% concession applies to residential property bought in a woman's sole name.",
+  "conflicts": [
+    "Some sources give 6% for all municipal corporations, others 7% for Pune/Thane/Nagpur (5% + 1% metro cess + 1% LBT).",
+    "Municipal council 4% and gram panchayat 3% come from a single calculator site; confirm on IGR Maharashtra.",
+    "Confirm whether the women's concession also applies to joint (woman + man) purchases."
+  ],
+  "areas": [
+    {
+      "id": "mumbai",
+      "label_en": "Mumbai (BMC limits)",
+      "label_hi": "मुंबई (BMC सीमा)"
+    },
+    {
+      "id": "pune-thane-nagpur",
+      "label_en": "Pune, Thane or Nagpur municipal corporation",
+      "label_hi": "पुणे, ठाणे या नागपुर नगर निगम"
+    },
+    {
+      "id": "other-corporation",
+      "label_en": "Other municipal corporation",
+      "label_hi": "अन्य नगर निगम"
+    },
+    {
+      "id": "municipal-council",
+      "label_en": "Municipal council / cantonment",
+      "label_hi": "नगर परिषद / छावनी"
+    },
+    {
+      "id": "gram-panchayat",
+      "label_en": "Gram panchayat (rural)",
+      "label_hi": "ग्राम पंचायत (ग्रामीण)"
+    }
+  ],
+  "rates": [
+    {
+      "id": "mumbai-female",
+      "description": "Mumbai (BMC limits), woman buyer (1% concession on stamp duty)",
+      "conditions": {
+        "area": "mumbai",
+        "buyer_gender": "female"
+      },
+      "stamp_duty_percent": 4,
+      "surcharges_percent": [
+        {
+          "name": "Metro cess",
+          "percent": 1
+        }
+      ],
+      "registration": {
+        "percent": 1,
+        "cap_inr": 30000
+      }
+    },
+    {
+      "id": "mumbai",
+      "description": "Mumbai (BMC limits), male or joint buyer",
+      "conditions": {
+        "area": "mumbai"
+      },
+      "stamp_duty_percent": 5,
+      "surcharges_percent": [
+        {
+          "name": "Metro cess",
+          "percent": 1
+        }
+      ],
+      "registration": {
+        "percent": 1,
+        "cap_inr": 30000
+      }
+    },
+    {
+      "id": "pune-thane-nagpur-female",
+      "description": "Pune, Thane or Nagpur municipal corporation, woman buyer (1% concession on stamp duty)",
+      "conditions": {
+        "area": "pune-thane-nagpur",
+        "buyer_gender": "female"
+      },
+      "stamp_duty_percent": 4,
+      "surcharges_percent": [
+        {
+          "name": "Metro cess",
+          "percent": 1
+        },
+        {
+          "name": "Local body tax",
+          "percent": 1
+        }
+      ],
+      "registration": {
+        "percent": 1,
+        "cap_inr": 30000
+      }
+    },
+    {
+      "id": "pune-thane-nagpur",
+      "description": "Pune, Thane or Nagpur municipal corporation, male or joint buyer",
+      "conditions": {
+        "area": "pune-thane-nagpur"
+      },
+      "stamp_duty_percent": 5,
+      "surcharges_percent": [
+        {
+          "name": "Metro cess",
+          "percent": 1
+        },
+        {
+          "name": "Local body tax",
+          "percent": 1
+        }
+      ],
+      "registration": {
+        "percent": 1,
+        "cap_inr": 30000
+      }
+    },
+    {
+      "id": "other-corporation-female",
+      "description": "Other municipal corporation, woman buyer (1% concession on stamp duty)",
+      "conditions": {
+        "area": "other-corporation",
+        "buyer_gender": "female"
+      },
+      "stamp_duty_percent": 4,
+      "surcharges_percent": [
+        {
+          "name": "Local body tax",
+          "percent": 1
+        }
+      ],
+      "registration": {
+        "percent": 1,
+        "cap_inr": 30000
+      }
+    },
+    {
+      "id": "other-corporation",
+      "description": "Other municipal corporation, male or joint buyer",
+      "conditions": {
+        "area": "other-corporation"
+      },
+      "stamp_duty_percent": 5,
+      "surcharges_percent": [
+        {
+          "name": "Local body tax",
+          "percent": 1
+        }
+      ],
+      "registration": {
+        "percent": 1,
+        "cap_inr": 30000
+      }
+    },
+    {
+      "id": "municipal-council-female",
+      "description": "Municipal council / cantonment, woman buyer (1% concession on stamp duty)",
+      "conditions": {
+        "area": "municipal-council",
+        "buyer_gender": "female"
+      },
+      "stamp_duty_percent": 3,
+      "registration": {
+        "percent": 1,
+        "cap_inr": 30000
+      }
+    },
+    {
+      "id": "municipal-council",
+      "description": "Municipal council / cantonment, male or joint buyer",
+      "conditions": {
+        "area": "municipal-council"
+      },
+      "stamp_duty_percent": 4,
+      "registration": {
+        "percent": 1,
+        "cap_inr": 30000
+      }
+    },
+    {
+      "id": "gram-panchayat-female",
+      "description": "Gram panchayat (rural), woman buyer (1% concession on stamp duty)",
+      "conditions": {
+        "area": "gram-panchayat",
+        "buyer_gender": "female"
+      },
+      "stamp_duty_percent": 2,
+      "registration": {
+        "percent": 1,
+        "cap_inr": 30000
+      }
+    },
+    {
+      "id": "gram-panchayat",
+      "description": "Gram panchayat (rural), male or joint buyer",
+      "conditions": {
+        "area": "gram-panchayat"
+      },
+      "stamp_duty_percent": 3,
+      "registration": {
+        "percent": 1,
+        "cap_inr": 30000
+      }
+    }
+  ]
+}
