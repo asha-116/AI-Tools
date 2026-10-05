@@ -37,6 +37,21 @@ export function evaluate(states: StateRates[], form: SdFormState): SdView {
   return { ok: true, result, data };
 }
 
+/**
+ * Rule description and surcharge names in the page language. Hindi falls back to English
+ * per item when the data file has no (or a blank) Hindi text.
+ */
+export function localizeResult(
+  r: StampDutyResult,
+  lang: 'en' | 'hi',
+): { rule: string; surcharges: { name: string; amount: number }[] } {
+  const pick = (en: string, hi: string | undefined) => (lang === 'hi' && hi?.trim() ? hi : en);
+  return {
+    rule: pick(r.ruleDescription, r.ruleDescriptionHi),
+    surcharges: r.surcharges.map((x) => ({ name: pick(x.name, x.nameHi), amount: x.amount })),
+  };
+}
+
 const BUYERS: readonly BuyerGender[] = ['male', 'female', 'joint'];
 const CODE = /^[A-Z]{2}$/;
 const AREA = /^[a-z0-9-]{1,40}$/;

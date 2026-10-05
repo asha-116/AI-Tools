@@ -24,9 +24,12 @@ const fixture: StateRates = {
     {
       id: 'city-female',
       description: 'City, woman buyer',
+      description_hi: 'शहर, महिला खरीदार',
       conditions: { area: 'city', buyer_gender: 'female' },
       stamp_duty_percent: 5,
-      surcharges_percent: [{ name: 'Metro cess', percent: 1, base: 'value' }],
+      surcharges_percent: [
+        { name: 'Metro cess', name_hi: 'मेट्रो सेस', percent: 1, base: 'value' },
+      ],
       registration: { percent: 1, cap_inr: 30000 },
     },
     {
@@ -89,6 +92,15 @@ describe('computeStampDuty — hand-checked cases', () => {
   it('itemises surcharges with their names', () => {
     const r = computeStampDuty(fixture, { value: 1000000, area: 'city', buyer: 'male' });
     expect(r.surcharges).toEqual([{ name: 'Metro cess', amount: 10000 }]);
+  });
+
+  it('passes Hindi rule and surcharge text through only when the data has it', () => {
+    const hi = computeStampDuty(fixture, { value: 1000000, area: 'city', buyer: 'female' });
+    expect(hi.ruleDescriptionHi).toBe('शहर, महिला खरीदार');
+    expect(hi.surcharges).toEqual([{ name: 'Metro cess', nameHi: 'मेट्रो सेस', amount: 10000 }]);
+    const en = computeStampDuty(fixture, { value: 1000000, area: 'city', buyer: 'male' });
+    expect('ruleDescriptionHi' in en).toBe(false);
+    expect('nameHi' in at(en.surcharges, 0)).toBe(false);
   });
 
   it('total = stamp duty + surcharges + registration', () => {
