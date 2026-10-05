@@ -9,7 +9,7 @@ identity or legal authority — agents cannot do them. Tick them as you go.
 - [ ] Create a Cloudflare account (free plan)
 - [ ] Create a Razorpay account; complete **KYC**; add the **bank account** for settlements
 - [ ] Generate API keys and store them as GitHub Actions / Cloudflare secrets (§4)
-- [ ] Set up payments and downloads in Razorpay **test mode** and do one test purchase (§6)
+- [ ] Later (deferred 2026-10-05): set up payments in Razorpay **test mode** and do one test purchase (§6)
 - [ ] Decide repo visibility / branch protection (ADR-009) and apply §3
 - [ ] Approve legal pages, prices, brand name, and every social post
 - [ ] Decide business registration and **GST** obligations with a Chartered Accountant
@@ -172,6 +172,9 @@ How a sale works (ADR-023): the buyer pays on a **Razorpay Payment Page** → Ra
 **/get-download/** on our site, enters the payment ID from their Razorpay receipt email and
 their email → the page shows download links (valid 72 hours, renewable on the same page) served
 by the **download Worker** (`workers/download`) from the R2 bucket.
+
+> **Deferred (owner, 2026-10-05):** do this section once business details and prices are
+> decided. Until then the Workers stay off and the site shows templates as "coming soon".
 
 Nothing is buyable on the live site until you approve prices and switch products in
 `products/catalog.json` from `draft` to `live` (PR labelled `approved-by-owner`).

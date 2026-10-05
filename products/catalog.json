@@ -1,6 +1,6 @@
 {
   "$schema": "./catalog.schema.json",
-  "note": "DRAFT prices from company/policies/pricing-rules.md — not approved by the owner. Only products with status \"live\" can be bought on the real site; \"draft\" products are delivered only when the Worker runs with ALLOW_DRAFT_PRODUCTS=true (Razorpay test mode).",
+  "note": "PLACEHOLDER prices, not decided and never shown on the site (owner, 2026-10-05: show templates as upcoming; prices later). Only products with status \"live\" can be bought on the real site; \"draft\" products are delivered only when the Worker runs with ALLOW_DRAFT_PRODUCTS=true (Razorpay test mode).",
   "products": [
     {
       "id": "lead-tracker",

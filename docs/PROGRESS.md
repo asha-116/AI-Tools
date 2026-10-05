@@ -5,8 +5,9 @@ Living status log. Update at the end of every session (see `AGENTS.md` §1).
 ## Current phase
 
 **Phase 3 — Paid products, payment, delivery** (started 2026-10-05). Payment + delivery backbone
-built and tested locally; waiting for the owner's Razorpay test-mode setup and the Phase 3
-decisions below. Phase 2: EMI and commission live; stamp duty live as "coming soon" until the
+built and tested locally. **Owner, 2026-10-05:** payment provider stays **Razorpay**; payment
+setup, business details and prices come later; the site shows paid templates as **coming soon**
+with no price. Phase 2: EMI and commission live; stamp duty live as "coming soon" until the
 owner verifies a state. Phase 1 is done: the site is live at
 **https://tools.changelense.in** and the waitlist records sign-ups (first one confirmed
 2026-09-29). Brand is now **ChangeLens** (ADR-019). Phase 1 is merged; going live
@@ -22,8 +23,9 @@ still needs the owner's Cloudflare setup (`docs/SETUP.md` §5).
   - `workers/download` (`toolshop-download`): verifies the link (403 tampered, 410 expired),
     checks the file belongs to the product, streams it from private R2 `toolshop-products`.
   - `workers/lib`: WebCrypto HMAC (checked against RFC 4231 and node:crypto), tokens, catalog.
-  - `products/catalog.json`: lead tracker ₹199, commission ledger ₹299, bundle ₹399 — **draft
-    prices**, only sellable in test mode (`ALLOW_DRAFT_PRODUCTS=true`).
+  - `products/catalog.json`: lead tracker, commission ledger, bundle with **placeholder prices**
+    (not shown anywhere; only sellable in test mode, `ALLOW_DRAFT_PRODUCTS=true`).
+  - Landing page: paid ideas now say "Template · coming soon" instead of "small one-time price".
   - `/get-download/` + `/hi/get-download/` (noindex): claim form; links only accepted from the
     download Worker's origin. Shows "not open yet" until `CLAIM_URL` is set.
   - `deploy.yml`: payments and download jobs, skipped until configured (`docs/SETUP.md` §6).
@@ -95,19 +97,20 @@ still needs the owner's Cloudflare setup (`docs/SETUP.md` §5).
 
 ## In progress
 
-- Phase 3 part 1 PR review; owner Razorpay test-mode setup (`docs/SETUP.md` §6).
+- Phase 3 part 1 PR review. Razorpay test-mode setup (`docs/SETUP.md` §6) is **deferred by the
+  owner** until business details and prices are ready.
 - Owner verification of stamp duty rates (RUNBOOK).
 
 ## Exact next step
 
-1. Owner: merge Phase 3 part 1, then follow `docs/SETUP.md` §6 in Razorpay **test mode** and do
-   one test purchase (§6.5). Confirm the Worker log showed `payment_recorded`.
-2. Owner: answer the Phase 3 questions (16–19 below, plus 6, 7, 11).
-3. Engineer: Phase 3 part 2 — the two templates (`products/<id>/spec.json`, known-answer test
-   data, EN + HI how-to guide) and a product page per template with the Buy button (needs
-   prices approved). Then part 3 — `legal/` drafts (terms, privacy, refund, contact) labelled
-   `needs-owner`.
-4. Engineer (Phase 2 leftovers): Hindi fields for stamp-duty rule descriptions and surcharge
+1. Owner: merge Phase 3 part 1 (it sells nothing; the new Workers stay off until set up).
+2. Engineer: Phase 3 part 2 — build the two templates (`products/<id>/spec.json`, known-answer
+   test data, EN + HI how-to guide) and a "coming soon" page per template with no price and a
+   "notify me" link to the waitlist.
+3. Engineer: Phase 3 part 3 — `legal/` drafts (terms, privacy, refund, contact) with
+   placeholders for the business details, labelled `needs-owner`.
+4. Later (owner): business details, prices, then `docs/SETUP.md` §6 in Razorpay test mode.
+5. Engineer (Phase 2 leftovers): Hindi fields for stamp-duty rule descriptions and surcharge
    names; publish each state as the owner verifies it.
 
 ## Blockers
@@ -127,8 +130,7 @@ still needs the owner's Cloudflare setup (`docs/SETUP.md` §5).
 5. **Licence:** keep proprietary "All rights reserved"?
 6. **Delivery email (ADR-010):** free transactional email tier (needs a domain) or download
    link on the post-payment page only?
-7. **Prices:** starting price points for the first two templates (suggest ₹199 and ₹299, bundle ₹399)?
-   The landing page currently says only "small one-time price".
+7. ~~Prices~~ → see 18 (deferred).
 8. **Refund threshold:** max refund the Support agent may approve alone (suggest ₹0 until
    Phase 5 is proven, then ≤ ₹299)?
 9. **States for stamp duty v1:** suggest Maharashtra, Karnataka, Delhi, Tamil Nadu, Uttar Pradesh.
@@ -144,12 +146,11 @@ still needs the owner's Cloudflare setup (`docs/SETUP.md` §5).
     confirm; every figure is also recomputed independently, so the maths is not at risk.
 15. **TDS on commission** (new): should the commission calculator show TDS? Published sources
     disagree on the current section 194H rate, so it is left out until a CA confirms it.
-16. **Payment provider** (new): Razorpay Payment Pages as built (recommended), or Dodo Payments
-    as used by Change Lens? Razorpay suits Indian UPI buyers; switching later means a new webhook
-    parser only.
+16. ~~Payment provider~~ → **answered 2026-10-05:** Razorpay. Setup deferred until business
+    details are ready.
 17. **First templates** (new): lead tracker and commission ledger as Google Sheets (delivered
     as .xlsx that opens in Google Sheets / Excel)? Any columns your agents always need?
-18. **Prices** (new, replaces 7): approve ₹199 / ₹299 / bundle ₹399 or give others. They stay
-    `draft` in `products/catalog.json` until you approve them in a PR.
+18. **Prices** (replaces 7): **deferred by owner 2026-10-05** — site shows "coming soon", no price.
+    Catalog prices are placeholders until you approve real ones in a PR.
 19. **Legal pages** (new): the name (person or business) and contact address to show on terms,
     privacy and refund pages. Razorpay also requires these pages before live mode.

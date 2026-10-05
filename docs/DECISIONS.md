@@ -218,4 +218,5 @@ NOTHING`), so duplicates and both events for one payment are harmless. It stores
   the download Worker needs no database and its secret surface stays tiny); KV for idempotency
   (D1 already used, 1k KV writes/day limit).
 - **Status:** Accepted for test mode; the payload format must be confirmed by the owner's test
-  purchase (`docs/SETUP.md` §6.5) before going live.
+  purchase (`docs/SETUP.md` §6.5) before going live. Owner, 2026-10-05: provider stays
+  Razorpay; setup and prices deferred, site shows templates as "coming soon".
