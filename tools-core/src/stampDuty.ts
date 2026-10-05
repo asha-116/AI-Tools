@@ -13,6 +13,8 @@ export type BuyerGender = 'male' | 'female' | 'joint';
 
 export interface Surcharge {
   name: string;
+  /** Hindi name for the /hi/ page; the site falls back to `name` when missing. */
+  name_hi?: string;
   percent: number;
   /** 'value' (default): % of the property value. 'stamp_duty': % of the stamp duty. */
   base?: 'value' | 'stamp_duty';
@@ -21,6 +23,8 @@ export interface Surcharge {
 export interface RateRule {
   id: string;
   description: string;
+  /** Hindi description for the /hi/ page; the site falls back to `description` when missing. */
+  description_hi?: string;
   conditions?: {
     area?: string;
     buyer_gender?: BuyerGender | 'any';
@@ -64,8 +68,10 @@ export interface StampDutyInput {
 export interface StampDutyResult {
   ruleId: string;
   ruleDescription: string;
+  /** Hindi rule description, when the data file has one. */
+  ruleDescriptionHi?: string;
   stampDuty: number;
-  surcharges: { name: string; amount: number }[];
+  surcharges: { name: string; nameHi?: string; amount: number }[];
   surchargesTotal: number;
   registration: number;
   total: number;
@@ -91,6 +97,7 @@ export function computeStampDuty(data: StateRates, input: StampDutyInput): Stamp
   const stampDuty = (value * rule.stamp_duty_percent) / 100;
   const surcharges = (rule.surcharges_percent ?? []).map((s) => ({
     name: s.name,
+    ...(s.name_hi !== undefined && { nameHi: s.name_hi }),
     amount: ((s.base === 'stamp_duty' ? stampDuty : value) * s.percent) / 100,
   }));
   const surchargesTotal = surcharges.reduce((sum, s) => sum + s.amount, 0);
@@ -104,6 +111,7 @@ export function computeStampDuty(data: StateRates, input: StampDutyInput): Stamp
   return {
     ruleId: rule.id,
     ruleDescription: rule.description,
+    ...(rule.description_hi !== undefined && { ruleDescriptionHi: rule.description_hi }),
     stampDuty,
     surcharges,
     surchargesTotal,

@@ -68,6 +68,10 @@
           "description": {
             "type": "string"
           },
+          "description_hi": {
+            "type": "string",
+            "description": "Hindi version of description, shown on the /hi/ page. Falls back to description when missing."
+          },
           "conditions": {
             "type": "object",
             "additionalProperties": false,
@@ -108,6 +112,10 @@
                 "name": {
                   "type": "string",
                   "description": "e.g. metro cess, local body tax"
+                },
+                "name_hi": {
+                  "type": "string",
+                  "description": "Hindi name, e.g. मेट्रो सेस. Falls back to name when missing."
                 },
                 "percent": {
                   "type": "number",

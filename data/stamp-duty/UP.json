@@ -32,6 +32,7 @@
     {
       "id": "female",
       "description": "Woman buyer",
+      "description_hi": "महिला खरीदार",
       "conditions": {
         "buyer_gender": "female"
       },
@@ -43,6 +44,7 @@
     {
       "id": "joint",
       "description": "Joint (man + woman)",
+      "description_hi": "संयुक्त (पुरुष + महिला)",
       "conditions": {
         "buyer_gender": "joint"
       },
@@ -54,6 +56,7 @@
     {
       "id": "male",
       "description": "Man buyer",
+      "description_hi": "पुरुष खरीदार",
       "conditions": {
         "buyer_gender": "male"
       },

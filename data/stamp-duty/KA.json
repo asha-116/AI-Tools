@@ -45,6 +45,7 @@
     {
       "id": "bengaluru-upto-20l",
       "description": "Bengaluru (BBMP / GBA limits), value up to ₹20 lakh",
+      "description_hi": "बेंगलुरु (BBMP / GBA सीमा), कीमत ₹20 लाख तक",
       "conditions": {
         "area": "bengaluru",
         "max_value_inr": 2000000
@@ -53,6 +54,7 @@
       "surcharges_percent": [
         {
           "name": "Cess (10% of stamp duty)",
+          "name_hi": "सेस (स्टांप ड्यूटी का 10%)",
           "percent": 10,
           "base": "stamp_duty"
         }
@@ -64,6 +66,7 @@
     {
       "id": "bengaluru-20l-45l",
       "description": "Bengaluru (BBMP / GBA limits), ₹20–45 lakh",
+      "description_hi": "बेंगलुरु (BBMP / GBA सीमा), ₹20–45 लाख",
       "conditions": {
         "area": "bengaluru",
         "min_value_inr": 2000000,
@@ -73,6 +76,7 @@
       "surcharges_percent": [
         {
           "name": "Cess (10% of stamp duty)",
+          "name_hi": "सेस (स्टांप ड्यूटी का 10%)",
           "percent": 10,
           "base": "stamp_duty"
         }
@@ -84,6 +88,7 @@
     {
       "id": "bengaluru-above-45l",
       "description": "Bengaluru (BBMP / GBA limits), above ₹45 lakh",
+      "description_hi": "बेंगलुरु (BBMP / GBA सीमा), ₹45 लाख से अधिक",
       "conditions": {
         "area": "bengaluru",
         "min_value_inr": 4500000
@@ -92,6 +97,7 @@
       "surcharges_percent": [
         {
           "name": "Cess (10% of stamp duty)",
+          "name_hi": "सेस (स्टांप ड्यूटी का 10%)",
           "percent": 10,
           "base": "stamp_duty"
         }
@@ -103,6 +109,7 @@
     {
       "id": "other-upto-20l",
       "description": "Rest of Karnataka, value up to ₹20 lakh",
+      "description_hi": "बाकी कर्नाटक, कीमत ₹20 लाख तक",
       "conditions": {
         "area": "other",
         "max_value_inr": 2000000
@@ -115,6 +122,7 @@
     {
       "id": "other-20l-45l",
       "description": "Rest of Karnataka, ₹20–45 lakh",
+      "description_hi": "बाकी कर्नाटक, ₹20–45 लाख",
       "conditions": {
         "area": "other",
         "min_value_inr": 2000000,
@@ -128,6 +136,7 @@
     {
       "id": "other-above-45l",
       "description": "Rest of Karnataka, above ₹45 lakh",
+      "description_hi": "बाकी कर्नाटक, ₹45 लाख से अधिक",
       "conditions": {
         "area": "other",
         "min_value_inr": 4500000
