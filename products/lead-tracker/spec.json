@@ -7,7 +7,10 @@
   "sheets": [
     {
       "id": "leads",
-      "title": { "en": "Leads", "hi": "लीड" },
+      "title": {
+        "en": "Leads",
+        "hi": "लीड"
+      },
       "purpose": {
         "en": "One row per enquiry. Fill the white columns; the grey ones fill themselves.",
         "hi": "हर पूछताछ की एक पंक्ति। सफ़ेद कॉलम भरें; ग्रे कॉलम अपने-आप भरते हैं।"
@@ -20,21 +23,60 @@
           "type": "date",
           "required": true
         },
-        { "id": "name", "en": "Name", "hi": "नाम", "type": "text", "required": true },
-        { "id": "phone", "en": "Phone", "hi": "फ़ोन", "type": "text" },
+        {
+          "id": "name",
+          "en": "Name",
+          "hi": "नाम",
+          "type": "text",
+          "required": true
+        },
+        {
+          "id": "phone",
+          "en": "Phone",
+          "hi": "फ़ोन",
+          "type": "text"
+        },
         {
           "id": "source",
           "en": "Source",
           "hi": "स्रोत",
           "type": "list",
           "options": [
-            { "id": "walk-in", "en": "Walk-in", "hi": "सीधे आए" },
-            { "id": "call", "en": "Phone call", "hi": "फ़ोन कॉल" },
-            { "id": "whatsapp", "en": "WhatsApp", "hi": "WhatsApp" },
-            { "id": "portal", "en": "Property portal", "hi": "प्रॉपर्टी पोर्टल" },
-            { "id": "referral", "en": "Referral", "hi": "रेफ़रल" },
-            { "id": "social", "en": "Social media", "hi": "सोशल मीडिया" },
-            { "id": "other", "en": "Other", "hi": "अन्य" }
+            {
+              "id": "walk-in",
+              "en": "Walk-in",
+              "hi": "सीधे आए"
+            },
+            {
+              "id": "call",
+              "en": "Phone call",
+              "hi": "फ़ोन कॉल"
+            },
+            {
+              "id": "whatsapp",
+              "en": "WhatsApp",
+              "hi": "WhatsApp"
+            },
+            {
+              "id": "portal",
+              "en": "Property portal",
+              "hi": "प्रॉपर्टी पोर्टल"
+            },
+            {
+              "id": "referral",
+              "en": "Referral",
+              "hi": "रेफ़रल"
+            },
+            {
+              "id": "social",
+              "en": "Social media",
+              "hi": "सोशल मीडिया"
+            },
+            {
+              "id": "other",
+              "en": "Other",
+              "hi": "अन्य"
+            }
           ]
         },
         {
@@ -43,10 +85,26 @@
           "hi": "ज़रूरत",
           "type": "list",
           "options": [
-            { "id": "buy", "en": "Buy", "hi": "खरीदना" },
-            { "id": "rent", "en": "Rent", "hi": "किराये पर लेना" },
-            { "id": "sell", "en": "Sell", "hi": "बेचना" },
-            { "id": "let", "en": "Let out", "hi": "किराये पर देना" }
+            {
+              "id": "buy",
+              "en": "Buy",
+              "hi": "खरीदना"
+            },
+            {
+              "id": "rent",
+              "en": "Rent",
+              "hi": "किराये पर लेना"
+            },
+            {
+              "id": "sell",
+              "en": "Sell",
+              "hi": "बेचना"
+            },
+            {
+              "id": "let",
+              "en": "Let out",
+              "hi": "किराये पर देना"
+            }
           ]
         },
         {
@@ -55,16 +113,51 @@
           "hi": "प्रॉपर्टी का प्रकार",
           "type": "list",
           "options": [
-            { "id": "flat", "en": "Flat", "hi": "फ़्लैट" },
-            { "id": "house", "en": "House / villa", "hi": "मकान / विला" },
-            { "id": "plot", "en": "Plot", "hi": "प्लॉट" },
-            { "id": "commercial", "en": "Shop / office", "hi": "दुकान / ऑफ़िस" },
-            { "id": "other", "en": "Other", "hi": "अन्य" }
+            {
+              "id": "flat",
+              "en": "Flat",
+              "hi": "फ़्लैट"
+            },
+            {
+              "id": "house",
+              "en": "House / villa",
+              "hi": "मकान / विला"
+            },
+            {
+              "id": "plot",
+              "en": "Plot",
+              "hi": "प्लॉट"
+            },
+            {
+              "id": "commercial",
+              "en": "Shop / office",
+              "hi": "दुकान / ऑफ़िस"
+            },
+            {
+              "id": "other",
+              "en": "Other",
+              "hi": "अन्य"
+            }
           ]
         },
-        { "id": "location", "en": "Location", "hi": "लोकेशन", "type": "text" },
-        { "id": "budget_min", "en": "Budget from (₹)", "hi": "बजट से (₹)", "type": "inr" },
-        { "id": "budget_max", "en": "Budget up to (₹)", "hi": "बजट तक (₹)", "type": "inr" },
+        {
+          "id": "location",
+          "en": "Location",
+          "hi": "लोकेशन",
+          "type": "text"
+        },
+        {
+          "id": "budget_min",
+          "en": "Budget from (₹)",
+          "hi": "बजट से (₹)",
+          "type": "inr"
+        },
+        {
+          "id": "budget_max",
+          "en": "Budget up to (₹)",
+          "hi": "बजट तक (₹)",
+          "type": "inr"
+        },
         {
           "id": "status",
           "en": "Status",
@@ -72,68 +165,167 @@
           "type": "list",
           "required": true,
           "options": [
-            { "id": "new", "en": "New", "hi": "नई" },
-            { "id": "contacted", "en": "Contacted", "hi": "संपर्क हुआ" },
-            { "id": "visit-planned", "en": "Site visit planned", "hi": "साइट विज़िट तय" },
-            { "id": "visit-done", "en": "Site visit done", "hi": "साइट विज़िट हुई" },
-            { "id": "negotiating", "en": "Negotiating", "hi": "बातचीत जारी" },
-            { "id": "won", "en": "Deal done", "hi": "डील पक्की" },
-            { "id": "lost", "en": "Lost", "hi": "हाथ से गई" }
+            {
+              "id": "new",
+              "en": "New",
+              "hi": "नई"
+            },
+            {
+              "id": "contacted",
+              "en": "Contacted",
+              "hi": "संपर्क हुआ"
+            },
+            {
+              "id": "visit-planned",
+              "en": "Site visit planned",
+              "hi": "साइट विज़िट तय"
+            },
+            {
+              "id": "visit-done",
+              "en": "Site visit done",
+              "hi": "साइट विज़िट हुई"
+            },
+            {
+              "id": "negotiating",
+              "en": "Negotiating",
+              "hi": "बातचीत जारी"
+            },
+            {
+              "id": "won",
+              "en": "Deal done",
+              "hi": "डील पक्की"
+            },
+            {
+              "id": "lost",
+              "en": "Lost",
+              "hi": "हाथ से गई"
+            }
           ]
         },
-        { "id": "last_contact", "en": "Last contacted", "hi": "आख़िरी संपर्क", "type": "date" },
-        { "id": "next_follow_up", "en": "Next follow-up", "hi": "अगला फ़ॉलो-अप", "type": "date" },
+        {
+          "id": "last_contact",
+          "en": "Last contacted",
+          "hi": "आख़िरी संपर्क",
+          "type": "date"
+        },
+        {
+          "id": "next_follow_up",
+          "en": "Next follow-up",
+          "hi": "अगला फ़ॉलो-अप",
+          "type": "date"
+        },
         {
           "id": "follow_up",
           "en": "Follow-up",
           "hi": "फ़ॉलो-अप",
           "type": "derived",
           "derived_by": "followUpBucket",
-          "formula": "=IF(OR(K2=\"Deal done\",K2=\"Lost\"),\"\",IF(M2=\"\",\"No date\",IF(M2<TODAY(),\"Overdue\",IF(M2=TODAY(),\"Today\",\"Upcoming\"))))",
+          "formula": "=IF(OR(J2=\"Deal done\",J2=\"Lost\"),\"\",IF(L2=\"\",\"No date\",IF(L2<TODAY(),\"Overdue\",IF(L2=TODAY(),\"Today\",\"Upcoming\"))))",
           "values": [
-            { "id": "closed", "en": "", "hi": "" },
-            { "id": "no-date", "en": "No date", "hi": "तारीख नहीं" },
-            { "id": "overdue", "en": "Overdue", "hi": "देर हो गई" },
-            { "id": "today", "en": "Today", "hi": "आज" },
-            { "id": "upcoming", "en": "Upcoming", "hi": "आगे" }
+            {
+              "id": "closed",
+              "en": "",
+              "hi": ""
+            },
+            {
+              "id": "no-date",
+              "en": "No date",
+              "hi": "तारीख नहीं"
+            },
+            {
+              "id": "overdue",
+              "en": "Overdue",
+              "hi": "देर हो गई"
+            },
+            {
+              "id": "today",
+              "en": "Today",
+              "hi": "आज"
+            },
+            {
+              "id": "upcoming",
+              "en": "Upcoming",
+              "hi": "आगे"
+            }
           ]
         },
-        { "id": "notes", "en": "Notes", "hi": "नोट्स", "type": "text" }
+        {
+          "id": "notes",
+          "en": "Notes",
+          "hi": "नोट्स",
+          "type": "text"
+        }
       ]
     },
     {
       "id": "today",
-      "title": { "en": "Call today", "hi": "आज कॉल करें" },
+      "title": {
+        "en": "Call today",
+        "hi": "आज कॉल करें"
+      },
       "purpose": {
         "en": "Everyone who is overdue or due today, oldest first. Nothing to fill in.",
         "hi": "जिनका फ़ॉलो-अप आज है या छूट गया है, सबसे पुराने पहले। कुछ भरना नहीं है।"
       },
-      "formula": "=SORT(FILTER({Leads!B2:B,Leads!C2:C,Leads!K2:K,Leads!M2:M,Leads!O2:O},(Leads!N2:N=\"Overdue\")+(Leads!N2:N=\"Today\")),4,TRUE)",
+      "formula": "=IFERROR(SORT(FILTER({Leads!B2:B,Leads!C2:C,Leads!J2:J,Leads!L2:L,Leads!N2:N},(Leads!M2:M=\"Overdue\")+(Leads!M2:M=\"Today\")),4,TRUE),\"\")",
       "derived_by": "callList"
     },
     {
       "id": "visits",
-      "title": { "en": "Site visits", "hi": "साइट विज़िट" },
+      "title": {
+        "en": "Site visits",
+        "hi": "साइट विज़िट"
+      },
       "columns": [
-        { "id": "date", "en": "Date", "hi": "तारीख", "type": "date", "required": true },
-        { "id": "lead", "en": "Lead name", "hi": "लीड का नाम", "type": "text", "required": true },
-        { "id": "property", "en": "Property shown", "hi": "दिखाई गई प्रॉपर्टी", "type": "text" },
-        { "id": "feedback", "en": "Feedback", "hi": "प्रतिक्रिया", "type": "text" },
-        { "id": "next_step", "en": "Next step", "hi": "अगला कदम", "type": "text" }
+        {
+          "id": "date",
+          "en": "Date",
+          "hi": "तारीख",
+          "type": "date",
+          "required": true
+        },
+        {
+          "id": "lead",
+          "en": "Lead name",
+          "hi": "लीड का नाम",
+          "type": "text",
+          "required": true
+        },
+        {
+          "id": "property",
+          "en": "Property shown",
+          "hi": "दिखाई गई प्रॉपर्टी",
+          "type": "text"
+        },
+        {
+          "id": "feedback",
+          "en": "Feedback",
+          "hi": "प्रतिक्रिया",
+          "type": "text"
+        },
+        {
+          "id": "next_step",
+          "en": "Next step",
+          "hi": "अगला कदम",
+          "type": "text"
+        }
       ]
     },
     {
       "id": "summary",
-      "title": { "en": "Summary", "hi": "सारांश" },
+      "title": {
+        "en": "Summary",
+        "hi": "सारांश"
+      },
       "purpose": {
         "en": "Leads by status and by source, and how many open leads turned into deals.",
         "hi": "स्थिति और स्रोत के हिसाब से लीड, और कितनी लीड डील में बदलीं।"
       },
       "derived_by": "leadSummary",
       "formulas": {
-        "count_by_status": "=COUNTIF(Leads!K2:K,A2)",
+        "count_by_status": "=COUNTIF(Leads!J2:J,A2)",
         "count_by_source": "=COUNTIF(Leads!D2:D,A2)",
-        "win_rate_percent": "=IFERROR(ROUND(100*COUNTIF(Leads!K2:K,\"Deal done\")/(COUNTIF(Leads!K2:K,\"Deal done\")+COUNTIF(Leads!K2:K,\"Lost\")),1),\"\")"
+        "win_rate_percent": "=IFERROR(ROUND(100*COUNTIF(Leads!J2:J,\"Deal done\")/(COUNTIF(Leads!J2:J,\"Deal done\")+COUNTIF(Leads!J2:J,\"Lost\")),1),\"\")"
       }
     }
   ],
@@ -141,24 +333,77 @@
     "$comment": "Hand-checked cases. today = 2026-10-05.",
     "today": "2026-10-05",
     "follow_up": [
-      { "status": "new", "next": "2026-10-04", "expect": "overdue" },
-      { "status": "contacted", "next": "2026-10-05", "expect": "today" },
-      { "status": "visit-planned", "next": "2026-10-06", "expect": "upcoming" },
-      { "status": "negotiating", "next": null, "expect": "no-date" },
-      { "status": "won", "next": "2026-10-01", "expect": "closed" },
-      { "status": "lost", "next": null, "expect": "closed" },
-      { "status": "new", "next": "2025-12-31", "expect": "overdue" },
-      { "status": "visit-done", "next": "2027-01-01", "expect": "upcoming" }
+      {
+        "status": "new",
+        "next": "2026-10-04",
+        "expect": "overdue"
+      },
+      {
+        "status": "contacted",
+        "next": "2026-10-05",
+        "expect": "today"
+      },
+      {
+        "status": "visit-planned",
+        "next": "2026-10-06",
+        "expect": "upcoming"
+      },
+      {
+        "status": "negotiating",
+        "next": null,
+        "expect": "no-date"
+      },
+      {
+        "status": "won",
+        "next": "2026-10-01",
+        "expect": "closed"
+      },
+      {
+        "status": "lost",
+        "next": null,
+        "expect": "closed"
+      },
+      {
+        "status": "new",
+        "next": "2025-12-31",
+        "expect": "overdue"
+      },
+      {
+        "status": "visit-done",
+        "next": "2027-01-01",
+        "expect": "upcoming"
+      }
     ],
     "summary": {
       "rows": [
-        { "status": "new", "source": "whatsapp" },
-        { "status": "won", "source": "referral" },
-        { "status": "lost", "source": "portal" },
-        { "status": "won", "source": "whatsapp" },
-        { "status": "negotiating", "source": "whatsapp" },
-        { "status": "lost", "source": "portal" },
-        { "status": "won", "source": "walk-in" }
+        {
+          "status": "new",
+          "source": "whatsapp"
+        },
+        {
+          "status": "won",
+          "source": "referral"
+        },
+        {
+          "status": "lost",
+          "source": "portal"
+        },
+        {
+          "status": "won",
+          "source": "whatsapp"
+        },
+        {
+          "status": "negotiating",
+          "source": "whatsapp"
+        },
+        {
+          "status": "lost",
+          "source": "portal"
+        },
+        {
+          "status": "won",
+          "source": "walk-in"
+        }
       ],
       "expect": {
         "total": 7,
@@ -166,18 +411,52 @@
         "won": 3,
         "lost": 2,
         "winRatePercent": 60,
-        "byStatus": { "new": 1, "won": 3, "lost": 2, "negotiating": 1 },
-        "bySource": { "whatsapp": 3, "referral": 1, "portal": 2, "walk-in": 1 }
+        "byStatus": {
+          "new": 1,
+          "won": 3,
+          "lost": 2,
+          "negotiating": 1
+        },
+        "bySource": {
+          "whatsapp": 3,
+          "referral": 1,
+          "portal": 2,
+          "walk-in": 1
+        }
       }
     },
     "call_list": {
       "rows": [
-        { "name": "A", "status": "new", "next": "2026-10-05" },
-        { "name": "B", "status": "contacted", "next": "2026-10-01" },
-        { "name": "C", "status": "won", "next": "2026-09-30" },
-        { "name": "D", "status": "visit-planned", "next": "2026-10-09" },
-        { "name": "E", "status": "negotiating", "next": "2026-10-03" },
-        { "name": "F", "status": "new", "next": null }
+        {
+          "name": "A",
+          "status": "new",
+          "next": "2026-10-05"
+        },
+        {
+          "name": "B",
+          "status": "contacted",
+          "next": "2026-10-01"
+        },
+        {
+          "name": "C",
+          "status": "won",
+          "next": "2026-09-30"
+        },
+        {
+          "name": "D",
+          "status": "visit-planned",
+          "next": "2026-10-09"
+        },
+        {
+          "name": "E",
+          "status": "negotiating",
+          "next": "2026-10-03"
+        },
+        {
+          "name": "F",
+          "status": "new",
+          "next": null
+        }
       ],
       "expect": ["B", "E", "A"]
     }

@@ -7,7 +7,10 @@
   "sheets": [
     {
       "id": "deals",
-      "title": { "en": "Deals", "hi": "डील" },
+      "title": {
+        "en": "Deals",
+        "hi": "डील"
+      },
       "purpose": {
         "en": "One row per deal. Commission is either a % of the deal value or a fixed amount.",
         "hi": "हर डील की एक पंक्ति। कमीशन डील की कीमत का % या एक तय रकम हो सकता है।"
@@ -21,11 +24,37 @@
           "required": true,
           "note": "e.g. D-001; used on the Payments sheet"
         },
-        { "id": "date", "en": "Deal date", "hi": "डील की तारीख", "type": "date", "required": true },
-        { "id": "property", "en": "Property", "hi": "प्रॉपर्टी", "type": "text" },
-        { "id": "client", "en": "Client", "hi": "क्लाइंट", "type": "text" },
-        { "id": "deal_value", "en": "Deal value (₹)", "hi": "डील की कीमत (₹)", "type": "inr" },
-        { "id": "commission_percent", "en": "Commission %", "hi": "कमीशन %", "type": "percent" },
+        {
+          "id": "date",
+          "en": "Deal date",
+          "hi": "डील की तारीख",
+          "type": "date",
+          "required": true
+        },
+        {
+          "id": "property",
+          "en": "Property",
+          "hi": "प्रॉपर्टी",
+          "type": "text"
+        },
+        {
+          "id": "client",
+          "en": "Client",
+          "hi": "क्लाइंट",
+          "type": "text"
+        },
+        {
+          "id": "deal_value",
+          "en": "Deal value (₹)",
+          "hi": "डील की कीमत (₹)",
+          "type": "inr"
+        },
+        {
+          "id": "commission_percent",
+          "en": "Commission %",
+          "hi": "कमीशन %",
+          "type": "percent"
+        },
         {
           "id": "fixed_commission",
           "en": "Or fixed commission (₹)",
@@ -86,12 +115,29 @@
           "derived_by": "ledgerDeal.status",
           "formula": "=IF(K2=\"\",\"\",IF(L2>=K2,\"Paid\",IF(L2>0,\"Part paid\",\"Due\")))",
           "values": [
-            { "id": "due", "en": "Due", "hi": "बकाया" },
-            { "id": "part-paid", "en": "Part paid", "hi": "आंशिक भुगतान" },
-            { "id": "paid", "en": "Paid", "hi": "पूरा भुगतान" }
+            {
+              "id": "due",
+              "en": "Due",
+              "hi": "बकाया"
+            },
+            {
+              "id": "part-paid",
+              "en": "Part paid",
+              "hi": "आंशिक भुगतान"
+            },
+            {
+              "id": "paid",
+              "en": "Paid",
+              "hi": "पूरा भुगतान"
+            }
           ]
         },
-        { "id": "co_broker", "en": "Co-broker", "hi": "को-ब्रोकर", "type": "text" },
+        {
+          "id": "co_broker",
+          "en": "Co-broker",
+          "hi": "को-ब्रोकर",
+          "type": "text"
+        },
         {
           "id": "co_broker_percent",
           "en": "Co-broker share %",
@@ -104,7 +150,7 @@
           "hi": "को-ब्रोकर की रकम (₹)",
           "type": "derived",
           "derived_by": "ledgerDeal.coBrokerAmount",
-          "formula": "=IF(H2=\"\",\"\",ROUND(H2*N(Q2)/100,2))"
+          "formula": "=IF(H2=\"\",\"\",ROUND(H2*N(P2)/100,2))"
         },
         {
           "id": "my_share",
@@ -112,40 +158,90 @@
           "hi": "मेरा हिस्सा (₹)",
           "type": "derived",
           "derived_by": "ledgerDeal.myShare",
-          "formula": "=IF(H2=\"\",\"\",H2-R2)"
+          "formula": "=IF(H2=\"\",\"\",H2-Q2)"
         },
-        { "id": "notes", "en": "Notes", "hi": "नोट्स", "type": "text" }
+        {
+          "id": "notes",
+          "en": "Notes",
+          "hi": "नोट्स",
+          "type": "text"
+        }
       ]
     },
     {
       "id": "payments",
-      "title": { "en": "Payments", "hi": "भुगतान" },
+      "title": {
+        "en": "Payments",
+        "hi": "भुगतान"
+      },
       "purpose": {
         "en": "Every amount you receive, one row each. Use the Deal ID from the Deals sheet.",
         "hi": "हर मिली रकम की एक पंक्ति। Deals शीट वाली डील ID लिखें।"
       },
       "columns": [
-        { "id": "date", "en": "Date", "hi": "तारीख", "type": "date", "required": true },
-        { "id": "deal_id", "en": "Deal ID", "hi": "डील ID", "type": "text", "required": true },
-        { "id": "amount", "en": "Amount (₹)", "hi": "रकम (₹)", "type": "inr", "required": true },
+        {
+          "id": "date",
+          "en": "Date",
+          "hi": "तारीख",
+          "type": "date",
+          "required": true
+        },
+        {
+          "id": "deal_id",
+          "en": "Deal ID",
+          "hi": "डील ID",
+          "type": "text",
+          "required": true
+        },
+        {
+          "id": "amount",
+          "en": "Amount (₹)",
+          "hi": "रकम (₹)",
+          "type": "inr",
+          "required": true
+        },
         {
           "id": "mode",
           "en": "Mode",
           "hi": "तरीका",
           "type": "list",
           "options": [
-            { "id": "upi", "en": "UPI", "hi": "UPI" },
-            { "id": "bank", "en": "Bank transfer", "hi": "बैंक ट्रांसफ़र" },
-            { "id": "cheque", "en": "Cheque", "hi": "चेक" },
-            { "id": "cash", "en": "Cash", "hi": "नकद" }
+            {
+              "id": "upi",
+              "en": "UPI",
+              "hi": "UPI"
+            },
+            {
+              "id": "bank",
+              "en": "Bank transfer",
+              "hi": "बैंक ट्रांसफ़र"
+            },
+            {
+              "id": "cheque",
+              "en": "Cheque",
+              "hi": "चेक"
+            },
+            {
+              "id": "cash",
+              "en": "Cash",
+              "hi": "नकद"
+            }
           ]
         },
-        { "id": "reference", "en": "Reference / UTR", "hi": "रेफ़रेंस / UTR", "type": "text" }
+        {
+          "id": "reference",
+          "en": "Reference / UTR",
+          "hi": "रेफ़रेंस / UTR",
+          "type": "text"
+        }
       ]
     },
     {
       "id": "summary",
-      "title": { "en": "Summary", "hi": "सारांश" },
+      "title": {
+        "en": "Summary",
+        "hi": "सारांश"
+      },
       "purpose": {
         "en": "Totals for all deals: billed, received, pending and your own share.",
         "hi": "सभी डील का जोड़: कुल बिल, मिला, बाकी और आपका अपना हिस्सा।"
@@ -156,7 +252,7 @@
         "invoiced": "=SUM(Deals!K2:K)",
         "received": "=SUM(Deals!L2:L)",
         "pending": "=SUM(Deals!M2:M)",
-        "my_share": "=SUM(Deals!S2:S)"
+        "my_share": "=SUM(Deals!R2:R)"
       }
     }
   ],
@@ -185,7 +281,11 @@
       },
       {
         "name": "Fixed ₹25,000, no GST, nothing received",
-        "input": { "fixedCommission": 25000, "gstPercent": 0, "payments": [] },
+        "input": {
+          "fixedCommission": 25000,
+          "gstPercent": 0,
+          "payments": []
+        },
         "expect": {
           "commission": 25000,
           "gst": 0,
@@ -238,7 +338,11 @@
       },
       {
         "name": "Overpaid: pending never goes below zero",
-        "input": { "fixedCommission": 10000, "gstPercent": 0, "payments": [12000] },
+        "input": {
+          "fixedCommission": 10000,
+          "gstPercent": 0,
+          "payments": [12000]
+        },
         "expect": {
           "commission": 10000,
           "gst": 0,
