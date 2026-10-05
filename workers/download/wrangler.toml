@@ -1,0 +1,12 @@
+# Serves paid files from R2 for a signed, expiring link (Phase 3). See docs/SETUP.md §6.
+name = "toolshop-download"
+main = "src/index.ts"
+compatibility_date = "2026-09-01"
+workers_dev = true
+
+[[r2_buckets]]
+binding = "FILES"
+bucket_name = "toolshop-products"
+
+# Secret (set with `wrangler secret put`, never here): DOWNLOAD_TOKEN_SECRET —
+# the same value as in the payments Worker.

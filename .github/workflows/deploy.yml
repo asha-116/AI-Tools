@@ -1,8 +1,9 @@
 name: Deploy
 
-# Deploys the static site to Cloudflare Pages and the waitlist Worker on every push to main.
+# Deploys the static site to Cloudflare Pages and the Workers (waitlist, payments, download)
+# on every push to main.
 # Every step is skipped (and the run stays green) until the owner has set the secrets and
-# variables listed in docs/SETUP.md §5.
+# variables listed in docs/SETUP.md §5 (site, waitlist) and §6 (payments, downloads).
 on:
   push:
     branches: [main]
@@ -66,6 +67,103 @@ jobs:
           $WRANGLER deploy
           printf '%s' "$IP_HASH_SECRET" | $WRANGLER secret put IP_HASH_SECRET
 
+  payments-worker:
+    name: Payments Worker
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      RAZORPAY_WEBHOOK_SECRET: ${{ secrets.RAZORPAY_WEBHOOK_SECRET }}
+      HASH_SECRET: ${{ secrets.PAYMENTS_HASH_SECRET }}
+      DOWNLOAD_TOKEN_SECRET: ${{ secrets.DOWNLOAD_TOKEN_SECRET }}
+      D1_ID: ${{ vars.ORDERS_D1_ID }}
+      SITE_ORIGINS: ${{ vars.SITE_ORIGINS }}
+      DOWNLOAD_BASE_URL: ${{ vars.DOWNLOAD_BASE_URL }}
+      # "true" only while Razorpay is in test mode (docs/SETUP.md §6).
+      ALLOW_DRAFT_PRODUCTS: ${{ vars.ALLOW_DRAFT_PRODUCTS || 'false' }}
+    steps:
+      - name: Check configuration
+        id: cfg
+        run: |
+          missing=""
+          for v in CLOUDFLARE_API_TOKEN CLOUDFLARE_ACCOUNT_ID RAZORPAY_WEBHOOK_SECRET HASH_SECRET DOWNLOAD_TOKEN_SECRET D1_ID SITE_ORIGINS DOWNLOAD_BASE_URL; do
+            [ -n "${!v}" ] || missing="$missing $v"
+          done
+          if [ -n "$missing" ]; then
+            echo "::notice::Skipping payments Worker deploy; not configured:$missing (see docs/SETUP.md §6)"
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          fi
+      - uses: actions/checkout@v7
+        if: steps.cfg.outputs.ready == 'true'
+      - uses: actions/setup-node@v7
+        if: steps.cfg.outputs.ready == 'true'
+        with:
+          node-version-file: .nvmrc
+      - name: Fill in account-specific config
+        if: steps.cfg.outputs.ready == 'true'
+        working-directory: workers/payment-webhook
+        run: |
+          sed -i "s|^database_id = .*|database_id = \"$D1_ID\"|" wrangler.toml
+          sed -i "s|^ALLOWED_ORIGINS = .*|ALLOWED_ORIGINS = \"$SITE_ORIGINS\"|" wrangler.toml
+          sed -i "s|^DOWNLOAD_BASE_URL = .*|DOWNLOAD_BASE_URL = \"$DOWNLOAD_BASE_URL\"|" wrangler.toml
+          sed -i "s|^ALLOW_DRAFT_PRODUCTS = .*|ALLOW_DRAFT_PRODUCTS = \"$ALLOW_DRAFT_PRODUCTS\"|" wrangler.toml
+      - name: Apply D1 migrations
+        if: steps.cfg.outputs.ready == 'true'
+        working-directory: workers/payment-webhook
+        run: $WRANGLER d1 migrations apply toolshop-orders --remote
+      - name: Deploy Worker
+        if: steps.cfg.outputs.ready == 'true'
+        working-directory: workers/payment-webhook
+        run: |
+          set -o pipefail
+          $WRANGLER deploy | tee deploy.log
+          printf '%s' "$RAZORPAY_WEBHOOK_SECRET" | $WRANGLER secret put RAZORPAY_WEBHOOK_SECRET
+          printf '%s' "$HASH_SECRET" | $WRANGLER secret put HASH_SECRET
+          printf '%s' "$DOWNLOAD_TOKEN_SECRET" | $WRANGLER secret put DOWNLOAD_TOKEN_SECRET
+          url=$(grep -oE 'https://toolshop-payments\.[a-z0-9-]+\.workers\.dev' deploy.log | tail -1 || true)
+          echo "::notice title=Payments Worker deployed::Webhook URL: ${url:-unknown}/api/razorpay/webhook. Set the repo variable CLAIM_URL to ${url:-unknown}/api/claim. Draft products sellable: $ALLOW_DRAFT_PRODUCTS"
+
+  download-worker:
+    name: Download Worker
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      DOWNLOAD_TOKEN_SECRET: ${{ secrets.DOWNLOAD_TOKEN_SECRET }}
+    steps:
+      - name: Check configuration
+        id: cfg
+        run: |
+          missing=""
+          for v in CLOUDFLARE_API_TOKEN CLOUDFLARE_ACCOUNT_ID DOWNLOAD_TOKEN_SECRET; do
+            [ -n "${!v}" ] || missing="$missing $v"
+          done
+          if [ -n "$missing" ]; then
+            echo "::notice::Skipping download Worker deploy; not configured:$missing (see docs/SETUP.md §6)"
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          fi
+      - uses: actions/checkout@v7
+        if: steps.cfg.outputs.ready == 'true'
+      - uses: actions/setup-node@v7
+        if: steps.cfg.outputs.ready == 'true'
+        with:
+          node-version-file: .nvmrc
+      - name: Deploy Worker
+        if: steps.cfg.outputs.ready == 'true'
+        working-directory: workers/download
+        run: |
+          set -o pipefail
+          $WRANGLER deploy | tee deploy.log
+          printf '%s' "$DOWNLOAD_TOKEN_SECRET" | $WRANGLER secret put DOWNLOAD_TOKEN_SECRET
+          url=$(grep -oE 'https://toolshop-download\.[a-z0-9-]+\.workers\.dev' deploy.log | tail -1 || true)
+          echo "::notice title=Download Worker deployed::Address: ${url:-unknown}. Set the repo variable DOWNLOAD_BASE_URL to it."
+
   site:
     name: Site (Cloudflare Pages)
     runs-on: ubuntu-latest
@@ -77,6 +175,8 @@ jobs:
       SITE_URL: ${{ vars.SITE_URL }}
       PUBLIC_WAITLIST_URL: ${{ vars.WAITLIST_URL }}
       PUBLIC_SUPPORT_EMAIL: ${{ vars.SUPPORT_EMAIL }}
+      PUBLIC_CLAIM_URL: ${{ vars.CLAIM_URL }}
+      PUBLIC_DOWNLOAD_BASE_URL: ${{ vars.DOWNLOAD_BASE_URL }}
       PUBLIC_CF_BEACON_TOKEN: ${{ vars.CF_BEACON_TOKEN }}
     steps:
       - name: Check configuration

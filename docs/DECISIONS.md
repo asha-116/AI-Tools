@@ -76,7 +76,9 @@ Statuses: **Accepted**, **Proposed** (engineer's recommendation, not yet exercis
 - **Options:** Resend free tier (3,000/month, 100/day, needs a domain); Brevo free (300/day);
   no email — show link on the Razorpay success redirect only.
 - **Recommendation:** redirect page shows the link immediately **and** Resend emails it (once a domain exists).
-- **Status:** Needs owner (requires domain decision).
+- **Status:** Needs owner. Phase 3 ships **without** email (ADR-023): buyers get links on
+  `/get-download/` with the payment ID from Razorpay's own receipt email. Email can be added later
+  without changing that flow.
 
 ### ADR-011 — Waitlist storage
 
@@ -187,3 +189,33 @@ Statuses: **Accepted**, **Proposed** (engineer's recommendation, not yet exercis
 - **Alternatives:** publish with a disclaimer only (rejected: wrong tax numbers harm agents'
   credibility); hard-code rates (forbidden by AGENTS.md rule 6).
 - **Status:** Accepted.
+
+### ADR-023 — Delivery without our own email: claim page + stateless signed links
+
+- **Context:** Phase 3 needs paid files delivered automatically. Emailing links needs a provider
+  decision (ADR-010, still open) and would store or pass buyer emails through another service.
+  Razorpay already emails every buyer a receipt with the payment ID. Razorpay's docs could not be
+  opened from the build environment, so the webhook format comes from search summaries of them.
+- **Decision:**
+  - `workers/payment-webhook` (`toolshop-payments`) verifies `X-Razorpay-Signature` (hex
+    HMAC-SHA256 of the raw body with the webhook secret) **before** parsing, handles
+    `payment.captured` and `order.paid`, and inserts one row per payment ID (`ON CONFLICT DO
+NOTHING`), so duplicates and both events for one payment are harmless. It stores IDs, product,
+    amount and an **HMAC of the email** — never the email, name or phone.
+  - The product is the `product` note if the Payment Page sends one, otherwise the catalog product
+    whose price equals the amount; the amount must always equal the full price. Prices of sellable
+    products must therefore differ (enforced when the catalog loads). Unmatched payments are kept
+    with no product and the buyer is told to contact support.
+  - Buyers claim on `/get-download/` with payment ID + email (same "not found" for unknown payment
+    and wrong email; 10 tries per IP per hour). The Worker returns one link per file.
+  - Links are stateless tokens `payload.HMAC` (separate secret), ≤ 72 h, checked by
+    `workers/download` (`toolshop-download`), which streams from a private R2 bucket. Expired →
+    410, anything else wrong → 403. Buyers can always claim fresh links.
+  - `products/catalog.json` holds prices with `status: draft | live | retired`. Drafts sell only
+    when `ALLOW_DRAFT_PRODUCTS=true` (Razorpay test mode). Retired products stay downloadable.
+- **Alternatives:** email via Resend (needs ADR-010); Razorpay redirect parameters to show links
+  instantly (format not verifiable from here; can be added later); one Worker for both (rejected:
+  the download Worker needs no database and its secret surface stays tiny); KV for idempotency
+  (D1 already used, 1k KV writes/day limit).
+- **Status:** Accepted for test mode; the payload format must be confirmed by the owner's test
+  purchase (`docs/SETUP.md` §6.5) before going live.

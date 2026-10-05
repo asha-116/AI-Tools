@@ -9,6 +9,7 @@ identity or legal authority — agents cannot do them. Tick them as you go.
 - [ ] Create a Cloudflare account (free plan)
 - [ ] Create a Razorpay account; complete **KYC**; add the **bank account** for settlements
 - [ ] Generate API keys and store them as GitHub Actions / Cloudflare secrets (§4)
+- [ ] Set up payments and downloads in Razorpay **test mode** and do one test purchase (§6)
 - [ ] Decide repo visibility / branch protection (ADR-009) and apply §3
 - [ ] Approve legal pages, prices, brand name, and every social post
 - [ ] Decide business registration and **GST** obligations with a Chartered Accountant
@@ -83,17 +84,16 @@ linked to this repo. Agents add Issues to it (Phase 4).
 
 Names match `.env.example`. **Never** paste a value into an Issue, PR, commit or chat.
 
-| Name                                                                       | Where                                            | Phase                                                                                       |
-| -------------------------------------------------------------------------- | ------------------------------------------------ | ------------------------------------------------------------------------------------------- |
-| `CLOUDFLARE_API_TOKEN`                                                     | GitHub secret                                    | 1 — token with _Cloudflare Pages: Edit_ (+ _Workers Scripts: Edit_, _D1: Edit_ for workers) |
-| `CLOUDFLARE_ACCOUNT_ID`                                                    | GitHub secret                                    | 1                                                                                           |
-| `RAZORPAY_WEBHOOK_SECRET`                                                  | Cloudflare Worker secret (`wrangler secret put`) | 3                                                                                           |
-| `RAZORPAY_KEY_ID` / `RAZORPAY_KEY_SECRET`                                  | Worker secret; GitHub secret for Controller      | 3 / 4                                                                                       |
-| `DOWNLOAD_SIGNING_KEY`                                                     | Worker secret (both workers); 32+ random bytes   | 3                                                                                           |
-| `EMAIL_API_KEY`, `EMAIL_FROM`                                              | Worker secret                                    | 3 (if ADR-010 approved)                                                                     |
-| `GEMINI_API_KEY`, `GROQ_API_KEY`, `CEREBRAS_API_KEY`, `OPENROUTER_API_KEY` | GitHub secrets                                   | 4                                                                                           |
-| `AGENT_APP_PRIVATE_KEY`                                                    | GitHub secret                                    | 4                                                                                           |
-| `SUPPORT_INBOX_TOKEN`                                                      | GitHub secret                                    | 5                                                                                           |
+| Name                                                                       | Where                                          | Phase                                                                                       |
+| -------------------------------------------------------------------------- | ---------------------------------------------- | ------------------------------------------------------------------------------------------- |
+| `CLOUDFLARE_API_TOKEN`                                                     | GitHub secret                                  | 1 — token with _Cloudflare Pages: Edit_ (+ _Workers Scripts: Edit_, _D1: Edit_ for workers) |
+| `CLOUDFLARE_ACCOUNT_ID`                                                    | GitHub secret                                  | 1                                                                                           |
+| `RAZORPAY_WEBHOOK_SECRET`, `PAYMENTS_HASH_SECRET`, `DOWNLOAD_TOKEN_SECRET` | GitHub secret; Deploy copies it to the Workers | 3 — see §6.2                                                                                |
+| `RAZORPAY_KEY_ID` / `RAZORPAY_KEY_SECRET`                                  | GitHub secret for the Controller (read-only)   | 4 — not needed for Payment Pages                                                            |
+| `EMAIL_API_KEY`, `EMAIL_FROM`                                              | Worker secret                                  | 3 (if ADR-010 approved)                                                                     |
+| `GEMINI_API_KEY`, `GROQ_API_KEY`, `CEREBRAS_API_KEY`, `OPENROUTER_API_KEY` | GitHub secrets                                 | 4                                                                                           |
+| `AGENT_APP_PRIVATE_KEY`                                                    | GitHub secret                                  | 4                                                                                           |
+| `SUPPORT_INBOX_TOKEN`                                                      | GitHub secret                                  | 5                                                                                           |
 
 Generate random keys with `openssl rand -base64 48`.
 
@@ -165,8 +165,109 @@ npx wrangler@4.143.0 dev --port 8787
 # then run the site with PUBLIC_WAITLIST_URL=http://localhost:8787/api/waitlist
 ```
 
-## 6. Razorpay (Phase 3)
+## 6. Payments and downloads (Phase 3)
 
-Test mode first. Payment Pages → one page per product; webhook URL = the
-`payment-webhook` Worker URL, event `payment.captured`, secret = `RAZORPAY_WEBHOOK_SECRET`.
-Details added in Phase 3.
+How a sale works (ADR-023): the buyer pays on a **Razorpay Payment Page** → Razorpay calls the
+**payments Worker** (`workers/payment-webhook`), which records the payment → the buyer opens
+**/get-download/** on our site, enters the payment ID from their Razorpay receipt email and
+their email → the page shows download links (valid 72 hours, renewable on the same page) served
+by the **download Worker** (`workers/download`) from the R2 bucket.
+
+Nothing is buyable on the live site until you approve prices and switch products in
+`products/catalog.json` from `draft` to `live` (PR labelled `approved-by-owner`).
+Always do §6.1–6.5 in **Razorpay test mode** first.
+
+### 6.1 Cloudflare (owner, ~10 min)
+
+1. Edit the API token from §5.1.1 and add **Account · Workers R2 Storage · Edit**.
+2. _Storage & Databases → D1 → Create_ named `toolshop-orders`. Copy its **Database ID**.
+3. _R2 → Create bucket_ named `toolshop-products` (location: Automatic). Keep it **private**
+   (no public access, no custom domain) — files leave it only through the download Worker.
+
+### 6.2 GitHub settings (Settings → Secrets and variables → Actions)
+
+| Kind     | Name                      | Value                                                                                  |
+| -------- | ------------------------- | -------------------------------------------------------------------------------------- |
+| Secret   | `RAZORPAY_WEBHOOK_SECRET` | any long random string — you type the **same** value into Razorpay in 6.3              |
+| Secret   | `PAYMENTS_HASH_SECRET`    | output of `openssl rand -base64 48` (hashes buyer emails and IPs)                      |
+| Secret   | `DOWNLOAD_TOKEN_SECRET`   | output of `openssl rand -base64 48` (signs download links; both Workers use it)        |
+| Variable | `ORDERS_D1_ID`            | Database ID from 6.1.2                                                                 |
+| Variable | `DOWNLOAD_BASE_URL`       | `https://toolshop-download.<your-subdomain>.workers.dev` (printed by the first Deploy) |
+| Variable | `ALLOW_DRAFT_PRODUCTS`    | `true` while testing; **delete it (or set `false`) before going live**                 |
+| Variable | `CLAIM_URL`               | `https://toolshop-payments.<your-subdomain>.workers.dev/api/claim` (printed by Deploy) |
+
+Run **Deploy**. The first run deploys the download Worker and prints its address; set
+`DOWNLOAD_BASE_URL`, then run **Deploy** again so the payments Worker and the site pick it up.
+
+Never change `DOWNLOAD_TOKEN_SECRET` casually: links already sent stop working (buyers can get
+new ones on /get-download/).
+
+### 6.3 Razorpay (test mode)
+
+1. Dashboard → switch to **Test Mode**.
+2. _Payment Pages → Create_ one page per product in `products/catalog.json` (lead tracker,
+   commission ledger, bundle). **Fixed amount** equal to the catalog price (₹199 / ₹299 / ₹399
+   while those are drafts). Make **email mandatory**. Optional: add a hidden field `product`
+   with the catalog id — the Worker uses it if present, otherwise it matches by amount.
+3. Success message / redirect: point buyers to `https://tools.changelense.in/get-download/`
+   and tell them the payment ID is in their Razorpay receipt email.
+4. _Accounts & Settings → Webhooks → Add new webhook_:
+   - URL: `https://toolshop-payments.<your-subdomain>.workers.dev/api/razorpay/webhook`
+   - Secret: the value of `RAZORPAY_WEBHOOK_SECRET`
+   - Active events: **payment.captured** (and optionally **order.paid**; duplicates are ignored)
+
+### 6.4 Upload the product files
+
+Until the templates exist (Phase 3, next PRs), upload any small test file under the keys in
+`products/catalog.json`:
+
+```bash
+npx wrangler@4.143.0 r2 object put toolshop-products/lead-tracker/v1/lead-tracker.xlsx --file ./lead-tracker.xlsx --remote
+npx wrangler@4.143.0 r2 object put toolshop-products/commission-ledger/v1/commission-ledger.xlsx --file ./commission-ledger.xlsx --remote
+```
+
+### 6.5 Test purchase (≈5 min)
+
+1. Open a test Payment Page and pay with Razorpay's **test card / UPI** (shown in their test docs).
+2. Cloudflare → Workers → `toolshop-payments` → _Logs_: expect
+   `{"evt":"payment_recorded","payment_id":"pay_…","product":"lead-tracker"}`.
+   `payment_unmatched` means the amount differs from the catalog; `webhook_rejected` /
+   `bad_signature` means the secret in Razorpay ≠ `RAZORPAY_WEBHOOK_SECRET`.
+3. Open /get-download/, enter the payment ID from the receipt email + your email → the file
+   downloads. In Razorpay, _Webhooks → your webhook → Resend_ an event: logs show
+   `payment_duplicate` and nothing changes.
+4. Please confirm here (or in the PR) that the logged payload matched — the Worker's parsing of
+   Razorpay's payload is based on their published format, which the build environment could
+   not open directly.
+
+### 6.6 Going live (owner, later)
+
+Only after: prices approved, legal pages approved (`legal/`), GST/registration advice from a CA,
+the test purchase in 6.5 passed. Then: Razorpay **Live Mode** keys/pages/webhook (new webhook,
+same Worker URL, same secret or rotate it), products → `live` in the catalog, remove
+`ALLOW_DRAFT_PRODUCTS`, Deploy.
+
+### 6.7 Local development
+
+```bash
+cd workers/payment-webhook
+printf 'RAZORPAY_WEBHOOK_SECRET=whsec_local\nHASH_SECRET=hash_local\nDOWNLOAD_TOKEN_SECRET=dl_local\n' > .dev.vars
+npx wrangler@4.143.0 d1 migrations apply toolshop-orders --local
+npx wrangler@4.143.0 dev --port 8787 --inspector-port 9331 \
+  --var ALLOWED_ORIGINS:http://localhost:4321 --var DOWNLOAD_BASE_URL:http://localhost:8788 \
+  --var ALLOW_DRAFT_PRODUCTS:true
+# second terminal
+cd workers/download && printf 'DOWNLOAD_TOKEN_SECRET=dl_local\n' > .dev.vars
+npx wrangler@4.143.0 r2 object put toolshop-products/lead-tracker/v1/lead-tracker.xlsx --file ./any.xlsx --local
+npx wrangler@4.143.0 dev --port 8788
+# site: PUBLIC_CLAIM_URL=http://localhost:8787/api/claim PUBLIC_DOWNLOAD_BASE_URL=http://localhost:8788
+```
+
+Send a signed test webhook:
+
+```bash
+BODY='{"event":"payment.captured","payload":{"payment":{"entity":{"id":"pay_LOCAL1","amount":19900,"currency":"INR","status":"captured","email":"me@example.com","notes":[]}}}}'
+SIG=$(printf '%s' "$BODY" | openssl dgst -sha256 -hmac whsec_local | awk '{print $2}')
+curl -X POST http://localhost:8787/api/razorpay/webhook -H 'Content-Type: application/json' \
+  -H "X-Razorpay-Signature: $SIG" --data-raw "$BODY"
+```

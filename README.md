@@ -15,15 +15,15 @@ Everything runs on free tiers (GitHub, Cloudflare, free LLM APIs).
 
 ## How the company maps onto this repo
 
-| Company concept     | Where                                                          |
-| ------------------- | -------------------------------------------------------------- |
-| Tasks / tickets     | GitHub Issues + labels (`agent:*`, `type:*`, `needs-owner`)    |
-| Agent heartbeat     | Scheduled GitHub Actions in `.github/workflows/`               |
-| Work output         | Pull Requests from `agent/<name>/<slug>` branches              |
-| QA gate             | CI checks + Verifier agent on PRs to `main`                    |
-| Company memory      | `company/` (goals, policies, knowledge base, reports, ledger)  |
-| Storefront          | `site/` → Cloudflare Pages                                     |
-| Payments + delivery | Razorpay → `workers/payment-webhook` → R2 → `workers/download` |
+| Company concept     | Where                                                                             |
+| ------------------- | --------------------------------------------------------------------------------- |
+| Tasks / tickets     | GitHub Issues + labels (`agent:*`, `type:*`, `needs-owner`)                       |
+| Agent heartbeat     | Scheduled GitHub Actions in `.github/workflows/`                                  |
+| Work output         | Pull Requests from `agent/<name>/<slug>` branches                                 |
+| QA gate             | CI checks + Verifier agent on PRs to `main`                                       |
+| Company memory      | `company/` (goals, policies, knowledge base, reports, ledger)                     |
+| Storefront          | `site/` → Cloudflare Pages                                                        |
+| Payments + delivery | Razorpay → `workers/payment-webhook` → `/get-download/` → `workers/download` → R2 |
 
 Full diagrams: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
 
@@ -33,9 +33,9 @@ Full diagrams: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
 docs/          architecture, progress, roadmap, decisions, costs, runbook, setup
 site/          static storefront (Astro) — calculators + SEO content, EN + HI
 tools-core/    pure TypeScript formula functions, 100% unit-tested, no UI
-products/      paid templates: source, spec.json, changelog, test cases
+products/      paid templates (spec, changelog, tests) + catalog.json (prices, files)
 data/          reference data with sources (e.g. stamp-duty/<STATE>.json)
-workers/       Cloudflare Workers: waitlist, payment-webhook, download
+workers/       Cloudflare Workers: waitlist, payment-webhook, download (+ shared lib/)
 agents/        the AI workforce: lib/ + one folder per agent (PROCEDURE.md first)
 company/       goals, policies, knowledge base, memory, ledger, reports
 legal/         terms, privacy, refund, contact — owner must approve

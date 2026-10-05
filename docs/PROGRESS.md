@@ -4,16 +4,37 @@ Living status log. Update at the end of every session (see `AGENTS.md` §1).
 
 ## Current phase
 
-**Phase 2 — Free calculators.** EMI and commission live; stamp duty built, waiting for rate verification. Phase 1 is done: the site is live at
+**Phase 3 — Paid products, payment, delivery** (started 2026-10-05). Payment + delivery backbone
+built and tested locally; waiting for the owner's Razorpay test-mode setup and the Phase 3
+decisions below. Phase 2: EMI and commission live; stamp duty live as "coming soon" until the
+owner verifies a state. Phase 1 is done: the site is live at
 **https://tools.changelense.in** and the waitlist records sign-ups (first one confirmed
 2026-09-29). Brand is now **ChangeLens** (ADR-019). Phase 1 is merged; going live
 still needs the owner's Cloudflare setup (`docs/SETUP.md` §5).
 
 ## Done
 
+- 2026-10-05 — **Phase 3, part 1: payment + delivery backbone** (this PR, ADR-023):
+  - `workers/payment-webhook` (`toolshop-payments`): verifies the Razorpay signature on the raw
+    body, records each payment once in D1 `toolshop-orders` (duplicates and `order.paid` after
+    `payment.captured` are no-ops), stores only an HMAC of the buyer's email. `POST /api/claim`
+    turns payment ID + email into one signed link per file (≤ 72 h), 10 tries/IP/hour.
+  - `workers/download` (`toolshop-download`): verifies the link (403 tampered, 410 expired),
+    checks the file belongs to the product, streams it from private R2 `toolshop-products`.
+  - `workers/lib`: WebCrypto HMAC (checked against RFC 4231 and node:crypto), tokens, catalog.
+  - `products/catalog.json`: lead tracker ₹199, commission ledger ₹299, bundle ₹399 — **draft
+    prices**, only sellable in test mode (`ALLOW_DRAFT_PRODUCTS=true`).
+  - `/get-download/` + `/hi/get-download/` (noindex): claim form; links only accepted from the
+    download Worker's origin. Shows "not open yet" until `CLAIM_URL` is set.
+  - `deploy.yml`: payments and download jobs, skipped until configured (`docs/SETUP.md` §6).
+  - Verified locally with both Workers under `wrangler dev`, local D1 + R2 and Chromium: signed
+    webhook recorded once, repeat ignored, bad signature 401, claim in EN + HI, wrong email
+    "not found", file downloaded, tampered link 403, foreign origin 403, zero off-site requests.
+    251 tests; Lighthouse 100/100/100 on the new pages (SEO skipped: noindex).
+- 2026-10-05 — **Stamp duty calculator** merged (asha-116/AI-Tools#9) and deployed.
 - 2026-09-29 — **Phase 0** merged (asha-116/AI-Tools#1): repo layout, rules, docs, CI,
   templates, labels, agent procedures, policy drafts, stamp-duty schema.
-- 2026-09-29 — **Phase 2, part 4: stamp duty calculator** (this PR):
+- 2026-09-29 — **Phase 2, part 4: stamp duty calculator** (merged 2026-10-05):
   - `tools-core/src/stampDuty.ts`: data-driven rules (area, buyer, value slabs, surcharges on
     value or on duty, registration % with cap/min/fixed fee); tests first with hand-checked
     fixture cases.
@@ -74,15 +95,20 @@ still needs the owner's Cloudflare setup (`docs/SETUP.md` §5).
 
 ## In progress
 
-- Stamp duty calculator PR review; owner verification of state rates (RUNBOOK).
+- Phase 3 part 1 PR review; owner Razorpay test-mode setup (`docs/SETUP.md` §6).
+- Owner verification of stamp duty rates (RUNBOOK).
 
 ## Exact next step
 
-1. Owner: verify stamp duty rates for at least one state (`docs/RUNBOOK.md`), starting with
-   the state where most of your agents work; share https://tools.changelense.in with agents.
-2. Engineer: add Hindi fields for rule descriptions/surcharge names in the stamp-duty data;
-   publish each state as the owner verifies it (remove noindex + add SEO back to Lighthouse
-   when the first state goes live); then start **Phase 3** (paid templates + payments).
+1. Owner: merge Phase 3 part 1, then follow `docs/SETUP.md` §6 in Razorpay **test mode** and do
+   one test purchase (§6.5). Confirm the Worker log showed `payment_recorded`.
+2. Owner: answer the Phase 3 questions (16–19 below, plus 6, 7, 11).
+3. Engineer: Phase 3 part 2 — the two templates (`products/<id>/spec.json`, known-answer test
+   data, EN + HI how-to guide) and a product page per template with the Buy button (needs
+   prices approved). Then part 3 — `legal/` drafts (terms, privacy, refund, contact) labelled
+   `needs-owner`.
+4. Engineer (Phase 2 leftovers): Hindi fields for stamp-duty rule descriptions and surcharge
+   names; publish each state as the owner verifies it.
 
 ## Blockers
 
@@ -118,3 +144,12 @@ still needs the owner's Cloudflare setup (`docs/SETUP.md` §5).
     confirm; every figure is also recomputed independently, so the maths is not at risk.
 15. **TDS on commission** (new): should the commission calculator show TDS? Published sources
     disagree on the current section 194H rate, so it is left out until a CA confirms it.
+16. **Payment provider** (new): Razorpay Payment Pages as built (recommended), or Dodo Payments
+    as used by Change Lens? Razorpay suits Indian UPI buyers; switching later means a new webhook
+    parser only.
+17. **First templates** (new): lead tracker and commission ledger as Google Sheets (delivered
+    as .xlsx that opens in Google Sheets / Excel)? Any columns your agents always need?
+18. **Prices** (new, replaces 7): approve ₹199 / ₹299 / bundle ₹399 or give others. They stay
+    `draft` in `products/catalog.json` until you approve them in a PR.
+19. **Legal pages** (new): the name (person or business) and contact address to show on terms,
+    privacy and refund pages. Razorpay also requires these pages before live mode.
