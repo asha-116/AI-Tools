@@ -1,4 +1,5 @@
 /** Browser-side waitlist form handling. Kept framework-free and small. */
+import { ideaFromSearch } from '../lib/templates.js';
 
 interface ClientStrings {
   sending: string;
@@ -24,6 +25,15 @@ export function errorMessageFor(
 }
 
 export function initWaitlist(doc: Document): void {
+  // "/?idea=<id>#waitlist" (from a template page) pre-selects that idea, if it is on the form.
+  const radios = [...doc.querySelectorAll<HTMLInputElement>('input[name="idea"]')];
+  const fromUrl = ideaFromSearch(
+    doc.location.search,
+    radios.map((r) => r.value),
+  );
+  const picked = radios.find((r) => r.value === fromUrl);
+  if (picked) picked.checked = true;
+
   // "Notify me" on an idea card pre-selects that idea in the form.
   for (const link of doc.querySelectorAll<HTMLAnchorElement>('[data-pick-idea]')) {
     link.addEventListener('click', () => {

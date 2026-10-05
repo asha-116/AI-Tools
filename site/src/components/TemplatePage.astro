@@ -1,0 +1,170 @@
+---
+import { templateSpecs, templateStrings } from '../i18n/templates';
+import type { Lang } from '../i18n/strings';
+import { notifyHref, sheetsFor, type TemplateId } from '../lib/templates';
+
+interface Props {
+  lang: Lang;
+  id: TemplateId;
+}
+
+const { lang, id } = Astro.props;
+const t = templateStrings[lang];
+const p = t.pages[id];
+const sheets = sheetsFor(templateSpecs[id], lang);
+const notify = notifyHref(id, lang);
+---
+
+<article class="template">
+  <p class="crumb"><a href={lang === 'en' ? '/' : '/hi/'}>← {t.backHome}</a></p>
+  <p class="badge">{t.badge}</p>
+  <h1>{p.h1}</h1>
+  <p class="lead">{p.lead}</p>
+  <p class="works">{t.worksIn}</p>
+  {p.extraNote && <p class="card note">{p.extraNote}</p>}
+  <a class="button" href={notify}>{t.notifyMe}</a>
+
+  <section aria-labelledby="inside-title">
+    <h2 id="inside-title">{t.insideTitle}</h2>
+    <p class="hint">{t.autoLegend}</p>
+    <ol class="sheets">
+      {
+        sheets.map((sheet) => (
+          <li class="card sheet">
+            <h3>
+              <span class="sheet-label">{t.sheetLabel}:</span> {sheet.title}
+            </h3>
+            {sheet.purpose && <p>{sheet.purpose}</p>}
+            {sheet.columns.length > 0 ? (
+              <>
+                <p class="cols-label">{t.columnsLabel}</p>
+                <ul class="cols">
+                  {sheet.columns.map((col) => (
+                    <li class={col.auto ? 'auto' : undefined}>
+                      {col.name}
+                      {col.auto && <span class="auto-mark"> ({t.autoMark})</span>}
+                    </li>
+                  ))}
+                </ul>
+              </>
+            ) : (
+              <p class="hint">{t.noColumns}</p>
+            )}
+          </li>
+        ))
+      }
+    </ol>
+  </section>
+
+  <section aria-labelledby="price-title">
+    <h2 id="price-title">{t.priceTitle}</h2>
+    <p>{t.noPrice}</p>
+    <p>{t.notifyLead}</p>
+    <a class="button" href={notify}>{t.notifyMe}</a>
+  </section>
+</article>
+
+<style>
+  .template {
+    --auto-bg: #e4e7e5;
+    padding-top: 16px;
+  }
+  @media (prefers-color-scheme: dark) {
+    .template {
+      --auto-bg: #2c3531;
+    }
+  }
+  .crumb {
+    margin: 0 0 8px;
+  }
+  .badge {
+    display: inline-block;
+    margin: 8px 0 0;
+    padding: 2px 12px;
+    border-radius: 999px;
+    background: var(--brand);
+    color: var(--brand-fg);
+    font-size: 0.875rem;
+    font-weight: 700;
+  }
+  h1 {
+    font-size: clamp(1.75rem, 6vw, 2.5rem);
+    line-height: 1.2;
+    margin: 8px 0 12px;
+  }
+  h2 {
+    font-size: 1.5rem;
+    margin: 32px 0 12px;
+  }
+  h3 {
+    font-size: 1.1875rem;
+    margin: 0 0 4px;
+  }
+  .lead {
+    color: var(--muted);
+    max-width: 40em;
+  }
+  .works {
+    font-weight: 600;
+  }
+  .hint,
+  .sheet-label,
+  .cols-label {
+    color: var(--muted);
+  }
+  .card {
+    padding: 16px 20px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+  }
+  .note {
+    max-width: 40em;
+  }
+  .button {
+    display: inline-block;
+    min-height: 48px;
+    padding: 12px 20px;
+    border: 2px solid var(--brand);
+    border-radius: var(--radius);
+    background: var(--brand);
+    color: var(--brand-fg);
+    font-weight: 600;
+    text-decoration: none;
+  }
+  .sheets {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 16px;
+  }
+  .sheet p {
+    margin: 4px 0;
+  }
+  .cols-label {
+    font-size: 0.9375rem;
+    font-weight: 600;
+  }
+  .cols {
+    list-style: none;
+    padding: 0;
+    margin: 4px 0 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .cols li {
+    padding: 4px 10px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--bg);
+    font-size: 0.9375rem;
+  }
+  .cols li.auto {
+    background: var(--auto-bg);
+  }
+  .auto-mark {
+    font-style: italic;
+  }
+</style>
