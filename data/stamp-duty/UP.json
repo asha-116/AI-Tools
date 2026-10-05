@@ -1,0 +1,66 @@
+{
+  "state": "Uttar Pradesh",
+  "state_name_hi": "उत्तर प्रदेश",
+  "state_code": "UP",
+  "status": "draft",
+  "official_source": "https://igrsup.gov.in/",
+  "sources": [
+    {
+      "url": "https://cleartax.in/s/stamp-duty-and-registration-charges-in-up",
+      "title": "ClearTax — UP 2026",
+      "accessed": "2026-09-29"
+    },
+    {
+      "url": "https://homefirstindia.com/blog/article/stamp-duty-and-registration-charges-uttar-pradesh",
+      "title": "HomeFirst — UP 2026",
+      "accessed": "2026-09-29"
+    },
+    {
+      "url": "https://1acre.in/stamp-duty-calculator/uttar-pradesh",
+      "title": "1acre.in — UP calculator",
+      "accessed": "2026-09-29"
+    }
+  ],
+  "last_verified": "2026-09-29",
+  "verified_by": "NOT VERIFIED — compiled from web search summaries on 2026-09-29; official site could not be opened from the build environment",
+  "notes": "Charged on the higher of market value and circle rate. Registration 1% for all buyers.",
+  "conflicts": [
+    "Women's concession: sources differ on whether it is a flat 1% or capped (e.g. only up to a property value limit / ₹1 crore).",
+    "Joint (man + woman) rate of 6.5% comes from a single source."
+  ],
+  "rates": [
+    {
+      "id": "female",
+      "description": "Woman buyer",
+      "conditions": {
+        "buyer_gender": "female"
+      },
+      "stamp_duty_percent": 6,
+      "registration": {
+        "percent": 1
+      }
+    },
+    {
+      "id": "joint",
+      "description": "Joint (man + woman)",
+      "conditions": {
+        "buyer_gender": "joint"
+      },
+      "stamp_duty_percent": 6.5,
+      "registration": {
+        "percent": 1
+      }
+    },
+    {
+      "id": "male",
+      "description": "Man buyer",
+      "conditions": {
+        "buyer_gender": "male"
+      },
+      "stamp_duty_percent": 7,
+      "registration": {
+        "percent": 1
+      }
+    }
+  ]
+}

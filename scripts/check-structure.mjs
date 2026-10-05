@@ -113,7 +113,15 @@ if (existsSync(sdDir)) {
       errors.push(`data/stamp-duty/${f}: invalid JSON (${e.message})`);
       continue;
     }
-    for (const key of ['state', 'state_code', 'sources', 'last_verified', 'rates']) {
+    for (const key of [
+      'state',
+      'state_code',
+      'status',
+      'sources',
+      'last_verified',
+      'verified_by',
+      'rates',
+    ]) {
       if (!(key in doc)) errors.push(`data/stamp-duty/${f}: missing "${key}"`);
     }
     if (!Array.isArray(doc.sources) || doc.sources.length === 0) {
@@ -123,6 +131,17 @@ if (existsSync(sdDir)) {
         if (typeof s?.url !== 'string' || !s.url.startsWith('https://')) {
           errors.push(`data/stamp-duty/${f}: every source needs an https "url"`);
         }
+      }
+    }
+    if (doc.status !== 'draft' && doc.status !== 'verified') {
+      errors.push(`data/stamp-duty/${f}: "status" must be "draft" or "verified"`);
+    }
+    if (doc.status === 'verified') {
+      if (Array.isArray(doc.conflicts) && doc.conflicts.length > 0) {
+        errors.push(`data/stamp-duty/${f}: resolve and remove "conflicts" before marking verified`);
+      }
+      if (/not verified/i.test(String(doc.verified_by))) {
+        errors.push(`data/stamp-duty/${f}: "verified_by" must name who verified it`);
       }
     }
     if (typeof doc.last_verified !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(doc.last_verified)) {

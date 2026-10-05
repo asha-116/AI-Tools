@@ -1,0 +1,20 @@
+---
+import Base from '../../../layouts/Base.astro';
+import StampDutyCalculator from '../../../tools/stamp-duty/StampDutyCalculator.astro';
+import { ALL_STATES } from '../../../tools/stamp-duty/data';
+import { sdStrings } from '../../../tools/stamp-duty/strings';
+
+const t = sdStrings.en;
+// Kept out of search results until at least one state's rates are verified.
+const noindex = !ALL_STATES.some((s) => s.status === 'verified');
+---
+
+<Base
+  lang="en"
+  title={t.metaTitle}
+  description={t.metaDescription}
+  path="/tools/stamp-duty/"
+  noindex={noindex}
+>
+  <StampDutyCalculator lang="en" />
+</Base>

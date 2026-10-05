@@ -1,0 +1,68 @@
+{
+  "state": "Delhi",
+  "state_name_hi": "दिल्ली",
+  "state_code": "DL",
+  "status": "draft",
+  "official_source": "https://revenue.delhi.gov.in/",
+  "sources": [
+    {
+      "url": "https://cleartax.in/s/stamp-duty-and-registration-charges-in-delhi",
+      "title": "ClearTax — Delhi 2026",
+      "accessed": "2026-09-29"
+    },
+    {
+      "url": "https://homefirstindia.com/blog/article/stamp-duty-and-registration-charges-in-delhi",
+      "title": "HomeFirst — Delhi 2026",
+      "accessed": "2026-09-29"
+    },
+    {
+      "url": "https://www.kotak.bank.in/en/stories-in-focus/loans/home-loan/stamp-duty-property-registration-charges-in-delhi.html",
+      "title": "Kotak — Delhi 2026",
+      "accessed": "2026-09-29"
+    }
+  ],
+  "last_verified": "2026-09-29",
+  "verified_by": "NOT VERIFIED — compiled from web search summaries on 2026-09-29; official site could not be opened from the build environment",
+  "notes": "Charged on the higher of transaction value and circle-rate value. Registration 1% plus ₹100 pasting fee.",
+  "conflicts": [
+    "One source claims a higher slab above ₹25 lakh (7% male / 5% female / 6% joint); most sources give flat 6% / 4% / 5%."
+  ],
+  "rates": [
+    {
+      "id": "female",
+      "description": "Woman buyer",
+      "conditions": {
+        "buyer_gender": "female"
+      },
+      "stamp_duty_percent": 4,
+      "registration": {
+        "percent": 1,
+        "fixed_fee_inr": 100
+      }
+    },
+    {
+      "id": "joint",
+      "description": "Joint (man + woman)",
+      "conditions": {
+        "buyer_gender": "joint"
+      },
+      "stamp_duty_percent": 5,
+      "registration": {
+        "percent": 1,
+        "fixed_fee_inr": 100
+      }
+    },
+    {
+      "id": "male",
+      "description": "Man buyer",
+      "conditions": {
+        "buyer_gender": "male"
+      },
+      "stamp_duty_percent": 6,
+      "registration": {
+        "percent": 1,
+        "fixed_fee_inr": 100
+      }
+    }
+  ]
+}

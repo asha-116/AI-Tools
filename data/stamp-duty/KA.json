@@ -1,0 +1,141 @@
+{
+  "state": "Karnataka",
+  "state_name_hi": "कर्नाटक",
+  "state_code": "KA",
+  "status": "draft",
+  "official_source": "https://igr.karnataka.gov.in/",
+  "sources": [
+    {
+      "url": "https://homefirstindia.com/blog/article/stamp-duty-registration-charges-karnataka",
+      "title": "HomeFirst — Karnataka 2026",
+      "accessed": "2026-09-29"
+    },
+    {
+      "url": "https://www.godrejproperties.com/blog/stamp-duty-and-registration-charges-karnataka-2026",
+      "title": "Godrej Properties — Karnataka 2026",
+      "accessed": "2026-09-29"
+    },
+    {
+      "url": "https://www.bankbazaar.com/home-loan/stamp-duty-and-registration-charges-in-bangalore.html",
+      "title": "BankBazaar — Bangalore 2026",
+      "accessed": "2026-09-29"
+    }
+  ],
+  "last_verified": "2026-09-29",
+  "verified_by": "NOT VERIFIED — compiled from web search summaries on 2026-09-29; official site could not be opened from the build environment",
+  "notes": "Slabs by property value (2% / 3% / 5%). Registration fee reportedly raised from 1% to 2% from 31 August 2025.",
+  "conflicts": [
+    "Registration fee: 2% (revised Aug 2025) vs 1% in older sources.",
+    "Cess/surcharge on stamp duty: sources mention 10% cess in BBMP limits plus separate urban/rural surcharges (2%/3% of duty); exact components unconfirmed.",
+    "Slab boundaries (whether ₹20 lakh and ₹45 lakh fall in the lower or upper slab) unconfirmed."
+  ],
+  "areas": [
+    {
+      "id": "bengaluru",
+      "label_en": "Bengaluru (BBMP / GBA limits)",
+      "label_hi": "बेंगलुरु (BBMP / GBA सीमा)"
+    },
+    {
+      "id": "other",
+      "label_en": "Rest of Karnataka",
+      "label_hi": "शेष कर्नाटक"
+    }
+  ],
+  "rates": [
+    {
+      "id": "bengaluru-upto-20l",
+      "description": "Bengaluru (BBMP / GBA limits), value up to ₹20 lakh",
+      "conditions": {
+        "area": "bengaluru",
+        "max_value_inr": 2000000
+      },
+      "stamp_duty_percent": 2,
+      "surcharges_percent": [
+        {
+          "name": "Cess (10% of stamp duty)",
+          "percent": 10,
+          "base": "stamp_duty"
+        }
+      ],
+      "registration": {
+        "percent": 2
+      }
+    },
+    {
+      "id": "bengaluru-20l-45l",
+      "description": "Bengaluru (BBMP / GBA limits), ₹20–45 lakh",
+      "conditions": {
+        "area": "bengaluru",
+        "min_value_inr": 2000000,
+        "max_value_inr": 4500000
+      },
+      "stamp_duty_percent": 3,
+      "surcharges_percent": [
+        {
+          "name": "Cess (10% of stamp duty)",
+          "percent": 10,
+          "base": "stamp_duty"
+        }
+      ],
+      "registration": {
+        "percent": 2
+      }
+    },
+    {
+      "id": "bengaluru-above-45l",
+      "description": "Bengaluru (BBMP / GBA limits), above ₹45 lakh",
+      "conditions": {
+        "area": "bengaluru",
+        "min_value_inr": 4500000
+      },
+      "stamp_duty_percent": 5,
+      "surcharges_percent": [
+        {
+          "name": "Cess (10% of stamp duty)",
+          "percent": 10,
+          "base": "stamp_duty"
+        }
+      ],
+      "registration": {
+        "percent": 2
+      }
+    },
+    {
+      "id": "other-upto-20l",
+      "description": "Rest of Karnataka, value up to ₹20 lakh",
+      "conditions": {
+        "area": "other",
+        "max_value_inr": 2000000
+      },
+      "stamp_duty_percent": 2,
+      "registration": {
+        "percent": 2
+      }
+    },
+    {
+      "id": "other-20l-45l",
+      "description": "Rest of Karnataka, ₹20–45 lakh",
+      "conditions": {
+        "area": "other",
+        "min_value_inr": 2000000,
+        "max_value_inr": 4500000
+      },
+      "stamp_duty_percent": 3,
+      "registration": {
+        "percent": 2
+      }
+    },
+    {
+      "id": "other-above-45l",
+      "description": "Rest of Karnataka, above ₹45 lakh",
+      "conditions": {
+        "area": "other",
+        "min_value_inr": 4500000
+      },
+      "stamp_duty_percent": 5,
+      "registration": {
+        "percent": 2
+      }
+    }
+  ]
+}
