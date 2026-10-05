@@ -1,0 +1,275 @@
+{
+  "$comment": "Commission ledger. Column list is a proposal for owner review (docs/PROGRESS.md question 17). Formulas use Google Sheets syntax; derived columns are implemented and tested in tools-core/src/templates.ts. GST % is entered by the user per deal; no tax rate is built in (AGENTS.md rule 9). TDS is left out until a CA confirms it (PROGRESS question 15).",
+  "id": "commission-ledger",
+  "version": "1.0.0-draft",
+  "status": "draft",
+  "format": "Google Sheets (delivered as .xlsx; opens in Google Sheets and Excel 365)",
+  "sheets": [
+    {
+      "id": "deals",
+      "title": { "en": "Deals", "hi": "डील" },
+      "purpose": {
+        "en": "One row per deal. Commission is either a % of the deal value or a fixed amount.",
+        "hi": "हर डील की एक पंक्ति। कमीशन डील की कीमत का % या एक तय रकम हो सकता है।"
+      },
+      "columns": [
+        {
+          "id": "deal_id",
+          "en": "Deal ID",
+          "hi": "डील ID",
+          "type": "text",
+          "required": true,
+          "note": "e.g. D-001; used on the Payments sheet"
+        },
+        { "id": "date", "en": "Deal date", "hi": "डील की तारीख", "type": "date", "required": true },
+        { "id": "property", "en": "Property", "hi": "प्रॉपर्टी", "type": "text" },
+        { "id": "client", "en": "Client", "hi": "क्लाइंट", "type": "text" },
+        { "id": "deal_value", "en": "Deal value (₹)", "hi": "डील की कीमत (₹)", "type": "inr" },
+        { "id": "commission_percent", "en": "Commission %", "hi": "कमीशन %", "type": "percent" },
+        {
+          "id": "fixed_commission",
+          "en": "Or fixed commission (₹)",
+          "hi": "या तय कमीशन (₹)",
+          "type": "inr"
+        },
+        {
+          "id": "commission",
+          "en": "Commission (₹)",
+          "hi": "कमीशन (₹)",
+          "type": "derived",
+          "derived_by": "ledgerDeal.commission",
+          "formula": "=IF(G2<>\"\",ROUND(G2,2),IF(AND(E2<>\"\",F2<>\"\"),ROUND(E2*F2/100,2),\"\"))"
+        },
+        {
+          "id": "gst_percent",
+          "en": "GST % (if you charge it)",
+          "hi": "GST % (अगर लेते हैं)",
+          "type": "percent"
+        },
+        {
+          "id": "gst",
+          "en": "GST (₹)",
+          "hi": "GST (₹)",
+          "type": "derived",
+          "derived_by": "ledgerDeal.gst",
+          "formula": "=IF(H2=\"\",\"\",ROUND(H2*N(I2)/100,2))"
+        },
+        {
+          "id": "invoiced",
+          "en": "Total to bill (₹)",
+          "hi": "कुल बिल (₹)",
+          "type": "derived",
+          "derived_by": "ledgerDeal.invoiced",
+          "formula": "=IF(H2=\"\",\"\",H2+J2)"
+        },
+        {
+          "id": "received",
+          "en": "Received (₹)",
+          "hi": "मिला (₹)",
+          "type": "derived",
+          "derived_by": "ledgerDeal.received",
+          "formula": "=IF(A2=\"\",\"\",SUMIF(Payments!B2:B,A2,Payments!C2:C))"
+        },
+        {
+          "id": "pending",
+          "en": "Pending (₹)",
+          "hi": "बाकी (₹)",
+          "type": "derived",
+          "derived_by": "ledgerDeal.pending",
+          "formula": "=IF(K2=\"\",\"\",MAX(0,K2-L2))"
+        },
+        {
+          "id": "payment_status",
+          "en": "Payment status",
+          "hi": "भुगतान की स्थिति",
+          "type": "derived",
+          "derived_by": "ledgerDeal.status",
+          "formula": "=IF(K2=\"\",\"\",IF(L2>=K2,\"Paid\",IF(L2>0,\"Part paid\",\"Due\")))",
+          "values": [
+            { "id": "due", "en": "Due", "hi": "बकाया" },
+            { "id": "part-paid", "en": "Part paid", "hi": "आंशिक भुगतान" },
+            { "id": "paid", "en": "Paid", "hi": "पूरा भुगतान" }
+          ]
+        },
+        { "id": "co_broker", "en": "Co-broker", "hi": "को-ब्रोकर", "type": "text" },
+        {
+          "id": "co_broker_percent",
+          "en": "Co-broker share %",
+          "hi": "को-ब्रोकर का हिस्सा %",
+          "type": "percent"
+        },
+        {
+          "id": "co_broker_amount",
+          "en": "Co-broker amount (₹)",
+          "hi": "को-ब्रोकर की रकम (₹)",
+          "type": "derived",
+          "derived_by": "ledgerDeal.coBrokerAmount",
+          "formula": "=IF(H2=\"\",\"\",ROUND(H2*N(Q2)/100,2))"
+        },
+        {
+          "id": "my_share",
+          "en": "My share (₹)",
+          "hi": "मेरा हिस्सा (₹)",
+          "type": "derived",
+          "derived_by": "ledgerDeal.myShare",
+          "formula": "=IF(H2=\"\",\"\",H2-R2)"
+        },
+        { "id": "notes", "en": "Notes", "hi": "नोट्स", "type": "text" }
+      ]
+    },
+    {
+      "id": "payments",
+      "title": { "en": "Payments", "hi": "भुगतान" },
+      "purpose": {
+        "en": "Every amount you receive, one row each. Use the Deal ID from the Deals sheet.",
+        "hi": "हर मिली रकम की एक पंक्ति। Deals शीट वाली डील ID लिखें।"
+      },
+      "columns": [
+        { "id": "date", "en": "Date", "hi": "तारीख", "type": "date", "required": true },
+        { "id": "deal_id", "en": "Deal ID", "hi": "डील ID", "type": "text", "required": true },
+        { "id": "amount", "en": "Amount (₹)", "hi": "रकम (₹)", "type": "inr", "required": true },
+        {
+          "id": "mode",
+          "en": "Mode",
+          "hi": "तरीका",
+          "type": "list",
+          "options": [
+            { "id": "upi", "en": "UPI", "hi": "UPI" },
+            { "id": "bank", "en": "Bank transfer", "hi": "बैंक ट्रांसफ़र" },
+            { "id": "cheque", "en": "Cheque", "hi": "चेक" },
+            { "id": "cash", "en": "Cash", "hi": "नकद" }
+          ]
+        },
+        { "id": "reference", "en": "Reference / UTR", "hi": "रेफ़रेंस / UTR", "type": "text" }
+      ]
+    },
+    {
+      "id": "summary",
+      "title": { "en": "Summary", "hi": "सारांश" },
+      "purpose": {
+        "en": "Totals for all deals: billed, received, pending and your own share.",
+        "hi": "सभी डील का जोड़: कुल बिल, मिला, बाकी और आपका अपना हिस्सा।"
+      },
+      "derived_by": "ledgerTotals",
+      "formulas": {
+        "commission": "=SUM(Deals!H2:H)",
+        "invoiced": "=SUM(Deals!K2:K)",
+        "received": "=SUM(Deals!L2:L)",
+        "pending": "=SUM(Deals!M2:M)",
+        "my_share": "=SUM(Deals!S2:S)"
+      }
+    }
+  ],
+  "known_answers": {
+    "$comment": "Hand-checked cases. Commission and GST also match the published examples in tools-core/test/fixtures/commission-known-answers.json (checked in tools-core/test/templates.test.ts).",
+    "deals": [
+      {
+        "name": "₹1 crore at 2% + 18% GST, half received, 50% co-broker",
+        "input": {
+          "dealValue": 10000000,
+          "commissionPercent": 2,
+          "gstPercent": 18,
+          "coBrokerPercent": 50,
+          "payments": [100000, 18000]
+        },
+        "expect": {
+          "commission": 200000,
+          "gst": 36000,
+          "invoiced": 236000,
+          "received": 118000,
+          "pending": 118000,
+          "status": "part-paid",
+          "coBrokerAmount": 100000,
+          "myShare": 100000
+        }
+      },
+      {
+        "name": "Fixed ₹25,000, no GST, nothing received",
+        "input": { "fixedCommission": 25000, "gstPercent": 0, "payments": [] },
+        "expect": {
+          "commission": 25000,
+          "gst": 0,
+          "invoiced": 25000,
+          "received": 0,
+          "pending": 25000,
+          "status": "due",
+          "coBrokerAmount": 0,
+          "myShare": 25000
+        }
+      },
+      {
+        "name": "₹47,35,000 at 1.5%, paid in full by two transfers",
+        "input": {
+          "dealValue": 4735000,
+          "commissionPercent": 1.5,
+          "gstPercent": 0,
+          "payments": [50000, 21025]
+        },
+        "expect": {
+          "commission": 71025,
+          "gst": 0,
+          "invoiced": 71025,
+          "received": 71025,
+          "pending": 0,
+          "status": "paid",
+          "coBrokerAmount": 0,
+          "myShare": 71025
+        }
+      },
+      {
+        "name": "Paise rounding: ₹33,33,333 at 1.25% + 18% GST, 30% co-broker",
+        "input": {
+          "dealValue": 3333333,
+          "commissionPercent": 1.25,
+          "gstPercent": 18,
+          "coBrokerPercent": 30,
+          "payments": []
+        },
+        "expect": {
+          "commission": 41666.66,
+          "gst": 7500,
+          "invoiced": 49166.66,
+          "received": 0,
+          "pending": 49166.66,
+          "status": "due",
+          "coBrokerAmount": 12500,
+          "myShare": 29166.66
+        }
+      },
+      {
+        "name": "Overpaid: pending never goes below zero",
+        "input": { "fixedCommission": 10000, "gstPercent": 0, "payments": [12000] },
+        "expect": {
+          "commission": 10000,
+          "gst": 0,
+          "invoiced": 10000,
+          "received": 12000,
+          "pending": 0,
+          "status": "paid",
+          "coBrokerAmount": 0,
+          "myShare": 10000
+        }
+      },
+      {
+        "name": "Fixed amount wins over a % when both are filled",
+        "input": {
+          "dealValue": 5000000,
+          "commissionPercent": 2,
+          "fixedCommission": 75000,
+          "gstPercent": 18,
+          "payments": []
+        },
+        "expect": {
+          "commission": 75000,
+          "gst": 13500,
+          "invoiced": 88500,
+          "received": 0,
+          "pending": 88500,
+          "status": "due",
+          "coBrokerAmount": 0,
+          "myShare": 75000
+        }
+      }
+    ]
+  }
+}
