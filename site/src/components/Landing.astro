@@ -2,6 +2,7 @@
 import { config } from '../config';
 import { ideas } from '../i18n/ideas';
 import { strings, type Lang } from '../i18n/strings';
+import { isTemplateId, templatePath } from '../lib/templates';
 
 interface Props {
   lang: Lang;
@@ -57,9 +58,16 @@ const clientStrings = {
           <p class={`kind kind-${idea.kind}`}>{idea.kind === 'free' ? t.kindFree : t.kindPaid}</p>
           <h3>{idea.title[lang]}</h3>
           <p>{idea.summary[lang]}</p>
-          <a class="button secondary" href="#waitlist" data-pick-idea={idea.id}>
-            {t.notifyMe}
-          </a>
+          <div class="actions">
+            <a class="button secondary" href="#waitlist" data-pick-idea={idea.id}>
+              {t.notifyMe}
+            </a>
+            {idea.kind === 'paid' && isTemplateId(idea.id) && (
+              <a class="more" href={templatePath(idea.id, lang)}>
+                {t.seeInside}
+              </a>
+            )}
+          </div>
         </li>
       ))
     }
@@ -190,9 +198,22 @@ const clientStrings = {
     border: 1px solid var(--border);
     border-radius: var(--radius);
   }
-  .idea .button {
+  .idea > .button,
+  .idea .actions {
     margin-top: auto;
     align-self: flex-start;
+  }
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 16px;
+  }
+  .more {
+    display: inline-flex;
+    align-items: center;
+    min-height: 48px;
+    font-weight: 600;
   }
   .kind {
     margin: 0;

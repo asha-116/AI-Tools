@@ -1,0 +1,16 @@
+---
+import TemplatePage from '../../../../components/TemplatePage.astro';
+import Base from '../../../../layouts/Base.astro';
+import { templateStrings } from '../../../../i18n/templates';
+
+const t = templateStrings.hi.pages['commission-ledger'];
+---
+
+<Base
+  lang="hi"
+  title={t.metaTitle}
+  description={t.metaDescription}
+  path="/templates/commission-ledger/"
+>
+  <TemplatePage lang="hi" id="commission-ledger" />
+</Base>
