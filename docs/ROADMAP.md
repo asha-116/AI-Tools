@@ -42,14 +42,16 @@ Phases and acceptance criteria. Tick items as they land; each phase ends with a 
 
 ## Phase 3 — Paid products, payment, delivery
 
-- [ ] 2 paid templates (spec.json, test data, how-to guide), e.g. lead tracker, commission ledger
+- [x] 2 paid templates (spec.json, test data, how-to guide), e.g. lead tracker, commission ledger
+      — EN + HI .xlsx built by `npm run build:templates`; owner opens them in Google Sheets/Excel
+- [x] "Coming soon" pages per template (no price) with notify-me
 - [ ] Razorpay Payment Page (test mode) — owner, `docs/SETUP.md` §6
 - [x] `payment-webhook` Worker: signature check, idempotent, signed download token ≤ 72 h;
       links via the `/get-download/` claim page instead of email (ADR-023; email waits on ADR-010)
 - [x] `download` Worker: validates token + expiry, streams from R2
 - [x] Tests: valid purchase, duplicate webhook, invalid signature, expired token, tampered token
 - [x] `products/catalog.json`: products, draft prices, files; drafts sell only in test mode
-- [ ] `legal/`: terms, privacy, refund, contact — drafted, labelled `needs-owner`
+- [x] `legal/`: terms, privacy, refund, contact — drafted (EN + HI), `needs-owner`; not published
 - [ ] **Done when:** end-to-end purchase works in Razorpay test mode incl. duplicate and invalid-signature tests
 
 ## Phase 4 — Agents v1

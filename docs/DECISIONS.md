@@ -220,3 +220,18 @@ NOTHING`), so duplicates and both events for one payment are harmless. It stores
 - **Status:** Accepted for test mode; the payload format must be confirmed by the owner's test
   purchase (`docs/SETUP.md` §6.5) before going live. Owner, 2026-10-05: provider stays
   Razorpay; setup and prices deferred, site shows templates as "coming soon".
+
+### ADR-024 — Templates are generated from a spec, with the logic mirrored in code
+
+- **Context:** paid templates are spreadsheets; spreadsheet formulas are easy to get subtly wrong
+  (a formula pointing at the wrong column was caught during review of the first draft) and cannot
+  be unit-tested directly here.
+- **Decision:** each template is a `products/<id>/spec.json` (sheets, columns EN + HI, formulas,
+  known answers). `scripts/build-templates.mjs` (exceljs, dev-only) generates EN and HI .xlsx and
+  refuses to build when a formula's column letters or compared labels don't match the spec.
+  `tools-core/src/templates.ts` implements every derived column; its tests run the spec's known
+  answers and the published commission examples. Built files are not committed; they go to R2.
+  Google-Sheets-only syntax is translated for Excel (`B2:B` → `B2:B1000`, `{…}` → `HSTACK`).
+- **Alternatives:** hand-made Google Sheets (no review trail, drift); a JS spreadsheet engine
+  to evaluate formulas in CI (GPL/commercial licences or abandoned projects).
+- **Status:** Accepted. Owner opens the files in Google Sheets / Excel before the first sale.

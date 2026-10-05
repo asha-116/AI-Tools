@@ -276,6 +276,10 @@
         "en": "Site visits",
         "hi": "साइट विज़िट"
       },
+      "purpose": {
+        "en": "One row per site visit: who came, what you showed and what happens next.",
+        "hi": "हर साइट विज़िट की एक पंक्ति: कौन आया, क्या दिखाया और आगे क्या करना है।"
+      },
       "columns": [
         {
           "id": "date",

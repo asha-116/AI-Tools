@@ -176,7 +176,7 @@
       },
       "purpose": {
         "en": "Every amount you receive, one row each. Use the Deal ID from the Deals sheet.",
-        "hi": "हर मिली रकम की एक पंक्ति। Deals शीट वाली डील ID लिखें।"
+        "hi": "हर मिली रकम की एक पंक्ति। डील शीट वाली डील ID लिखें।"
       },
       "columns": [
         {

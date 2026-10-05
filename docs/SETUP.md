@@ -221,13 +221,21 @@ new ones on /get-download/).
 
 ### 6.4 Upload the product files
 
-Until the templates exist (Phase 3, next PRs), upload any small test file under the keys in
-`products/catalog.json`:
+Build the workbooks (English and Hindi) from `products/*/spec.json`, then upload them under the
+keys listed in `products/catalog.json`:
 
 ```bash
-npx wrangler@4.143.0 r2 object put toolshop-products/lead-tracker/v1/lead-tracker.xlsx --file ./lead-tracker.xlsx --remote
-npx wrangler@4.143.0 r2 object put toolshop-products/commission-ledger/v1/commission-ledger.xlsx --file ./commission-ledger.xlsx --remote
+npm run build:templates            # → products/<id>/dist/{en,hi}/<id>.xlsx (git-ignored)
+for id in lead-tracker commission-ledger; do
+  for lang in en hi; do
+    npx wrangler@4.143.0 r2 object put "toolshop-products/$id/v1/$lang/$id.xlsx" \
+      --file "products/$id/dist/$lang/$id.xlsx" --remote
+  done
+done
 ```
+
+Open each file in Google Sheets and Excel once before selling (checklist in
+`products/README.md`).
 
 ### 6.5 Test purchase (≈5 min)
 
@@ -261,7 +269,7 @@ npx wrangler@4.143.0 dev --port 8787 --inspector-port 9331 \
   --var ALLOW_DRAFT_PRODUCTS:true
 # second terminal
 cd workers/download && printf 'DOWNLOAD_TOKEN_SECRET=dl_local\n' > .dev.vars
-npx wrangler@4.143.0 r2 object put toolshop-products/lead-tracker/v1/lead-tracker.xlsx --file ./any.xlsx --local
+npx wrangler@4.143.0 r2 object put toolshop-products/lead-tracker/v1/en/lead-tracker.xlsx --file ./any.xlsx --local
 npx wrangler@4.143.0 dev --port 8788
 # site: PUBLIC_CLAIM_URL=http://localhost:8787/api/claim PUBLIC_DOWNLOAD_BASE_URL=http://localhost:8788
 ```

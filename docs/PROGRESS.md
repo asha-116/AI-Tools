@@ -5,7 +5,7 @@ Living status log. Update at the end of every session (see `AGENTS.md` §1).
 ## Current phase
 
 **Phase 3 — Paid products, payment, delivery** (started 2026-10-05). Payment + delivery backbone
-built and tested locally. **Owner, 2026-10-05:** payment provider stays **Razorpay**; payment
+merged; both templates, their "coming soon" pages and the legal drafts built (part 2). **Owner, 2026-10-05:** payment provider stays **Razorpay**; payment
 setup, business details and prices come later; the site shows paid templates as **coming soon**
 with no price. Phase 2: EMI and commission live; stamp duty live as "coming soon" until the
 owner verifies a state. Phase 1 is done: the site is live at
@@ -15,6 +15,28 @@ still needs the owner's Cloudflare setup (`docs/SETUP.md` §5).
 
 ## Done
 
+- 2026-10-05 — **Phase 3, part 2: templates, pages, legal drafts** (this PR; built by five
+  parallel agents, merged and checked together — owner asked for it):
+  - `products/{lead-tracker,commission-ledger}/spec.json`: sheets, columns (EN + HI), Google
+    Sheets formulas, hand-checked known answers. Column proposals wait for owner input (Q17).
+  - `tools-core/src/templates.ts`: follow-up bucket, call list, lead summary, ledger row and
+    totals — exact to the paisa; every spec known answer passes, and ledger commission/GST match
+    all 10 published cases in `commission-known-answers.json`. "Open" lead = not won/lost.
+  - `scripts/build-templates.mjs` (`npm run build:templates`, exceljs 4.4.0 + jszip 3.10.2,
+    both MIT, dev-only): EN and HI .xlsx with a "How to use" sheet, dropdowns, grey formula
+    columns, Indian ₹ grouping, example rows. Refuses to build if a formula points at the wrong
+    column or compares against a label the column does not have. Built files are git-ignored
+    and go to R2 (`products/catalog.json` now lists EN + HI files per product).
+    **Not opened in a real spreadsheet app** (LibreOffice in the build environment fails to
+    load any file) — owner checklist in `products/README.md`.
+  - `/templates/lead-tracker/`, `/templates/commission-ledger/` (+ `/hi/`): "coming soon", what's
+    inside (sheets + columns from the spec), no price; "Notify me" opens the waitlist with the
+    idea pre-selected (`?idea=`). Home page paid cards link to them. Lighthouse 100 × 4 on all 4.
+  - `products/*/guide.{en,hi}.md`: how-to guides.
+  - `legal/{terms,privacy,refund,contact}{,.hi}.md`: drafts with placeholders for business
+    details and marked proposals; not published (needs owner + lawyer, Q19–Q21).
+  - Stamp duty: Hindi rule descriptions and surcharge names in all five draft state files; the
+    Hindi page now shows them (structure check requires them).
 - 2026-10-05 — **Phase 3, part 1: payment + delivery backbone** (this PR, ADR-023):
   - `workers/payment-webhook` (`toolshop-payments`): verifies the Razorpay signature on the raw
     body, records each payment once in D1 `toolshop-orders` (duplicates and `order.paid` after
@@ -103,15 +125,13 @@ still needs the owner's Cloudflare setup (`docs/SETUP.md` §5).
 
 ## Exact next step
 
-1. Owner: merge Phase 3 part 1 (it sells nothing; the new Workers stay off until set up).
-2. Engineer: Phase 3 part 2 — build the two templates (`products/<id>/spec.json`, known-answer
-   test data, EN + HI how-to guide) and a "coming soon" page per template with no price and a
-   "notify me" link to the waitlist.
-3. Engineer: Phase 3 part 3 — `legal/` drafts (terms, privacy, refund, contact) with
-   placeholders for the business details, labelled `needs-owner`.
+1. Owner: merge Phase 3 part 2, then open the four .xlsx files (`npm run build:templates`, or
+   ask the engineer for them) in Google Sheets and Excel 365 — checklist in `products/README.md`.
+2. Owner: answer Q17 (template columns), Q19–Q22 (legal details and proposals, Hindi reviewer).
+3. Engineer, next: Phase 4 — `agents/lib` (LLM client with free-tier fallback, budgets,
+   redaction, schema validation, dry-run) and the first agents in dry-run, since Phase 3's
+   remaining steps (prices, Razorpay test mode, publishing legal pages) wait on the owner.
 4. Later (owner): business details, prices, then `docs/SETUP.md` §6 in Razorpay test mode.
-5. Engineer (Phase 2 leftovers): Hindi fields for stamp-duty rule descriptions and surcharge
-   names; publish each state as the owner verifies it.
 
 ## Blockers
 
@@ -154,3 +174,12 @@ still needs the owner's Cloudflare setup (`docs/SETUP.md` §5).
     Catalog prices are placeholders until you approve real ones in a PR.
 19. **Legal pages** (new): the name (person or business) and contact address to show on terms,
     privacy and refund pages. Razorpay also requires these pages before live mode.
+20. **Legal proposals** (new): retention (orders [8] years — ask your CA; support mail [12]
+    months), reply within [2] working days, refunds started within [2] working days, template
+    licence (own business use, no resale), liability capped at the price paid. See
+    `legal/README.md` for the full checklist.
+21. **Lawyer review** (new): the legal drafts are not legal advice; have them reviewed before
+    publishing. Razorpay needs them live before live mode.
+22. **Hindi review** (new, expands 10): new Hindi to review — stamp-duty rule descriptions and
+    surcharge names (`data/stamp-duty/*.json`), template pages, the two `guide.hi.md`, the
+    Hindi workbooks, and `legal/*.hi.md`.
