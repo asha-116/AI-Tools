@@ -1,0 +1,53 @@
+{
+  "$schema": "./catalog.schema.json",
+  "note": "PLACEHOLDER prices, not decided and never shown on the site (owner, 2026-10-05: show templates as upcoming; prices later). Only products with status \"live\" can be bought on the real site; \"draft\" products are delivered only when the Worker runs with ALLOW_DRAFT_PRODUCTS=true (Razorpay test mode).",
+  "products": [
+    {
+      "id": "lead-tracker",
+      "name_en": "Lead tracker (Google Sheets)",
+      "name_hi": "लीड ट्रैकर (Google Sheets)",
+      "price_inr": 199,
+      "status": "draft",
+      "files": [
+        {
+          "key": "lead-tracker/v1/lead-tracker.xlsx",
+          "name": "changelens-lead-tracker.xlsx",
+          "content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        }
+      ]
+    },
+    {
+      "id": "commission-ledger",
+      "name_en": "Commission ledger (Google Sheets)",
+      "name_hi": "कमीशन लेजर (Google Sheets)",
+      "price_inr": 299,
+      "status": "draft",
+      "files": [
+        {
+          "key": "commission-ledger/v1/commission-ledger.xlsx",
+          "name": "changelens-commission-ledger.xlsx",
+          "content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        }
+      ]
+    },
+    {
+      "id": "bundle",
+      "name_en": "Lead tracker + commission ledger",
+      "name_hi": "लीड ट्रैकर + कमीशन लेजर",
+      "price_inr": 399,
+      "status": "draft",
+      "files": [
+        {
+          "key": "lead-tracker/v1/lead-tracker.xlsx",
+          "name": "changelens-lead-tracker.xlsx",
+          "content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        },
+        {
+          "key": "commission-ledger/v1/commission-ledger.xlsx",
+          "name": "changelens-commission-ledger.xlsx",
+          "content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        }
+      ]
+    }
+  ]
+}

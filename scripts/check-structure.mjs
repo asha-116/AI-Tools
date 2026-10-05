@@ -28,6 +28,11 @@ const requiredFiles = [
   '.github/workflows/deploy.yml',
   'data/waitlist-ideas.json',
   'workers/waitlist/wrangler.toml',
+  'workers/payment-webhook/wrangler.toml',
+  'workers/payment-webhook/migrations/0001_init.sql',
+  'workers/download/wrangler.toml',
+  'products/catalog.json',
+  'products/catalog.schema.json',
   'site/public/_headers',
 ];
 

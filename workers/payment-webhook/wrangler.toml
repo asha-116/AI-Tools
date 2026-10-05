@@ -1,0 +1,25 @@
+# Razorpay webhook + "get my download" claim API (Phase 3). See docs/SETUP.md §6.
+name = "toolshop-payments"
+main = "src/index.ts"
+compatibility_date = "2026-09-01"
+workers_dev = true
+
+[triggers]
+crons = ["23 3 * * *"]
+
+[vars]
+# Replaced at deploy time from repo variables (docs/SETUP.md §6).
+ALLOWED_ORIGINS = "http://localhost:4321"
+DOWNLOAD_BASE_URL = "http://localhost:8788"
+# "true" only while Razorpay is in test mode: lets draft products in products/catalog.json be bought.
+ALLOW_DRAFT_PRODUCTS = "false"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "toolshop-orders"
+# Replaced at deploy time from the repo variable ORDERS_D1_ID. Not a secret.
+database_id = "00000000-0000-0000-0000-000000000000"
+migrations_dir = "migrations"
+
+# Secrets (set with `wrangler secret put`, never here):
+#   RAZORPAY_WEBHOOK_SECRET, HASH_SECRET, DOWNLOAD_TOKEN_SECRET

@@ -1,0 +1,11 @@
+---
+import GetDownload from '../../components/GetDownload.astro';
+import Base from '../../layouts/Base.astro';
+import { claimStrings } from '../../i18n/claim';
+
+const t = claimStrings.en;
+---
+
+<Base lang="en" title={t.metaTitle} description={t.metaDescription} path="/get-download/" noindex>
+  <GetDownload lang="en" />
+</Base>

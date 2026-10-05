@@ -25,7 +25,7 @@ flowchart LR
     W1[Worker: payment-webhook]
     W2[Worker: download]
     R2[(R2: product files)]
-    KV[(KV/D1: orders, waitlist)]
+    KV[(D1: orders, waitlist)]
   end
 
   LLM[Free LLM APIs<br/>Gemini · Groq · OpenRouter · Cerebras]
@@ -42,7 +42,8 @@ flowchart LR
   B -->|uses free tools| P
   B -->|pays| RZ -->|webhook, signed| W1
   W1 --> KV
-  W1 -->|signed link ≤ 72 h, by email| B
+  B -->|/get-download/: payment ID + email| W1
+  W1 -->|signed links ≤ 72 h| B
   B -->|link| W2 --> R2
   A -->|Controller: read-only API| RZ
 ```
@@ -75,7 +76,7 @@ sequenceDiagram
   Ctl->>GH: ledger + usage report
 ```
 
-## 3. Purchase and delivery (Phase 3)
+## 3. Purchase and delivery (Phase 3, ADR-023)
 
 ```mermaid
 sequenceDiagram
@@ -83,36 +84,39 @@ sequenceDiagram
   participant B as Buyer
   participant RZ as Razorpay Payment Page
   participant WH as Worker: payment-webhook
-  participant KV as KV/D1 (orders)
-  participant E as Email provider (free tier)
+  participant D1 as D1 (orders)
+  participant S as Site: /get-download/
   participant DL as Worker: download
-  participant R2 as R2 bucket
+  participant R2 as R2 bucket (private)
 
   B->>RZ: pay (UPI/card)
+  RZ-->>B: receipt email with payment ID
   RZ->>WH: POST payment.captured + X-Razorpay-Signature
-  WH->>WH: verify HMAC-SHA256(body, webhook secret) — reject if invalid
-  WH->>KV: idempotency: event id / payment id seen? → 200, do nothing
-  WH->>WH: token = HMAC(order, product, expiry ≤ 72 h)
-  WH->>KV: store order (ids, product, amount, expiry — minimal PII)
-  WH->>E: email download link to buyer
-  WH-->>RZ: 200
+  WH->>WH: verify HMAC-SHA256(raw body, webhook secret), reject if invalid
+  WH->>WH: product = "product" note or catalog price == amount
+  WH->>D1: INSERT payment id, product, amount, HMAC(email) ON CONFLICT DO NOTHING
+  WH-->>RZ: 200 (also for duplicates)
+  B->>S: payment ID + email
+  S->>WH: POST /api/claim (CORS allow-list, 10/IP/hour)
+  WH->>D1: find payment, compare HMAC(email)
+  WH-->>S: one signed link per file, valid 72 h
   B->>DL: GET /d/<token>
-  DL->>DL: verify signature + expiry (+ download count)
-  DL->>R2: stream file
-  DL-->>B: file
+  DL->>DL: verify signature, expiry, file belongs to product
+  DL->>R2: get file
+  DL-->>B: file (attachment, no-store)
 ```
 
 ## 4. Data flows and trust boundaries
 
-| Data                         | Lives in                                | May go to an LLM?           |
-| ---------------------------- | --------------------------------------- | --------------------------- |
-| Calculator inputs            | Buyer's browser only                    | Never (never leaves device) |
-| Waitlist emails              | Cloudflare KV/D1                        | Never                       |
-| Buyer email, name, phone     | Razorpay; KV/D1 (email only)            | Never                       |
-| Payment/order IDs, amounts   | Razorpay; KV/D1; `company/ledger/*.csv` | Never                       |
-| Support message text         | Support inbox → agent run memory        | Only after redaction        |
-| Goals, policies, KB, reports | `company/` in git                       | Yes (no PII by rule)        |
-| Secrets                      | GitHub Secrets / Cloudflare env         | Never                       |
+| Data                         | Lives in                              | May go to an LLM?           |
+| ---------------------------- | ------------------------------------- | --------------------------- |
+| Calculator inputs            | Buyer's browser only                  | Never (never leaves device) |
+| Waitlist emails              | Cloudflare D1                         | Never                       |
+| Buyer email, name, phone     | Razorpay only; D1 keeps an email HMAC | Never                       |
+| Payment/order IDs, amounts   | Razorpay; D1; `company/ledger/*.csv`  | Never                       |
+| Support message text         | Support inbox → agent run memory      | Only after redaction        |
+| Goals, policies, KB, reports | `company/` in git                     | Yes (no PII by rule)        |
+| Secrets                      | GitHub Secrets / Cloudflare env       | Never                       |
 
 ## 5. Agent runtime
 

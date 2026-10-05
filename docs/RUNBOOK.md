@@ -51,3 +51,16 @@ anything irreversible. Everything you need arrives as a GitHub notification.
    the official page/notification you used, and your name. The engineer sets
    `status: "verified"`, clears `conflicts`, and opens a PR; merging it publishes that state.
 5. Re-verify every state at least every 6 months (the Orchestrator will remind you).
+
+## Buyer says the download page did not work (Phase 3)
+
+1. Ask for the **payment ID** only (never ask them to email card or bank details).
+2. Cloudflare → D1 → `toolshop-orders` → _Console_:
+   `SELECT product_id, amount_paise, created_at FROM orders WHERE payment_id = 'pay_…';`
+   - **No row:** the webhook never arrived. Razorpay → _Webhooks_ → check delivery errors, fix,
+     then _Resend_ the event. The buyer can retry the page a minute later.
+   - **`product_id` is empty:** the amount matched no product (wrong Payment Page price). Send
+     the file by hand, then fix the page price or `products/catalog.json`.
+   - **Row is fine:** they probably typed a different email. Ask which email they paid with
+     (Razorpay dashboard → Payments shows it) and tell them to use exactly that one.
+3. Links expire after 72 hours by design; the same page always gives fresh ones.

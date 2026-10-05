@@ -12,13 +12,13 @@ Rule: **no paid component without an entry here and an owner-approved Issue.** A
 | GitHub Actions                         | CI + agent heartbeats                      | private repos: 2,000 min/month; public repos: unlimited on standard runners   | 0                              | > 2,000 min/month on private → make public or pay                              | not yet  |
 | GitHub branch protection               | required checks on `main`                  | public repos only on Free                                                     | n/a                            | private + protection → GitHub Pro                                              | not yet  |
 | Cloudflare Pages                       | static site                                | 500 builds/month, unlimited static requests/bandwidth                         | 0                              | builds > 500 (we deploy via Actions, so few)                                   | not yet  |
-| Cloudflare Workers                     | waitlist (from Phase 1), webhook, download | 100,000 requests/day, 10 ms CPU/request                                       | 0 (not yet deployed)           | sustained > 70k/day                                                            | not yet  |
+| Cloudflare Workers                     | waitlist, payments, download (3 Workers)   | 100,000 requests/day, 10 ms CPU/request                                       | 0 (not yet deployed)           | sustained > 70k/day                                                            | not yet  |
 | Cloudflare D1                          | waitlist (from Phase 1), orders            | 5 GB, 5M rows read/day, 100k rows written/day                                 | 0 (≤ 2 row writes per sign-up) | —                                                                              | not yet  |
-| Cloudflare KV                          | idempotency keys (optional)                | 100k reads/day, 1k writes/day, 1 GB                                           | 0                              | writes > 1k/day                                                                | not yet  |
+| Cloudflare KV                          | not used (D1 handles idempotency, ADR-023) | 100k reads/day, 1k writes/day, 1 GB                                           | 0                              | writes > 1k/day                                                                | not yet  |
 | Cloudflare R2                          | paid product files                         | 10 GB-month, 1M class A + 10M class B ops/month, free egress                  | 0                              | > 10 GB                                                                        | not yet  |
 | Cloudflare Web Analytics               | traffic                                    | free                                                                          | —                              | —                                                                              | not yet  |
 | Razorpay                               | payments                                   | no setup/annual fee                                                           | 0                              | **per-transaction fee (~2% + 18% GST on the fee)** — unavoidable cost of sales | not yet  |
-| Transactional email (Resend, proposed) | buyer download emails                      | 3,000/month, 100/day; needs a domain                                          | 0                              | > 100 sales/day                                                                | not yet  |
+| Transactional email (Resend, proposed) | buyer emails — not used yet (ADR-023)      | 3,000/month, 100/day; needs a domain                                          | 0                              | > 100 sales/day                                                                | not yet  |
 | Gemini API                             | agents                                     | free tier with per-model RPM/RPD limits; **prompts may be used for training** | 0                              | —                                                                              | not yet  |
 | Groq                                   | agents                                     | free tier, per-model rate limits                                              | 0                              | —                                                                              | not yet  |
 | Cerebras                               | agents                                     | free tier, daily token limits                                                 | 0                              | —                                                                              | not yet  |
@@ -34,15 +34,15 @@ Rule: **no paid component without an entry here and an owner-approved Issue.** A
 
 ## Actions minutes budget (private repo)
 
-| Workflow                                     | Runs/month (est.) | Minutes/run (est.)                                       | Minutes/month       |
-| -------------------------------------------- | ----------------- | -------------------------------------------------------- | ------------------- |
-| CI (per PR/push)                             | 120               | 7 (4 parallel jobs; Lighthouse ~4 min: 6 pages × 3 runs) | 840                 |
-| Orchestrator (daily)                         | 30                | 1                                                        | 30                  |
-| Controller (daily)                           | 30                | 1                                                        | 30                  |
-| Demand Researcher (weekly)                   | 4                 | 3                                                        | 12                  |
-| Support (every 2 h)                          | 360               | 1                                                        | 360                 |
-| Builder / SEO / Social / Verifier (per task) | 60                | 3                                                        | 180                 |
-| **Total**                                    |                   |                                                          | **≈ 1,450 / 2,000** |
+| Workflow                                     | Runs/month (est.) | Minutes/run (est.)                                        | Minutes/month       |
+| -------------------------------------------- | ----------------- | --------------------------------------------------------- | ------------------- |
+| CI (per PR/push)                             | 120               | 8 (4 parallel jobs; Lighthouse ~6 min: 10 pages × 3 runs) | 960                 |
+| Orchestrator (daily)                         | 30                | 1                                                         | 30                  |
+| Controller (daily)                           | 30                | 1                                                         | 30                  |
+| Demand Researcher (weekly)                   | 4                 | 3                                                         | 12                  |
+| Support (every 2 h)                          | 360               | 1                                                         | 360                 |
+| Builder / SEO / Social / Verifier (per task) | 60                | 3                                                         | 180                 |
+| **Total**                                    |                   |                                                           | **≈ 1,570 / 2,000** |
 
 GitHub bills each job rounded up to the whole minute, so many tiny jobs cost more than they
 look. Keep jobs short, cache `npm`, and combine steps. If usage passes 70%, reduce Support to

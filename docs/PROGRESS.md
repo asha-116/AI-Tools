@@ -4,16 +4,39 @@ Living status log. Update at the end of every session (see `AGENTS.md` §1).
 
 ## Current phase
 
-**Phase 2 — Free calculators.** EMI and commission live; stamp duty built, waiting for rate verification. Phase 1 is done: the site is live at
+**Phase 3 — Paid products, payment, delivery** (started 2026-10-05). Payment + delivery backbone
+built and tested locally. **Owner, 2026-10-05:** payment provider stays **Razorpay**; payment
+setup, business details and prices come later; the site shows paid templates as **coming soon**
+with no price. Phase 2: EMI and commission live; stamp duty live as "coming soon" until the
+owner verifies a state. Phase 1 is done: the site is live at
 **https://tools.changelense.in** and the waitlist records sign-ups (first one confirmed
 2026-09-29). Brand is now **ChangeLens** (ADR-019). Phase 1 is merged; going live
 still needs the owner's Cloudflare setup (`docs/SETUP.md` §5).
 
 ## Done
 
+- 2026-10-05 — **Phase 3, part 1: payment + delivery backbone** (this PR, ADR-023):
+  - `workers/payment-webhook` (`toolshop-payments`): verifies the Razorpay signature on the raw
+    body, records each payment once in D1 `toolshop-orders` (duplicates and `order.paid` after
+    `payment.captured` are no-ops), stores only an HMAC of the buyer's email. `POST /api/claim`
+    turns payment ID + email into one signed link per file (≤ 72 h), 10 tries/IP/hour.
+  - `workers/download` (`toolshop-download`): verifies the link (403 tampered, 410 expired),
+    checks the file belongs to the product, streams it from private R2 `toolshop-products`.
+  - `workers/lib`: WebCrypto HMAC (checked against RFC 4231 and node:crypto), tokens, catalog.
+  - `products/catalog.json`: lead tracker, commission ledger, bundle with **placeholder prices**
+    (not shown anywhere; only sellable in test mode, `ALLOW_DRAFT_PRODUCTS=true`).
+  - Landing page: paid ideas now say "Template · coming soon" instead of "small one-time price".
+  - `/get-download/` + `/hi/get-download/` (noindex): claim form; links only accepted from the
+    download Worker's origin. Shows "not open yet" until `CLAIM_URL` is set.
+  - `deploy.yml`: payments and download jobs, skipped until configured (`docs/SETUP.md` §6).
+  - Verified locally with both Workers under `wrangler dev`, local D1 + R2 and Chromium: signed
+    webhook recorded once, repeat ignored, bad signature 401, claim in EN + HI, wrong email
+    "not found", file downloaded, tampered link 403, foreign origin 403, zero off-site requests.
+    251 tests; Lighthouse 100/100/100 on the new pages (SEO skipped: noindex).
+- 2026-10-05 — **Stamp duty calculator** merged (asha-116/AI-Tools#9) and deployed.
 - 2026-09-29 — **Phase 0** merged (asha-116/AI-Tools#1): repo layout, rules, docs, CI,
   templates, labels, agent procedures, policy drafts, stamp-duty schema.
-- 2026-09-29 — **Phase 2, part 4: stamp duty calculator** (this PR):
+- 2026-09-29 — **Phase 2, part 4: stamp duty calculator** (merged 2026-10-05):
   - `tools-core/src/stampDuty.ts`: data-driven rules (area, buyer, value slabs, surcharges on
     value or on duty, registration % with cap/min/fixed fee); tests first with hand-checked
     fixture cases.
@@ -74,15 +97,21 @@ still needs the owner's Cloudflare setup (`docs/SETUP.md` §5).
 
 ## In progress
 
-- Stamp duty calculator PR review; owner verification of state rates (RUNBOOK).
+- Phase 3 part 1 PR review. Razorpay test-mode setup (`docs/SETUP.md` §6) is **deferred by the
+  owner** until business details and prices are ready.
+- Owner verification of stamp duty rates (RUNBOOK).
 
 ## Exact next step
 
-1. Owner: verify stamp duty rates for at least one state (`docs/RUNBOOK.md`), starting with
-   the state where most of your agents work; share https://tools.changelense.in with agents.
-2. Engineer: add Hindi fields for rule descriptions/surcharge names in the stamp-duty data;
-   publish each state as the owner verifies it (remove noindex + add SEO back to Lighthouse
-   when the first state goes live); then start **Phase 3** (paid templates + payments).
+1. Owner: merge Phase 3 part 1 (it sells nothing; the new Workers stay off until set up).
+2. Engineer: Phase 3 part 2 — build the two templates (`products/<id>/spec.json`, known-answer
+   test data, EN + HI how-to guide) and a "coming soon" page per template with no price and a
+   "notify me" link to the waitlist.
+3. Engineer: Phase 3 part 3 — `legal/` drafts (terms, privacy, refund, contact) with
+   placeholders for the business details, labelled `needs-owner`.
+4. Later (owner): business details, prices, then `docs/SETUP.md` §6 in Razorpay test mode.
+5. Engineer (Phase 2 leftovers): Hindi fields for stamp-duty rule descriptions and surcharge
+   names; publish each state as the owner verifies it.
 
 ## Blockers
 
@@ -101,8 +130,7 @@ still needs the owner's Cloudflare setup (`docs/SETUP.md` §5).
 5. **Licence:** keep proprietary "All rights reserved"?
 6. **Delivery email (ADR-010):** free transactional email tier (needs a domain) or download
    link on the post-payment page only?
-7. **Prices:** starting price points for the first two templates (suggest ₹199 and ₹299, bundle ₹399)?
-   The landing page currently says only "small one-time price".
+7. ~~Prices~~ → see 18 (deferred).
 8. **Refund threshold:** max refund the Support agent may approve alone (suggest ₹0 until
    Phase 5 is proven, then ≤ ₹299)?
 9. **States for stamp duty v1:** suggest Maharashtra, Karnataka, Delhi, Tamil Nadu, Uttar Pradesh.
@@ -118,3 +146,11 @@ still needs the owner's Cloudflare setup (`docs/SETUP.md` §5).
     confirm; every figure is also recomputed independently, so the maths is not at risk.
 15. **TDS on commission** (new): should the commission calculator show TDS? Published sources
     disagree on the current section 194H rate, so it is left out until a CA confirms it.
+16. ~~Payment provider~~ → **answered 2026-10-05:** Razorpay. Setup deferred until business
+    details are ready.
+17. **First templates** (new): lead tracker and commission ledger as Google Sheets (delivered
+    as .xlsx that opens in Google Sheets / Excel)? Any columns your agents always need?
+18. **Prices** (replaces 7): **deferred by owner 2026-10-05** — site shows "coming soon", no price.
+    Catalog prices are placeholders until you approve real ones in a PR.
+19. **Legal pages** (new): the name (person or business) and contact address to show on terms,
+    privacy and refund pages. Razorpay also requires these pages before live mode.
