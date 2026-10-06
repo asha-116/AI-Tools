@@ -1,0 +1,34 @@
+{
+  "$comment": "QA bilingual check (agents/qa/src/bilingual.ts). `terms`: Latin-script words and phrases allowed inside Hindi strings because Indian users know them in English (brands, acronyms, product names). Matching is case-sensitive, on whole words. `pairAliases`: a `<key>_hi` whose English text is not in `<key>_en` or `<key>`. `exempt`: Hindi strings that are meant to be in English; each needs a reason. Change by PR and keep both lists short.",
+  "terms": [
+    "EMI",
+    "GST",
+    "TDS",
+    "PDF",
+    "UPI",
+    "UTR",
+    "ID",
+    "CA",
+    "WhatsApp",
+    "Google Sheets",
+    "Excel",
+    "Razorpay",
+    "ChangeLens",
+    "Cloudflare",
+    "JavaScript",
+    "English",
+    "BMC",
+    "BBMP",
+    "GBA"
+  ],
+  "pairAliases": {
+    "state_name_hi": "state"
+  },
+  "exempt": [
+    {
+      "file": "site/src/i18n/strings.ts",
+      "path": "strings.langSwitchLabel",
+      "reason": "The language switch on Hindi pages links to the English page, so it is written in English."
+    }
+  ]
+}

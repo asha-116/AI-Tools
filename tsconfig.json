@@ -13,6 +13,8 @@
     "site/src/tools",
     "site/src/lib",
     "site/test",
+    "agents/qa/src",
+    "agents/qa/test",
     "vitest.config.ts",
     "eslint.config.js"
   ]
