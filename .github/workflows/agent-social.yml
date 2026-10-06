@@ -1,0 +1,74 @@
+name: Agent — Social (drafts only)
+
+# Draft social posts into company/social-queue/ via PR (agents/social/PROCEDURE.md).
+# Never posts anything. Runs only when vars.AGENTS_ENABLED == 'true'; dry-run unless
+# vars.AGENTS_LIVE == 'true'.
+on:
+  schedule:
+    - cron: '13 4 * * 4' # Thursday 04:13 UTC — weekly evergreen tip
+  pull_request:
+    types: [closed]
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      slug:
+        description: Tool slug for a launch post; leave empty for the weekly tip
+        type: string
+        required: false
+        default: ''
+
+permissions:
+  contents: read
+
+jobs:
+  resolve:
+    name: Resolve tool slug
+    if: >-
+      vars.AGENTS_ENABLED == 'true' &&
+      (github.event_name != 'pull_request' ||
+       (github.event.pull_request.merged == true &&
+        (contains(github.event.pull_request.labels.*.name, 'type:tool') ||
+         contains(github.event.pull_request.labels.*.name, 'type:product'))))
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      pull-requests: read
+    outputs:
+      slug: ${{ steps.slug.outputs.slug }}
+    steps:
+      - id: slug
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EVENT: ${{ github.event_name }}
+          INPUT_SLUG: ${{ inputs.slug }}
+          PR: ${{ github.event.pull_request.number }}
+          REPO: ${{ github.repository }}
+        # Inputs go through env, never interpolated into the script.
+        run: |
+          set -euo pipefail
+          slug=""
+          if [ "$EVENT" = "workflow_dispatch" ]; then
+            slug="$INPUT_SLUG"
+          elif [ "$EVENT" = "pull_request" ]; then
+            slug=$(gh api --paginate "repos/$REPO/pulls/$PR/files" --jq '.[].filename' \
+              | sed -nE 's#^site/src/tools/([a-z0-9-]+)/.*#\1#p; s#^products/([a-z0-9-]+)/.*#\1#p' \
+              | sort -u | head -n 1)
+          fi
+          if [ -n "$slug" ] && ! printf '%s' "$slug" | grep -Eq '^[a-z0-9][a-z0-9-]{0,40}$'; then
+            echo "::warning::Ignoring invalid slug"
+            slug=""
+          fi
+          echo "slug=$slug" >> "$GITHUB_OUTPUT"
+
+  run:
+    needs: resolve
+    # A merged PR without a tool slug does nothing; schedule/dispatch without a slug = weekly tip.
+    if: >-
+      vars.AGENTS_ENABLED == 'true' &&
+      (github.event_name != 'pull_request' || needs.resolve.outputs.slug != '')
+    uses: ./.github/workflows/agent-run.yml
+    with:
+      agent: social
+      args: ${{ needs.resolve.outputs.slug != '' && format('--slug {0}', needs.resolve.outputs.slug) || '' }}
+    secrets: inherit

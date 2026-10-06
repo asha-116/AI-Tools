@@ -1,0 +1,19 @@
+name: Agent — Demand Researcher
+
+# Weekly idea research (agents/demand-researcher/PROCEDURE.md). Runs only when
+# vars.AGENTS_ENABLED == 'true'; dry-run unless vars.AGENTS_LIVE == 'true' (see agent-run.yml).
+on:
+  schedule:
+    - cron: '37 1 * * 1' # Monday 01:37 UTC ≈ 07:07 IST
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  run:
+    if: vars.AGENTS_ENABLED == 'true'
+    uses: ./.github/workflows/agent-run.yml
+    with:
+      agent: demand-researcher
+    secrets: inherit
