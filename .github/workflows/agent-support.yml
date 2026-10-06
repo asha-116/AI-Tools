@@ -1,4 +1,4 @@
-name: Support
+name: Agent — Support
 
 # Support agent (agents/support/PROCEDURE.md): answers buyer mail with KB templates, escalates
 # every refund to the owner. Skipped (0 minutes) until both repository variables are set:

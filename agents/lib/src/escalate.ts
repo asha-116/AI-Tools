@@ -57,7 +57,16 @@ export async function escalate(
   options: { runUrl?: string; now?: Date } = {},
 ): Promise<WriteResult & { deduped: boolean }> {
   const marker = escalationMarker(agent, req);
-  const open = await gh.listIssues({ state: 'open', labels: ['needs-owner'], limit: 300 });
+  let open: Awaited<ReturnType<GitHubClient['listIssues']>>;
+  try {
+    open = await gh.listIssues({ state: 'open', labels: ['needs-owner'], limit: 300 });
+  } catch (err) {
+    // In a dry run nothing is written anyway, so a failed read (no token, rate limit) must not
+    // crash the run: treat it as "no existing Issue". Live runs still fail loudly, because
+    // opening a duplicate Issue for the owner is worse than stopping.
+    if (!gh.dryRun) throw err;
+    open = [];
+  }
   const existing = open.find((i) => i.body.includes(marker));
   if (existing) {
     const when = (options.now ?? new Date()).toISOString();

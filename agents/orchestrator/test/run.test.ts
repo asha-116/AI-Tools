@@ -266,9 +266,11 @@ describe('orchestrate', () => {
 
   it('notes a failed escalation instead of crashing', async () => {
     const s = setup(['{}', '{}']);
-    s.github.listIssues = async (q) => {
-      if (q?.labels?.includes('needs-owner')) throw new Error('boom');
-      return MemoryGitHub.prototype.listIssues.call(s.github, q);
+    // A failed read is tolerated in dry runs (lib escalate); a failed write is not.
+    const create = s.github.createIssue.bind(s.github);
+    s.github.createIssue = async (issue) => {
+      if (issue.labels?.includes('needs-owner')) throw new Error('boom');
+      return create(issue);
     };
     const r = await orchestrate(s.ctx, s.opts);
     expect(r.report_markdown).toContain('Could not open the needs-owner Issue');

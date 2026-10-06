@@ -459,4 +459,18 @@ describe('escalate', () => {
     await escalate(mem, 'support', req);
     expect(mem.comments.get(1)).toHaveLength(1);
   });
+
+  it('in a dry run, a failed read (no token, rate limit) still lets the run continue', async () => {
+    class FailingReads extends MemoryGitHub {
+      override listIssues(): Promise<never> {
+        return Promise.reject(new Error('403 rate limit'));
+      }
+    }
+    const dry = new FailingReads({ agent: 'support', dryRun: true });
+    const r = await escalate(dry, 'support', req);
+    expect(r.deduped).toBe(false);
+    expect(dry.writes.map((w) => w.action)).toEqual(['createIssue']);
+    const live = new FailingReads({ agent: 'support', dryRun: false });
+    await expect(escalate(live, 'support', req)).rejects.toThrow('403 rate limit');
+  });
 });

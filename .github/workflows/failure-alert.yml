@@ -16,6 +16,15 @@ on:
       - Sync labels
       - Backup
       - Usage report
+      - Weekly link check
+      - Agent — Orchestrator
+      - Agent — Controller
+      - Agent — Builder
+      - Agent — Verifier
+      - Agent — Demand Researcher
+      - Agent — SEO/Listing
+      - Agent — Social (drafts only)
+      - Agent — Support
     types: [completed]
 
 permissions:
