@@ -11,6 +11,7 @@ export default defineConfig({
         'workers/*/src/**/*.ts',
         'site/src/tools/*/logic.ts',
         'site/src/lib/**/*.ts',
+        'agents/controller/src/**/*.ts',
       ],
       reporter: ['text', 'json-summary'],
       // Formula code is money-adjacent: see AGENTS.md ("Tests first").

@@ -4,6 +4,7 @@
     "noEmit": true
   },
   "include": [
+    "agents/controller",
     "tools-core/src",
     "tools-core/test",
     "workers/*/src",
