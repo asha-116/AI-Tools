@@ -302,3 +302,54 @@ NOTHING`), so duplicates and both events for one payment are harmless. It stores
   (`<!-- agent:qa -->`) is updated in place by a job with its own minimal permissions; it never
   fails a PR. Online link checks run weekly once agents are enabled.
 - **Status:** Accepted (2026-10-06).
+
+### ADR-030 — Builder does only the tests-first half; Verifier is independent and label-gated
+
+- **Context:** free-tier models cannot be trusted to write production formula code, and the
+  Verifier must never check its own family's work (AGENTS.md).
+- **Decision:**
+  - The **Builder** turns an `agent:builder` Issue into a draft PR with a known-answer fixture
+    (every case must cite a URL that appears in the Issue), a test skeleton and a PLAN.md. A
+    person or coding session implements the function until CI is green. It escalates instead of
+    building for pricing/legal Issues, uncited Issues or disagreeing sources.
+  - The **Verifier** runs on PRs touching formulas, data, products, legal, policies or content.
+    Formula cases (≤ 10, seeded from the PR number) are computed by a model of a **different
+    family** from the formula description only, then compared with our function within ₹1 or
+    0.01%. Changes to `legal/`, `company/policies/` or any price fail without the
+    `approved-by-owner` label (no model involved). No independent provider → failure, never
+    self-verification.
+- **Known risk:** the Verifier executes the PR's code in a job that holds the agents' App token
+  and model keys. Fork PRs are excluded, but a same-repo PR (including one opened by an agent)
+  could change what runs. Mitigation before `AGENTS_LIVE=true`: keep model keys low-privilege
+  free-tier keys, keep the App's permissions minimal, and review agent PRs before they get the
+  `labeled` trigger.
+- **Status:** Accepted for dry-run (2026-10-06).
+
+### ADR-031 — Support: templates only, every refund to the owner, no inbox yet
+
+- **Decision:** the Support agent redacts every message (and strips links, which may carry
+  download tokens) before any model call, classifies it (keyword fallback without a model),
+  and replies only with owner-approved templates from `company/knowledge-base/` (EN + HI; all
+  `draft` until a human approves them). Refund threshold stays ₹0: every refund request becomes
+  a `needs-owner` Issue with a masked payment ID. Legal threats, chargebacks and unclear
+  messages go to the owner. Logs hold a hashed message ref, category and outcome — never text.
+  It runs every 6 hours, only when `SUPPORT_INBOX` is set.
+- **Open:** the inbox. Recommended: Cloudflare Email Routing → Worker → D1 queue (free, raw mail
+  never reaches GitHub); alternative: Gmail API via OAuth.
+- **Status:** Accepted for dry-run (2026-10-06).
+
+### ADR-032 — Growth agents: research off by default, numbers from code, drafts only
+
+- **Decision:**
+  - **Demand Researcher** fetches only allow-listed sources whose `terms_checked` the owner has
+    set in `agents/demand-researcher/sources.json` (all off today), honours robots.txt, max 50
+    fetches/run, strips usernames and redacts before any model call. Scores are computed in
+    code; an idea needs ≥ 2 fetched evidence URLs.
+  - **SEO/Listing** lets the model write prose only; every number in a worked example comes from
+    the real tools-core function (unknown figures are rejected), JSON-LD and disclaimers are
+    built in code, and no `Offer`/price appears until a product is `live`. Stamp-duty content
+    waits for a verified state.
+  - **Social** writes drafts to `company/social-queue/` via PR and never calls a social API
+    (tested). News, politics, regulation and competitor topics go to the owner.
+- **Open:** wiring `site/src/content/articles/` into pages (no content collection yet).
+- **Status:** Accepted for dry-run (2026-10-06).
