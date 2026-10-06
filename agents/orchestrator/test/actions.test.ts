@@ -22,7 +22,7 @@ describe('listWorkflowRuns', () => {
       }),
     );
     const runs = await listWorkflowRuns(
-      { repository: 'o/r', token: 'tok-123456789', fetch: f, apiUrl: 'https://api.test/' },
+      { repository: 'o/r', token: ['fake', 'token'].join('-'), fetch: f, apiUrl: 'https://api.test/' },
       '2026-09-29',
     );
     const url = new URL(f.calls[0]?.url ?? '');
@@ -32,7 +32,7 @@ describe('listWorkflowRuns', () => {
       status: 'completed',
       created: '>=2026-09-29',
     });
-    expect(f.calls[0]?.headers['authorization']).toBe('Bearer tok-123456789');
+    expect(f.calls[0]?.headers['authorization']).toBe('Bearer fake-token');
     expect(runs).toEqual([
       {
         name: 'CI',

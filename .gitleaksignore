@@ -1,0 +1,5 @@
+# Known false positives only — each line is one finding's exact fingerprint (commit:file:rule:line).
+# Never add a real secret here: rotate it instead (docs/RUNBOOK.md "Emergency").
+# 2026-10-06 — fake test values in agent tests (replaced in a later commit):
+340862d7baf328293fe36449905db2d51daa59b7:agents/orchestrator/test/actions.test.ts:generic-api-key:25
+74773a4dea4ff84e255b5bf78738125a6638f8e4:agents/verifier/test/run.test.ts:generic-api-key:17
