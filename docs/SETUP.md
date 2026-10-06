@@ -73,7 +73,8 @@ no write access to `main` and never merge red CI yourself.
 Settings (your account) → Developer settings → GitHub Apps → _New GitHub App_: no webhook;
 repository permissions **Contents: RW, Pull requests: RW, Issues: RW, Metadata: R**; install it
 on this repo only. Save the App ID as variable `AGENT_APP_ID` and the private key as secret
-`AGENT_APP_PRIVATE_KEY`.
+`AGENT_APP_PRIVATE_KEY`. Agents and the usage report use it to open PRs (so CI runs on them);
+without it every agent run is forced into dry-run (§8).
 
 ### 3.5 Projects board
 
@@ -106,7 +107,8 @@ Each job skips itself with a notice until its settings exist, so nothing fails b
 
 1. Cloudflare dashboard → _My Profile → API Tokens → Create Token → Custom token_ with:
    **Account · Cloudflare Pages · Edit**, **Account · Workers Scripts · Edit**,
-   **Account · D1 · Edit**. Limit it to your account. Copy the token.
+   **Account · D1 · Edit**, and **Account · Account Analytics · Read** (for the monthly usage
+   report, §7). Limit it to your account. Copy the token.
 2. Note your **Account ID** (Workers & Pages overview, right sidebar).
 3. Create the database: _Storage & Databases → D1 → Create_ named `toolshop-waitlist`.
    Copy its **Database ID** (not a secret).
@@ -282,3 +284,33 @@ SIG=$(printf '%s' "$BODY" | openssl dgst -sha256 -hmac whsec_local | awk '{print
 curl -X POST http://localhost:8787/api/razorpay/webhook -H 'Content-Type: application/json' \
   -H "X-Razorpay-Signature: $SIG" --data-raw "$BODY"
 ```
+
+## 7. Hardening (Phase 6)
+
+| Kind             | Name                           | Effect                                                                 |
+| ---------------- | ------------------------------ | ---------------------------------------------------------------------- |
+| Token permission | **Account Analytics · Read**   | Cloudflare rows in the usage report (they show "error" without it)     |
+| Variable         | `ORDERS_D1_ID` (from §6)       | turns on the weekly backup's orders export                             |
+| Variable         | `AGENTS_ENABLED=true`          | turns on all scheduled agent/report workflows (they cost 0 until then) |
+| Variable         | `FAILURE_ALERTS_ENABLED=false` | optional: turns the automatic "workflow failed" Issues off             |
+
+Check once by hand: Actions → **Usage report** → _Run workflow_, and Actions → **Backup** →
+_Run workflow_. Read the results as described in `docs/RUNBOOK.md`.
+
+## 8. Agents (Phases 4–5)
+
+Each agent runs through `.github/workflows/agent-run.yml`. Three switches, all off by default:
+
+1. `AGENTS_ENABLED=true` (variable) — scheduled and event-triggered agent workflows run at all.
+2. Free LLM keys (secrets, any subset; ADR-013): `GEMINI_API_KEY` (Google AI Studio),
+   `GROQ_API_KEY`, `CEREBRAS_API_KEY`, `OPENROUTER_API_KEY`. Free tiers only — **prompts may be
+   used for training**, which is why agents redact personal data before every call. Check the
+   model names in `agents/lib/src/providers.json` against each provider's current free models.
+   The Verifier needs **at least two different model families** (e.g. Gemini + Groq) so it never
+   checks its own work.
+3. `AGENTS_LIVE=true` (variable) **and** the GitHub App (§3.4) — agents may then open Issues and
+   PRs. Without both, every run is a dry run: it reads, thinks and logs, but writes nothing.
+
+Start with `AGENTS_ENABLED=true` only and read a few run logs (artifact `agent-log-*`) before
+going live. Agents can never merge, publish, change prices or legal text, or refund money.
+Try one locally without keys: `npm run agent -- orchestrator`.

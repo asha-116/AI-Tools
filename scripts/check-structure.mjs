@@ -33,6 +33,12 @@ const requiredFiles = [
   'workers/download/wrangler.toml',
   'products/catalog.json',
   'products/catalog.schema.json',
+  'data/free-tier-limits.json',
+  'agents/tsconfig.json',
+  '.github/workflows/agent-run.yml',
+  '.github/workflows/failure-alert.yml',
+  '.github/workflows/backup.yml',
+  '.github/workflows/usage.yml',
   'site/public/_headers',
 ];
 
