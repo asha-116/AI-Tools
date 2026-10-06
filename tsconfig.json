@@ -13,6 +13,11 @@
     "site/src/tools",
     "site/src/lib",
     "site/test",
+    "agents/*/src",
+    "agents/*/test",
+    "agents/*/*.ts",
+    "agents/lib/bin",
+    "agents/lib/example",
     "vitest.config.ts",
     "eslint.config.js"
   ]

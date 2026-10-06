@@ -1,0 +1,44 @@
+{
+  "$comment": "Free-tier LLM providers in fallback order (ADR-013). Model names and limits change often: re-check each provider's docs and docs/COSTS.md before relying on them. A provider is skipped when its key env var (or base-URL env var) is unset. Never add a paid model here.",
+  "providers": [
+    {
+      "id": "gemini",
+      "baseUrl": "https://generativelanguage.googleapis.com/v1beta/openai",
+      "keyEnv": "GEMINI_API_KEY",
+      "model": "gemini-2.5-flash",
+      "family": "gemini",
+      "limits": { "rpm": 10, "rpd": 250, "maxOutputTokens": 8192 }
+    },
+    {
+      "id": "groq",
+      "baseUrl": "https://api.groq.com/openai/v1",
+      "keyEnv": "GROQ_API_KEY",
+      "model": "llama-3.3-70b-versatile",
+      "family": "llama",
+      "limits": { "rpm": 30, "rpd": 1000, "maxOutputTokens": 8192 }
+    },
+    {
+      "id": "cerebras",
+      "baseUrl": "https://api.cerebras.ai/v1",
+      "keyEnv": "CEREBRAS_API_KEY",
+      "model": "qwen-3-32b",
+      "family": "qwen",
+      "limits": { "rpm": 30, "rpd": 14400, "maxOutputTokens": 8192 }
+    },
+    {
+      "id": "openrouter",
+      "baseUrl": "https://openrouter.ai/api/v1",
+      "keyEnv": "OPENROUTER_API_KEY",
+      "model": "deepseek/deepseek-chat-v3-0324:free",
+      "family": "deepseek",
+      "limits": { "rpm": 20, "rpd": 50, "maxOutputTokens": 4096 }
+    },
+    {
+      "id": "ollama",
+      "baseUrlEnv": "OLLAMA_BASE_URL",
+      "model": "qwen2.5:7b",
+      "family": "qwen",
+      "limits": { "maxOutputTokens": 4096 }
+    }
+  ]
+}
