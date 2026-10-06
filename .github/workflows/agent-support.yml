@@ -1,0 +1,25 @@
+name: Support
+
+# Support agent (agents/support/PROCEDURE.md): answers buyer mail with KB templates, escalates
+# every refund to the owner. Skipped (0 minutes) until both repository variables are set:
+#   - AGENTS_ENABLED == 'true'
+#   - SUPPORT_INBOX  != ''  (which inbox adapter to use — an owner decision, see
+#     agents/support/src/inbox.ts; until one is built the run opens a needs-owner Issue)
+# Cost: every 2 hours = ~360 runs/month ≈ 360 Actions minutes. Start with every 6 hours
+# ('11 */6 * * *') if minutes are tight.
+on:
+  schedule:
+    - cron: '11 */2 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  support:
+    if: vars.AGENTS_ENABLED == 'true' && vars.SUPPORT_INBOX != ''
+    uses: ./.github/workflows/agent-run.yml
+    with:
+      agent: support
+      args: --inbox=${{ vars.SUPPORT_INBOX }}
+    secrets: inherit

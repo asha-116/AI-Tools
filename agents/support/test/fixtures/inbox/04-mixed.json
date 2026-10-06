@@ -1,0 +1,23 @@
+[
+  {
+    "id": "<fake-0004@example.com>",
+    "from": "Fakey Testperson <fakey.testperson@example.com>",
+    "subject": "Wrong total",
+    "body": "The Pending column in the commission ledger shows #REF! after I added a row. Payment pay_TESTBUG00001.\n\nRegards,\nFakey Testperson",
+    "receivedAt": "2026-10-06T05:00:00Z"
+  },
+  {
+    "id": "<fake-0005@example.com>",
+    "from": "someone.fake@example.com",
+    "subject": "Partnership",
+    "body": "Do you build websites for builders? Call me on 9999999999.",
+    "receivedAt": "2026-10-06T06:00:00Z"
+  },
+  {
+    "id": "<fake-0006@example.com>",
+    "from": "angry.fake@example.com",
+    "subject": "Chargeback",
+    "body": "I will file a chargeback and go to consumer court. pay_TESTLEGAL0001",
+    "receivedAt": "2026-10-06T07:00:00Z"
+  }
+]
