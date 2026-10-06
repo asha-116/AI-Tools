@@ -1,0 +1,135 @@
+{
+  "$comment": "Free-tier limits watched by scripts/usage (Phase 6). Mirrors docs/COSTS.md. Limits are data, not code: re-check each source page and update last_verified (YYYY-MM-DD) and verified_by when you do. 'window' is 'day' (compared against the busiest day of the month) or 'month'.",
+  "alert_threshold_percent": 70,
+  "limits": [
+    {
+      "id": "github-actions-minutes",
+      "service": "GitHub Actions",
+      "metric": "Job minutes (private repo, billed per job rounded up to the minute)",
+      "unit": "min",
+      "window": "month",
+      "limit": 2000,
+      "applies_to": "private repositories only; standard runners are free for public repositories",
+      "source": "https://docs.github.com/en/billing/concepts/product-billing/github-actions",
+      "last_verified": "2026-09-29",
+      "verified_by": "not verified — copied from docs/COSTS.md"
+    },
+    {
+      "id": "workers-requests",
+      "service": "Cloudflare Workers",
+      "metric": "Requests (all Workers on the account)",
+      "unit": "requests",
+      "window": "day",
+      "limit": 100000,
+      "source": "https://developers.cloudflare.com/workers/platform/limits/",
+      "last_verified": "2026-09-29",
+      "verified_by": "not verified — copied from docs/COSTS.md"
+    },
+    {
+      "id": "d1-rows-read",
+      "service": "Cloudflare D1",
+      "metric": "Rows read (all databases)",
+      "unit": "rows",
+      "window": "day",
+      "limit": 5000000,
+      "source": "https://developers.cloudflare.com/d1/platform/pricing/",
+      "last_verified": "2026-09-29",
+      "verified_by": "not verified — copied from docs/COSTS.md"
+    },
+    {
+      "id": "d1-rows-written",
+      "service": "Cloudflare D1",
+      "metric": "Rows written (all databases)",
+      "unit": "rows",
+      "window": "day",
+      "limit": 100000,
+      "source": "https://developers.cloudflare.com/d1/platform/pricing/",
+      "last_verified": "2026-09-29",
+      "verified_by": "not verified — copied from docs/COSTS.md"
+    },
+    {
+      "id": "d1-storage",
+      "service": "Cloudflare D1",
+      "metric": "Storage (all databases, peak)",
+      "unit": "GB",
+      "window": "month",
+      "limit": 5,
+      "source": "https://developers.cloudflare.com/d1/platform/pricing/",
+      "last_verified": "2026-09-29",
+      "verified_by": "not verified — copied from docs/COSTS.md"
+    },
+    {
+      "id": "r2-storage",
+      "service": "Cloudflare R2",
+      "metric": "Storage (peak; billed as GB-month)",
+      "unit": "GB",
+      "window": "month",
+      "limit": 10,
+      "source": "https://developers.cloudflare.com/r2/pricing/",
+      "last_verified": "2026-09-29",
+      "verified_by": "not verified — copied from docs/COSTS.md"
+    },
+    {
+      "id": "r2-class-a",
+      "service": "Cloudflare R2",
+      "metric": "Class A operations (writes, lists)",
+      "unit": "ops",
+      "window": "month",
+      "limit": 1000000,
+      "source": "https://developers.cloudflare.com/r2/pricing/",
+      "last_verified": "2026-09-29",
+      "verified_by": "not verified — copied from docs/COSTS.md"
+    },
+    {
+      "id": "r2-class-b",
+      "service": "Cloudflare R2",
+      "metric": "Class B operations (reads)",
+      "unit": "ops",
+      "window": "month",
+      "limit": 10000000,
+      "source": "https://developers.cloudflare.com/r2/pricing/",
+      "last_verified": "2026-09-29",
+      "verified_by": "not verified — copied from docs/COSTS.md"
+    }
+  ],
+  "github_runner_multipliers": {
+    "$comment": "Minute multiplier per runner OS for private-repo billing (job minutes × multiplier count against the free minutes).",
+    "source": "https://docs.github.com/en/billing/concepts/product-billing/github-actions",
+    "last_verified": "2026-09-29",
+    "linux": 1,
+    "windows": 2,
+    "macos": 10
+  },
+  "r2_operation_classes": {
+    "$comment": "R2 GraphQL actionType → billing class. Operations not listed (e.g. DeleteObject, AbortMultipartUpload) are free.",
+    "source": "https://developers.cloudflare.com/r2/pricing/#class-a-operations",
+    "last_verified": "2026-09-29",
+    "class_a": [
+      "ListBuckets",
+      "PutBucket",
+      "ListObjects",
+      "PutObject",
+      "CopyObject",
+      "CompleteMultipartUpload",
+      "CreateMultipartUpload",
+      "LifecycleStorageTierTransition",
+      "ListMultipartUploads",
+      "UploadPart",
+      "UploadPartCopy",
+      "ListParts",
+      "PutBucketEncryption",
+      "PutBucketCors",
+      "PutBucketLifecycleConfiguration"
+    ],
+    "class_b": [
+      "HeadBucket",
+      "HeadObject",
+      "GetObject",
+      "UsageSummary",
+      "GetBucketEncryption",
+      "GetBucketLocation",
+      "GetBucketCors",
+      "GetBucketLifecycleConfiguration"
+    ]
+  }
+}

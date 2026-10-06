@@ -1,0 +1,63 @@
+name: Failure alert
+
+# Opens one Issue per failing workflow (type:bug + needs-owner + type:alert), or comments on
+# the open one for that workflow (deduped by a hidden marker; scripts/failure-alert.mjs).
+# Only default-branch and scheduled runs count: PR CI failures already show on the PR.
+# The job is skipped (0 minutes) for every successful or PR run.
+#
+# KEEP THIS LIST IN SYNC: `workflow_run` has no wildcard-free "all workflows" option, so every
+# workflow must be listed here by its `name:`. When you add a workflow (e.g. the Phase 4 agent
+# heartbeats: Orchestrator, Controller, Support, ...), add its name below in the same PR.
+on:
+  workflow_run:
+    workflows:
+      - CI
+      - Deploy
+      - Sync labels
+      - Backup
+      - Usage report
+    types: [completed]
+
+permissions:
+  contents: read
+  issues: write
+  actions: read
+
+jobs:
+  open-issue:
+    name: Open or update the failure Issue
+    if: >-
+      vars.FAILURE_ALERTS_ENABLED != 'false' &&
+      contains(fromJSON('["failure","timed_out","startup_failure"]'), github.event.workflow_run.conclusion) &&
+      github.event.workflow_run.event != 'pull_request' &&
+      (github.event.workflow_run.head_branch == github.event.repository.default_branch ||
+       github.event.workflow_run.event == 'schedule')
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    # Job-level (not workflow-level) so the many skipped runs for green workflows never
+    # replace a queued failure run. Serialised per workflow so two failures cannot both
+    # open an Issue.
+    concurrency:
+      group: failure-alert-${{ github.event.workflow_run.workflow_id }}
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          sparse-checkout: scripts
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+      - name: Open or comment on the Issue
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          # Passed through env (never interpolated into the script) — names/branches are data.
+          FAILED_WORKFLOW: ${{ github.event.workflow_run.name }}
+          FAILED_RUN_URL: ${{ github.event.workflow_run.html_url }}
+          FAILED_RUN_NUMBER: ${{ github.event.workflow_run.run_number }}
+          FAILED_RUN_ATTEMPT: ${{ github.event.workflow_run.run_attempt }}
+          FAILED_BRANCH: ${{ github.event.workflow_run.head_branch }}
+          FAILED_EVENT: ${{ github.event.workflow_run.event }}
+          FAILED_SHA: ${{ github.event.workflow_run.head_sha }}
+          FAILED_CONCLUSION: ${{ github.event.workflow_run.conclusion }}
+        run: node scripts/failure-alert.mjs
