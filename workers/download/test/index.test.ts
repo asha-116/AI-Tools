@@ -7,7 +7,7 @@ const t = () =>
     {
       paymentId: 'pay_IDX',
       productId: 'lead-tracker',
-      fileKey: 'lead-tracker/v1/lead-tracker.xlsx',
+      fileKey: 'lead-tracker/v1/en/lead-tracker.xlsx',
     },
     Math.floor(Date.now() / 1000) + 600,
     'secret',

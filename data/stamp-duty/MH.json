@@ -60,6 +60,7 @@
     {
       "id": "mumbai-female",
       "description": "Mumbai (BMC limits), woman buyer (1% concession on stamp duty)",
+      "description_hi": "मुंबई (BMC सीमा), महिला खरीदार (स्टांप ड्यूटी में 1% छूट)",
       "conditions": {
         "area": "mumbai",
         "buyer_gender": "female"
@@ -68,6 +69,7 @@
       "surcharges_percent": [
         {
           "name": "Metro cess",
+          "name_hi": "मेट्रो सेस",
           "percent": 1
         }
       ],
@@ -79,6 +81,7 @@
     {
       "id": "mumbai",
       "description": "Mumbai (BMC limits), male or joint buyer",
+      "description_hi": "मुंबई (BMC सीमा), पुरुष या संयुक्त खरीदार",
       "conditions": {
         "area": "mumbai"
       },
@@ -86,6 +89,7 @@
       "surcharges_percent": [
         {
           "name": "Metro cess",
+          "name_hi": "मेट्रो सेस",
           "percent": 1
         }
       ],
@@ -97,6 +101,7 @@
     {
       "id": "pune-thane-nagpur-female",
       "description": "Pune, Thane or Nagpur municipal corporation, woman buyer (1% concession on stamp duty)",
+      "description_hi": "पुणे, ठाणे या नागपुर नगर निगम, महिला खरीदार (स्टांप ड्यूटी में 1% छूट)",
       "conditions": {
         "area": "pune-thane-nagpur",
         "buyer_gender": "female"
@@ -105,10 +110,12 @@
       "surcharges_percent": [
         {
           "name": "Metro cess",
+          "name_hi": "मेट्रो सेस",
           "percent": 1
         },
         {
           "name": "Local body tax",
+          "name_hi": "स्थानीय निकाय कर",
           "percent": 1
         }
       ],
@@ -120,6 +127,7 @@
     {
       "id": "pune-thane-nagpur",
       "description": "Pune, Thane or Nagpur municipal corporation, male or joint buyer",
+      "description_hi": "पुणे, ठाणे या नागपुर नगर निगम, पुरुष या संयुक्त खरीदार",
       "conditions": {
         "area": "pune-thane-nagpur"
       },
@@ -127,10 +135,12 @@
       "surcharges_percent": [
         {
           "name": "Metro cess",
+          "name_hi": "मेट्रो सेस",
           "percent": 1
         },
         {
           "name": "Local body tax",
+          "name_hi": "स्थानीय निकाय कर",
           "percent": 1
         }
       ],
@@ -142,6 +152,7 @@
     {
       "id": "other-corporation-female",
       "description": "Other municipal corporation, woman buyer (1% concession on stamp duty)",
+      "description_hi": "अन्य नगर निगम, महिला खरीदार (स्टांप ड्यूटी में 1% छूट)",
       "conditions": {
         "area": "other-corporation",
         "buyer_gender": "female"
@@ -150,6 +161,7 @@
       "surcharges_percent": [
         {
           "name": "Local body tax",
+          "name_hi": "स्थानीय निकाय कर",
           "percent": 1
         }
       ],
@@ -161,6 +173,7 @@
     {
       "id": "other-corporation",
       "description": "Other municipal corporation, male or joint buyer",
+      "description_hi": "अन्य नगर निगम, पुरुष या संयुक्त खरीदार",
       "conditions": {
         "area": "other-corporation"
       },
@@ -168,6 +181,7 @@
       "surcharges_percent": [
         {
           "name": "Local body tax",
+          "name_hi": "स्थानीय निकाय कर",
           "percent": 1
         }
       ],
@@ -179,6 +193,7 @@
     {
       "id": "municipal-council-female",
       "description": "Municipal council / cantonment, woman buyer (1% concession on stamp duty)",
+      "description_hi": "नगर परिषद / छावनी क्षेत्र, महिला खरीदार (स्टांप ड्यूटी में 1% छूट)",
       "conditions": {
         "area": "municipal-council",
         "buyer_gender": "female"
@@ -192,6 +207,7 @@
     {
       "id": "municipal-council",
       "description": "Municipal council / cantonment, male or joint buyer",
+      "description_hi": "नगर परिषद / छावनी क्षेत्र, पुरुष या संयुक्त खरीदार",
       "conditions": {
         "area": "municipal-council"
       },
@@ -204,6 +220,7 @@
     {
       "id": "gram-panchayat-female",
       "description": "Gram panchayat (rural), woman buyer (1% concession on stamp duty)",
+      "description_hi": "ग्राम पंचायत (ग्रामीण), महिला खरीदार (स्टांप ड्यूटी में 1% छूट)",
       "conditions": {
         "area": "gram-panchayat",
         "buyer_gender": "female"
@@ -217,6 +234,7 @@
     {
       "id": "gram-panchayat",
       "description": "Gram panchayat (rural), male or joint buyer",
+      "description_hi": "ग्राम पंचायत (ग्रामीण), पुरुष या संयुक्त खरीदार",
       "conditions": {
         "area": "gram-panchayat"
       },

@@ -41,6 +41,18 @@ describe('stamp-duty data files', () => {
       for (const a of s.areas ?? []) expect(a.label_hi.trim()).not.toBe('');
     },
   );
+
+  it.each(states.map((s) => [s.state_code, s] as const))(
+    '%s: every rule description and surcharge name has a Hindi version',
+    (_code, s) => {
+      for (const rule of s.rates) {
+        expect(rule.description_hi?.trim(), rule.id).toBeTruthy();
+        for (const sc of rule.surcharges_percent ?? []) {
+          expect(sc.name_hi?.trim(), `${rule.id}: ${sc.name}`).toBeTruthy();
+        }
+      }
+    },
+  );
 });
 
 /**

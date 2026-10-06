@@ -1,7 +1,13 @@
 import { readdirSync, readFileSync } from 'node:fs';
 import type { StateRates } from '@toolshop/tools-core';
 import { describe, expect, it } from 'vitest';
-import { evaluate, fromHash, toHash, visibleStates } from '../src/tools/stamp-duty/logic.js';
+import {
+  evaluate,
+  fromHash,
+  localizeResult,
+  toHash,
+  visibleStates,
+} from '../src/tools/stamp-duty/logic.js';
 import { sdStrings } from '../src/tools/stamp-duty/strings.js';
 
 /** Array access that fails loudly instead of using a non-null assertion. */
@@ -39,6 +45,47 @@ describe('stamp duty page logic', () => {
       expect(v.result.stampDuty + v.result.surchargesTotal).toBe(500000);
       expect(v.result.registration).toBe(30000);
     }
+  });
+
+  it('shows the rule and surcharges in Hindi on the Hindi page, English otherwise', () => {
+    const v = evaluate(verified, {
+      state: 'MH',
+      area: 'mumbai',
+      buyer: 'female',
+      value: '10000000',
+    });
+    if (!v.ok) throw new Error('expected a result');
+    expect(localizeResult(v.result, 'hi')).toEqual({
+      rule: 'मुंबई (BMC सीमा), महिला खरीदार (स्टांप ड्यूटी में 1% छूट)',
+      surcharges: [{ name: 'मेट्रो सेस', amount: 100000 }],
+    });
+    expect(localizeResult(v.result, 'en')).toEqual({
+      rule: 'Mumbai (BMC limits), woman buyer (1% concession on stamp duty)',
+      surcharges: [{ name: 'Metro cess', amount: 100000 }],
+    });
+  });
+
+  it('falls back to English when a Hindi text is missing or blank', () => {
+    const r = {
+      ruleId: 'x',
+      ruleDescription: 'Rule',
+      ruleDescriptionHi: '  ',
+      stampDuty: 1,
+      surcharges: [
+        { name: 'Cess', amount: 1 },
+        { name: 'Tax', nameHi: 'कर', amount: 2 },
+      ],
+      surchargesTotal: 3,
+      registration: 1,
+      total: 5,
+    };
+    expect(localizeResult(r, 'hi')).toEqual({
+      rule: 'Rule',
+      surcharges: [
+        { name: 'Cess', amount: 1 },
+        { name: 'कर', amount: 2 },
+      ],
+    });
   });
 
   it('works for a state without areas', () => {

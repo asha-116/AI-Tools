@@ -12,7 +12,11 @@
         "http://localhost/tools/stamp-duty/",
         "http://localhost/hi/tools/stamp-duty/",
         "http://localhost/get-download/",
-        "http://localhost/hi/get-download/"
+        "http://localhost/hi/get-download/",
+        "http://localhost/templates/lead-tracker/",
+        "http://localhost/hi/templates/lead-tracker/",
+        "http://localhost/templates/commission-ledger/",
+        "http://localhost/hi/templates/commission-ledger/"
       ],
       "numberOfRuns": 3,
       "settings": {

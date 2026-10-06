@@ -1,0 +1,11 @@
+---
+import TemplatePage from '../../../../components/TemplatePage.astro';
+import Base from '../../../../layouts/Base.astro';
+import { templateStrings } from '../../../../i18n/templates';
+
+const t = templateStrings.hi.pages['lead-tracker'];
+---
+
+<Base lang="hi" title={t.metaTitle} description={t.metaDescription} path="/templates/lead-tracker/">
+  <TemplatePage lang="hi" id="lead-tracker" />
+</Base>

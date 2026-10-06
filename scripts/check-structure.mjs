@@ -138,6 +138,19 @@ if (existsSync(sdDir)) {
         }
       }
     }
+    // Bilingual rule: every rule description and surcharge name needs Hindi text.
+    for (const rule of Array.isArray(doc.rates) ? doc.rates : []) {
+      if (typeof rule?.description_hi !== 'string' || !rule.description_hi.trim()) {
+        errors.push(`data/stamp-duty/${f}: rule "${rule?.id}" needs "description_hi"`);
+      }
+      for (const sc of Array.isArray(rule?.surcharges_percent) ? rule.surcharges_percent : []) {
+        if (typeof sc?.name_hi !== 'string' || !sc.name_hi.trim()) {
+          errors.push(
+            `data/stamp-duty/${f}: surcharge "${sc?.name}" in "${rule?.id}" needs "name_hi"`,
+          );
+        }
+      }
+    }
     if (doc.status !== 'draft' && doc.status !== 'verified') {
       errors.push(`data/stamp-duty/${f}: "status" must be "draft" or "verified"`);
     }

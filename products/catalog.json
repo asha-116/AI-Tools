@@ -10,8 +10,13 @@
       "status": "draft",
       "files": [
         {
-          "key": "lead-tracker/v1/lead-tracker.xlsx",
+          "key": "lead-tracker/v1/en/lead-tracker.xlsx",
           "name": "changelens-lead-tracker.xlsx",
+          "content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        },
+        {
+          "key": "lead-tracker/v1/hi/lead-tracker.xlsx",
+          "name": "changelens-lead-tracker-hi.xlsx",
           "content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
         }
       ]
@@ -24,8 +29,13 @@
       "status": "draft",
       "files": [
         {
-          "key": "commission-ledger/v1/commission-ledger.xlsx",
+          "key": "commission-ledger/v1/en/commission-ledger.xlsx",
           "name": "changelens-commission-ledger.xlsx",
+          "content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        },
+        {
+          "key": "commission-ledger/v1/hi/commission-ledger.xlsx",
+          "name": "changelens-commission-ledger-hi.xlsx",
           "content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
         }
       ]
@@ -38,13 +48,23 @@
       "status": "draft",
       "files": [
         {
-          "key": "lead-tracker/v1/lead-tracker.xlsx",
+          "key": "lead-tracker/v1/en/lead-tracker.xlsx",
           "name": "changelens-lead-tracker.xlsx",
           "content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
         },
         {
-          "key": "commission-ledger/v1/commission-ledger.xlsx",
+          "key": "lead-tracker/v1/hi/lead-tracker.xlsx",
+          "name": "changelens-lead-tracker-hi.xlsx",
+          "content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        },
+        {
+          "key": "commission-ledger/v1/en/commission-ledger.xlsx",
           "name": "changelens-commission-ledger.xlsx",
+          "content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        },
+        {
+          "key": "commission-ledger/v1/hi/commission-ledger.xlsx",
+          "name": "changelens-commission-ledger-hi.xlsx",
           "content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
         }
       ]

@@ -1,6 +1,13 @@
 import type { BuyerGender, StateRates } from '@toolshop/tools-core';
 import { formatInr } from '../../lib/format.js';
-import { evaluate, fromHash, toHash, visibleStates, type SdFormState } from './logic.js';
+import {
+  evaluate,
+  fromHash,
+  localizeResult,
+  toHash,
+  visibleStates,
+  type SdFormState,
+} from './logic.js';
 
 interface ClientStrings {
   resultRule: string;
@@ -93,6 +100,7 @@ export function initStampDuty(doc: Document, win: Window): void {
       return;
     }
     const { result: r, data } = view;
+    const text = localizeResult(r, s.lang);
     const row = (label: string, amount: number) => {
       const div = doc.createElement('div');
       const dt = doc.createElement('dt');
@@ -104,14 +112,11 @@ export function initStampDuty(doc: Document, win: Window): void {
     };
     lines?.replaceChildren(
       row(s.stampDuty, r.stampDuty),
-      ...r.surcharges.map((x) => row(x.name, x.amount)),
+      ...text.surcharges.map((x) => row(x.name, x.amount)),
       row(s.registration, r.registration),
     );
     setText(doc.querySelector('[data-out="total"]'), formatInr(r.total));
-    setText(
-      doc.querySelector('[data-out="rule"]'),
-      s.resultRule.replace('{rule}', r.ruleDescription),
-    );
+    setText(doc.querySelector('[data-out="rule"]'), s.resultRule.replace('{rule}', text.rule));
     setText(
       doc.querySelector('[data-out="verified"]'),
       s.lastVerified.replace('{date}', data.last_verified),

@@ -36,13 +36,13 @@ Rule: **no paid component without an entry here and an owner-approved Issue.** A
 
 | Workflow                                     | Runs/month (est.) | Minutes/run (est.)                                        | Minutes/month       |
 | -------------------------------------------- | ----------------- | --------------------------------------------------------- | ------------------- |
-| CI (per PR/push)                             | 120               | 8 (4 parallel jobs; Lighthouse ~6 min: 10 pages × 3 runs) | 960                 |
+| CI (per PR/push)                             | 120               | 9 (4 parallel jobs; Lighthouse ~8 min: 14 pages × 3 runs) | 1,080               |
 | Orchestrator (daily)                         | 30                | 1                                                         | 30                  |
 | Controller (daily)                           | 30                | 1                                                         | 30                  |
 | Demand Researcher (weekly)                   | 4                 | 3                                                         | 12                  |
 | Support (every 2 h)                          | 360               | 1                                                         | 360                 |
 | Builder / SEO / Social / Verifier (per task) | 60                | 3                                                         | 180                 |
-| **Total**                                    |                   |                                                           | **≈ 1,570 / 2,000** |
+| **Total**                                    |                   |                                                           | **≈ 1,690 / 2,000** |
 
 GitHub bills each job rounded up to the whole minute, so many tiny jobs cost more than they
 look. Keep jobs short, cache `npm`, and combine steps. If usage passes 70%, reduce Support to

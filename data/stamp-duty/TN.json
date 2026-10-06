@@ -29,6 +29,7 @@
     {
       "id": "all",
       "description": "All buyers",
+      "description_hi": "सभी खरीदार",
       "stamp_duty_percent": 7,
       "registration": {
         "percent": 2
