@@ -4,7 +4,6 @@
     "noEmit": true
   },
   "include": [
-    "agents/controller",
     "tools-core/src",
     "tools-core/test",
     "workers/*/src",
@@ -14,8 +13,11 @@
     "site/src/tools",
     "site/src/lib",
     "site/test",
-    "agents/qa/src",
-    "agents/qa/test",
+    "agents/*/src",
+    "agents/*/test",
+    "agents/*/*.ts",
+    "agents/lib/bin",
+    "agents/lib/example",
     "vitest.config.ts",
     "eslint.config.js"
   ]

@@ -6,11 +6,13 @@ schema, a checklist and a token budget. Folder layout (built in Phases 4–5):
 ```
 agents/<name>/
   PROCEDURE.md   the contract — read and change this first
-  prompt.md      prompt template(s) used by run.ts
-  schema.json    JSON Schema of the LLM output (mirrored by a zod schema in run.ts)
-  run.ts         the pipeline; supports DRY_RUN=true
-  test/          unit tests, run in CI with DRY_RUN=true and a mocked LLM
+  prompt.md      prompt template(s) used by src/run.ts
+  schema.ts      zod schema of the LLM output (mirrors "Output schema" in PROCEDURE.md)
+  src/run.ts     the pipeline: exports main() via runAgent(); supports DRY_RUN (default: dry)
+  test/          unit tests, run in CI with a mocked LLM and an in-memory GitHub
 ```
+
+Run one with `npm run agent -- <name>` (compiles `agents/` with `tsc` to `agents/dist/`).
 
 Shared code lives in [`lib/`](lib/README.md).
 

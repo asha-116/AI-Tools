@@ -21,9 +21,11 @@
     "test:coverage": "vitest run --coverage",
     "check:structure": "node scripts/check-structure.mjs",
     "build:templates": "node scripts/build-templates.mjs",
-    "ci": "npm run lint && npm run format:check && npm run typecheck && npm run check:site && npm run test:coverage && npm run build:site && npm run qa:pages && npm run check:structure",
     "qa:bilingual": "vitest run agents/qa/test/bilingual.test.ts",
     "qa:pages": "vitest run agents/qa/test/pages.dist.test.ts",
+    "build:agents": "tsc -p agents/tsconfig.json",
+    "agent": "npm run build:agents && node agents/dist/lib/bin/agent.js",
+    "ci": "npm run lint && npm run format:check && npm run typecheck && npm run check:site && npm run test:coverage && npm run build:site && npm run qa:pages && npm run build:agents && npm run check:structure",
     "build:site": "npm run build -w @toolshop/site",
     "check:site": "npm run check -w @toolshop/site"
   },
@@ -39,5 +41,8 @@
     "typescript": "6.0.3",
     "typescript-eslint": "8.71.0",
     "vitest": "5.0.2"
+  },
+  "dependencies": {
+    "zod": "4.6.5"
   }
 }
