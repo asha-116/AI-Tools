@@ -22,7 +22,12 @@ describe('listWorkflowRuns', () => {
       }),
     );
     const runs = await listWorkflowRuns(
-      { repository: 'o/r', token: ['fake', 'token'].join('-'), fetch: f, apiUrl: 'https://api.test/' },
+      {
+        repository: 'o/r',
+        token: ['fake', 'token'].join('-'),
+        fetch: f,
+        apiUrl: 'https://api.test/',
+      },
       '2026-09-29',
     );
     const url = new URL(f.calls[0]?.url ?? '');
