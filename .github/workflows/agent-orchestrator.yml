@@ -1,0 +1,20 @@
+name: Agent — Orchestrator
+
+# Daily plan (agents/orchestrator/PROCEDURE.md): ≤ 5 Issues + company/reports/daily/<date>.md as a
+# PR on agent/orchestrator/<date>. Runs only when vars.AGENTS_ENABLED == 'true'; dry-run unless
+# vars.AGENTS_LIVE == 'true' and the agents' GitHub App is set up (see agent-run.yml).
+on:
+  schedule:
+    - cron: '47 0 * * *' # 00:47 UTC ≈ 06:17 IST
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  orchestrator:
+    if: vars.AGENTS_ENABLED == 'true'
+    uses: ./.github/workflows/agent-run.yml
+    with:
+      agent: orchestrator
+    secrets: inherit
