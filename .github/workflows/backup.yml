@@ -1,0 +1,57 @@
+name: Backup
+
+# Weekly backup of the orders database (no personal data) and company/ledger + company/memory,
+# kept as a workflow artifact for 90 days (scripts/backup.mjs).
+# The waitlist database (email addresses) is NEVER exported here — see docs/RUNBOOK.md for the
+# owner's manual export to their own device.
+# Scheduled runs are skipped (0 minutes) until the orders database exists (ORDERS_D1_ID) or
+# agents are switched on (AGENTS_ENABLED=true). Manual runs always work; the D1 part skips
+# itself when the Cloudflare secrets are missing.
+on:
+  schedule:
+    - cron: '41 3 * * 0' # Sundays 03:41 UTC (09:11 IST)
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: backup
+  cancel-in-progress: false
+
+env:
+  WRANGLER: npx --yes wrangler@4.143.0
+
+jobs:
+  backup:
+    name: Export and upload
+    if: github.event_name != 'schedule' || vars.ORDERS_D1_ID != '' || vars.AGENTS_ENABLED == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      ORDERS_D1_ID: ${{ vars.ORDERS_D1_ID }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+      - name: Export
+        run: node scripts/backup.mjs --out "$RUNNER_TEMP/backup"
+      - name: Summary
+        run: |
+          {
+            echo "### Backup $(date -u +%Y-%m-%d)"
+            echo '```json'
+            cat "$RUNNER_TEMP/backup/manifest.json"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v7
+        with:
+          name: backup-${{ github.run_number }}
+          path: ${{ runner.temp }}/backup
+          retention-days: 90
+          if-no-files-found: error
