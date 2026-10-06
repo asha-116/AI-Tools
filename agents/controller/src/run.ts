@@ -296,3 +296,6 @@ export function renderMismatches(day: string, mismatches: readonly Mismatch[]): 
   assertNoPii(body, 'mismatch issue');
   return body;
 }
+
+// `npm run agent -- controller` loads this module and calls main() (wiring in main.ts).
+export { main } from './main.js';
