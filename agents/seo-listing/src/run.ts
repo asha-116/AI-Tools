@@ -14,11 +14,17 @@ import {
 } from '../../lib/src/index.js';
 import { SeoDraftSchema, type SeoDraft, type SeoListing } from '../schema.js';
 import { cliArgs, slugArg } from './args.js';
-import { articleBody, draftProblems, renderArticle, WORDS, type ArticleContext } from './article.js';
+import {
+  articleBody,
+  draftProblems,
+  renderArticle,
+  WORDS,
+  type ArticleContext,
+} from './article.js';
 import { parseDisclaimers } from './disclaimer.js';
 import { buildJsonLd, liveProduct, validateJsonLd } from './jsonld.js';
 import { wordCount } from './policy.js';
-import { fsRepo, pageExists, type RepoReader } from './repo.js';
+import { fsRepo, pageExists, readText, type RepoReader } from './repo.js';
 import { findTool, LANGS, placeholderList, TOOLS, type WorkedExample } from './tools.js';
 
 export const AGENT = 'seo-listing';
@@ -118,7 +124,7 @@ export async function seoListing(ctx: AgentContext, opts: SeoOptions): Promise<S
 
   const lastVerified = tool.lastVerified(ctx.config.repoRoot);
   const disclaimer = parseDisclaimers(
-    repo.read('company/policies/disclaimers.md') ?? '',
+    readText(repo, 'company/policies/disclaimers.md'),
     lastVerified,
   );
   const actx: ArticleContext = {
@@ -133,10 +139,10 @@ export async function seoListing(ctx: AgentContext, opts: SeoOptions): Promise<S
   const exists = (p: string) => pageExists(repo, p);
 
   const p = promptSections(ctx.readFile('prompt.md'));
-  const system = renderTemplate(p.system ?? '', {
-    brand_voice: repo.read('company/policies/brand-voice.md') ?? '',
+  const system = renderTemplate(String(p.system), {
+    brand_voice: readText(repo, 'company/policies/brand-voice.md'),
   });
-  const user = renderTemplate(p.user ?? '', {
+  const user = renderTemplate(String(p.user), {
     slug,
     name_en: tool.text.en.h1,
     name_hi: tool.text.hi.h1,

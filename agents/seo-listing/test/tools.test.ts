@@ -83,6 +83,18 @@ describe('worked examples are computed by tools-core (never by a model)', () => 
     expect(e.source.hi).toContain('Everyone');
     expect(findTool('stamp-duty')?.lastVerified(root)).toBe('2026-10-01');
     expect(verifiedStates(join(root, 'missing'))).toEqual([]);
+
+    // Hindi names are used when the data file has them.
+    const hiState = {
+      ...state,
+      state_name_hi: 'टेस्टलैंड',
+      areas: undefined,
+      rates: [{ ...state.rates[0], description_hi: 'सभी' }],
+    };
+    writeFileSync(join(root, 'data/stamp-duty/TL.json'), JSON.stringify(hiState));
+    const h = example('stamp-duty', root);
+    expect(h.inputs[1]?.display.hi).toBe('टेस्टलैंड');
+    expect(h.source.hi).toContain('सभी');
   });
 });
 

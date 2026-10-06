@@ -160,7 +160,11 @@ const commission: ToolInfo = {
   lastVerified: metaReviewed('commission'),
   example() {
     const r = computeCommission(COMMISSION_INPUT);
-    const [me, co] = r.parties;
+    const shares = r.parties.map((p, i) =>
+      i === 0
+        ? money('me', { en: 'Your share', hi: 'आपका हिस्सा' }, p.amount, true)
+        : money('co', { en: 'Co-broker’s share', hi: 'को-ब्रोकर का हिस्सा' }, p.amount, true),
+    );
     return {
       inputs: [
         money('deal', { en: 'Deal value', hi: 'डील वैल्यू' }, COMMISSION_INPUT.dealValue),
@@ -178,8 +182,7 @@ const commission: ToolInfo = {
           r.totalPayable,
           true,
         ),
-        money('me', { en: 'Your share', hi: 'आपका हिस्सा' }, me?.amount ?? 0, true),
-        money('co', { en: 'Co-broker’s share', hi: 'को-ब्रोकर का हिस्सा' }, co?.amount ?? 0, true),
+        ...shares,
       ],
       source: {
         en: 'Example inputs (the GST rate is whatever you enter — ask your CA which applies); results computed by the calculator’s own code.',

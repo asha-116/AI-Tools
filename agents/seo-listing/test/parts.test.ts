@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest';
 import { argValue, cliArgs, slugArg } from '../src/args.js';
 import { parseDisclaimers, SHORT_DISCLAIMER } from '../src/disclaimer.js';
 import { buildJsonLd, liveProduct, validateJsonLd, type JsonLd } from '../src/jsonld.js';
-import { fsRepo, pageExists } from '../src/repo.js';
+import { fsRepo, pageExists, readText } from '../src/repo.js';
 import { findTool, type ToolInfo } from '../src/tools.js';
 
 const emi = findTool('emi') as ToolInfo;
@@ -134,6 +134,7 @@ describe('repo reader', () => {
 
   it('reads, lists and checks pages', () => {
     expect(repo.read('nope.txt')).toBeNull();
+    expect(readText(repo, 'nope.txt')).toBe('');
     expect(repo.read('AGENTS.md')).toContain('AGENTS.md');
     expect(repo.list('site/src/tools')).toEqual(['commission', 'emi', 'stamp-duty']);
     expect(repo.list('nope')).toEqual([]);

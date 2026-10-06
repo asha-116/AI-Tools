@@ -17,7 +17,10 @@ export function parseDisclaimers(markdown: string, lastVerified: string): Biling
     const re = new RegExp(`\\*\\*${label}:\\*\\*\\s*([\\s\\S]*?)(?:\\n\\s*\\n|$)`);
     const m = re.exec(markdown);
     if (!m?.[1]?.trim()) throw new Error(`disclaimers.md has no **${label}:** paragraph`);
-    return m[1].replace(/\s*\n\s*/g, ' ').trim().replaceAll('{last_verified}', lastVerified);
+    return m[1]
+      .replace(/\s*\n\s*/g, ' ')
+      .trim()
+      .replaceAll('{last_verified}', lastVerified);
   };
   const out = { en: para('EN'), hi: para('HI') };
   if (!out.en.includes(SHORT_DISCLAIMER.en)) {

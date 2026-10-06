@@ -39,3 +39,8 @@ export function pageExists(repo: RepoReader, path: string): boolean {
   const p = path.endsWith('/') ? path : `${path}/`;
   return repo.exists(`site/src/pages${p}index.astro`);
 }
+
+/** File content, or '' when missing. */
+export function readText(repo: RepoReader, path: string): string {
+  return repo.read(path) ?? '';
+}

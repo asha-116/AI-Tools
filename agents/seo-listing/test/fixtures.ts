@@ -1,6 +1,7 @@
 import type { SeoDraft } from '../schema.js';
 
-const EN_SENTENCE = 'Agents use this page to explain the monthly payment to a buyer in plain words.';
+const EN_SENTENCE =
+  'Agents use this page to explain the monthly payment to a buyer in plain words.';
 const HI_SENTENCE = 'एजेंट इस पेज से खरीदार को मासिक भुगतान आसान शब्दों में समझाते हैं।';
 
 export function para(sentence: string, words: number): string {

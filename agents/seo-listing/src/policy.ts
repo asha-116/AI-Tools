@@ -84,7 +84,9 @@ export function sensitiveTopics(text: string): string[] {
 
 /** "@someone" tags (people or brands). Email-like text is not a tag. */
 export function personTags(text: string): string[] {
-  return [...text.matchAll(/(?<![\w.])@[A-Za-z0-9_.]{2,}/g)].map((m) => `tags ${m[0]}`);
+  return [...text.matchAll(/(?<![\w.])@[A-Za-z0-9_]{2,}(?:\.[A-Za-z0-9_]+)*/g)].map(
+    (m) => `tags ${m[0]}`,
+  );
 }
 
 const URL_RE = /\bhttps?:\/\/[^\s)<>\]"']+/gi;
