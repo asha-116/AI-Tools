@@ -10,7 +10,7 @@ export interface AgentModule {
 
 export type AgentLoader = (name: string) => Promise<Partial<AgentModule>>;
 
-/** Resolves agents/<name>/src/run.js next to this file's build location (agents/dist/lib/src). */
+/** Resolves agents/<name>/src/run.js next to this file's build location (agents/dist/agents/lib/src). */
 export const defaultLoader: AgentLoader = (name) =>
   import(new URL(`../../${name}/src/run.js`, import.meta.url).href) as Promise<
     Partial<AgentModule>

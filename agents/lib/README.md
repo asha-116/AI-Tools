@@ -110,7 +110,7 @@ Agents are compiled with `tsc` (no extra runtime dependency): `agents/tsconfig.j
 
 ```bash
 npm run build:agents              # tsc -p agents/tsconfig.json
-npm run agent -- orchestrator     # build, then node agents/dist/lib/bin/agent.js orchestrator
+npm run agent -- orchestrator     # build, then node agents/dist/agents/lib/bin/agent.js orchestrator
 DRY_RUN=false npm run agent -- orchestrator   # real writes (Actions only, with an App token)
 ```
 
