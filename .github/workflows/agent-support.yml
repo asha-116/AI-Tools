@@ -9,7 +9,7 @@ name: Support
 # ('11 */6 * * *') if minutes are tight.
 on:
   schedule:
-    - cron: '11 */2 * * *'
+    - cron: '11 */6 * * *'
   workflow_dispatch:
 
 permissions:
