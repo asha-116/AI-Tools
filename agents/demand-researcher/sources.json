@@ -1,0 +1,65 @@
+{
+  "$comment": "Candidate research sources. ALL DISABLED until the owner reads each source's terms and robots.txt and sets terms_checked: true (then enabled: true). The agent refuses to load a source that is enabled without terms_checked. Only type 'autocomplete' is allowed; forums and page scraping are not supported. The agent also checks robots.txt itself, identifies as 'ChangeLensResearchBot (+https://tools.changelense.in)', and makes at most 50 requests per weekly run.",
+  "sources": [
+    {
+      "id": "google-suggest",
+      "type": "autocomplete",
+      "name": "Google search suggestions (unofficial endpoint)",
+      "url_template": "https://suggestqueries.google.com/complete/search?client=firefox&hl={hl}&gl=in&q={q}",
+      "format": "opensearch",
+      "languages": ["en", "hi"],
+      "terms_url": "https://policies.google.com/terms",
+      "terms_checked": false,
+      "enabled": false,
+      "notes": "Undocumented endpoint. Google's terms restrict automated access to its services; owner must confirm this use is permitted before enabling."
+    },
+    {
+      "id": "youtube-suggest",
+      "type": "autocomplete",
+      "name": "YouTube search suggestions (unofficial endpoint)",
+      "url_template": "https://suggestqueries.google.com/complete/search?client=firefox&ds=yt&hl={hl}&q={q}",
+      "format": "opensearch",
+      "languages": ["en", "hi"],
+      "terms_url": "https://www.youtube.com/t/terms",
+      "terms_checked": false,
+      "enabled": false,
+      "notes": "Same endpoint and caveats as google-suggest; shows what agents search for as videos."
+    },
+    {
+      "id": "duckduckgo-ac",
+      "type": "autocomplete",
+      "name": "DuckDuckGo autocomplete",
+      "url_template": "https://duckduckgo.com/ac/?q={q}&kl=in-en",
+      "format": "ddg",
+      "languages": ["en", "hi"],
+      "terms_url": "https://duckduckgo.com/terms",
+      "terms_checked": false,
+      "enabled": false,
+      "notes": "Undocumented endpoint; check the terms and robots.txt before enabling."
+    },
+    {
+      "id": "wikipedia-opensearch-en",
+      "type": "autocomplete",
+      "name": "Wikipedia OpenSearch API (English)",
+      "url_template": "https://en.wikipedia.org/w/api.php?action=opensearch&format=json&limit=10&search={q}",
+      "format": "opensearch",
+      "languages": ["en"],
+      "terms_url": "https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use",
+      "terms_checked": false,
+      "enabled": false,
+      "notes": "Documented public API (MediaWiki API etiquette: identify with a user-agent, be gentle). Weak commercial-intent signal; mostly useful for Hindi/English term coverage."
+    },
+    {
+      "id": "wikipedia-opensearch-hi",
+      "type": "autocomplete",
+      "name": "Wikipedia OpenSearch API (Hindi)",
+      "url_template": "https://hi.wikipedia.org/w/api.php?action=opensearch&format=json&limit=10&search={q}",
+      "format": "opensearch",
+      "languages": ["hi"],
+      "terms_url": "https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use",
+      "terms_checked": false,
+      "enabled": false,
+      "notes": "As above, for Hindi queries."
+    }
+  ]
+}

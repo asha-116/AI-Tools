@@ -1,0 +1,66 @@
+name: Agent — SEO/Listing
+
+# Listing copy + help articles for a merged tool (agents/seo-listing/PROCEDURE.md).
+# Runs only when vars.AGENTS_ENABLED == 'true'; dry-run unless vars.AGENTS_LIVE == 'true'.
+on:
+  pull_request:
+    types: [closed]
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      slug:
+        description: Tool slug (folder under site/src/tools/), e.g. emi
+        type: string
+        required: true
+
+permissions:
+  contents: read
+
+jobs:
+  resolve:
+    name: Resolve tool slug
+    if: >-
+      vars.AGENTS_ENABLED == 'true' &&
+      (github.event_name == 'workflow_dispatch' ||
+       (github.event.pull_request.merged == true &&
+        (contains(github.event.pull_request.labels.*.name, 'type:tool') ||
+         contains(github.event.pull_request.labels.*.name, 'type:product'))))
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      pull-requests: read
+    outputs:
+      slug: ${{ steps.slug.outputs.slug }}
+    steps:
+      - id: slug
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EVENT: ${{ github.event_name }}
+          INPUT_SLUG: ${{ inputs.slug }}
+          PR: ${{ github.event.pull_request.number }}
+          REPO: ${{ github.repository }}
+        # Inputs go through env, never interpolated into the script.
+        run: |
+          set -euo pipefail
+          if [ "$EVENT" = "workflow_dispatch" ]; then
+            slug="$INPUT_SLUG"
+          else
+            slug=$(gh api --paginate "repos/$REPO/pulls/$PR/files" --jq '.[].filename' \
+              | sed -nE 's#^site/src/tools/([a-z0-9-]+)/.*#\1#p; s#^products/([a-z0-9-]+)/.*#\1#p' \
+              | sort -u | head -n 1)
+          fi
+          if ! printf '%s' "$slug" | grep -Eq '^[a-z0-9][a-z0-9-]{0,40}$'; then
+            echo "::notice::No tool slug found — nothing to do"
+            slug=""
+          fi
+          echo "slug=$slug" >> "$GITHUB_OUTPUT"
+
+  run:
+    needs: resolve
+    if: vars.AGENTS_ENABLED == 'true' && needs.resolve.outputs.slug != ''
+    uses: ./.github/workflows/agent-run.yml
+    with:
+      agent: seo-listing
+      args: --slug ${{ needs.resolve.outputs.slug }}
+    secrets: inherit
