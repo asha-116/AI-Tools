@@ -1,0 +1,6 @@
+Message-ID: <fake-0001@example.com>
+From: "Testy Fakebuyer" <testy.fakebuyer@example.com>
+Subject: Download link expired
+Content-Type: text/plain; charset=utf-8
+
+The same message delivered twice (same Message-ID): it must be handled once.

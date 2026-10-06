@@ -1,0 +1,7 @@
+{
+  "id": "<fake-0003@example.com>",
+  "from": "fake.agent.three@example.com",
+  "subject": "lead tracker",
+  "body": "Bhai lead tracker kaise use karna hai? Mujhe Google Sheets mein import nahi ho raha. Mera number 9999999999 hai.",
+  "receivedAt": "2026-10-06T04:00:00Z"
+}
