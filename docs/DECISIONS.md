@@ -97,9 +97,15 @@ Statuses: **Accepted**, **Proposed** (engineer's recommendation, not yet exercis
 
 - **Decision (initial):** Gemini (Flash) → Groq (Llama) → Cerebras → OpenRouter free models → Ollama (local).
   Verifier picks the first provider whose **model family** differs from the producer's.
-- **Status:** Implemented 2026-10-06 in `agents/lib/src/providers.json` (families gemini, llama,
-  qwen, deepseek). Model names are unverified guesses until the owner checks each provider;
-  finalise after measuring quality and limits.
+- **Status:** Implemented 2026-10-06 in `agents/lib/src/providers.json`.
+- **Update 2026-10-07:** the first live run got HTTP 404 from both Gemini and Groq — the
+  configured models had been retired on the free tiers. Instead of guessing again, each provider
+  now has a preference list (`model`, `models`) and a `modelPattern`; on a 404 the client asks
+  `GET /models` once per run, picks a stable chat model (never previews; OpenRouter only
+  `:free`) and logs `llm.model_switched` or `llm.model_unavailable` with a sample of what the
+  provider offers. The family is inferred from the model actually used (`familyOf`), so the
+  Verifier's "different family" rule holds after a switch. Groq's free tier now serves
+  `openai/gpt-oss-*` (family `gpt`), so Gemini + Groq still give two independent families.
 
 ### ADR-014 — Additions to the prescribed repo structure
 

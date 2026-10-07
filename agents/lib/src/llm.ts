@@ -16,7 +16,13 @@ export const ProviderSchema = z
     baseUrlEnv: z.string().optional(),
     /** Env var holding the API key. Omit for keyless local providers. */
     keyEnv: z.string().optional(),
+    /** First-choice model. */
     model: z.string().min(1),
+    /** Further models to try, in order, when the first choice no longer exists (HTTP 404). */
+    models: z.array(z.string().min(1)).optional(),
+    /** Last resort: any model the provider lists whose id matches this regex (stable ids only). */
+    modelPattern: z.string().optional(),
+    /** Family of the configured models; the family actually used is inferred from the model id. */
     family: z.string().min(1),
     limits: z
       .object({
@@ -34,6 +40,44 @@ export const ProviderSchema = z
   });
 
 export type Provider = z.infer<typeof ProviderSchema>;
+
+/**
+ * Model family from a model id, so the Verifier's "different family" rule follows the model
+ * that really answered (a provider may switch models). Falls back to the provider's family.
+ */
+export function familyOf(model: string, fallback: string): string {
+  const id = model.toLowerCase();
+  const rules: [RegExp, string][] = [
+    [/gemini|gemma/, 'gemini'],
+    [/gpt-oss|^openai\//, 'gpt'],
+    [/llama/, 'llama'],
+    [/qwen|qwq/, 'qwen'],
+    [/deepseek/, 'deepseek'],
+    [/mistral|mixtral|codestral/, 'mistral'],
+    [/kimi|moonshot/, 'kimi'],
+  ];
+  for (const [re, family] of rules) if (re.test(id)) return family;
+  return fallback;
+}
+
+/** Model ids we never pick automatically: previews and non-chat models. */
+const NOT_FOR_CHAT =
+  /preview|exp|tts|image|embed|audio|live|vision|whisper|guard|transcribe|veo|imagen/i;
+
+/**
+ * Pick the model to use from what the provider lists: the configured model, then `models` in
+ * order, then the first listed id matching `modelPattern`. Returns undefined when none fits.
+ */
+export function chooseModel(p: Provider, listed: readonly string[]): string | undefined {
+  let ids = listed.map((id) => id.replace(/^models\//, ''));
+  // Zero-cost rule (AGENTS.md): on OpenRouter only `:free` models may ever be chosen.
+  if (p.baseUrl?.includes('openrouter.ai')) ids = ids.filter((id) => id.endsWith(':free'));
+  const available = new Set(ids);
+  for (const m of [p.model, ...(p.models ?? [])]) if (available.has(m)) return m;
+  if (!p.modelPattern) return undefined;
+  const re = new RegExp(p.modelPattern);
+  return ids.find((id) => re.test(id) && !NOT_FOR_CHAT.test(id));
+}
 
 /** The providers from providers.json, validated. */
 export function loadProviders(json: unknown = providersFile): Provider[] {
@@ -87,6 +131,7 @@ export interface LlmOptions {
 
 interface ResolvedProvider extends Provider {
   url: string;
+  modelsUrl: string;
   key: string | undefined;
 }
 
@@ -108,7 +153,8 @@ export function availableProviders(
     if (p.keyEnv && !key) continue;
     const base = p.baseUrl ?? (p.baseUrlEnv ? env[p.baseUrlEnv] : undefined);
     if (!base) continue;
-    out.push({ ...p, url: `${base.replace(/\/+$/, '')}/chat/completions`, key });
+    const root = base.replace(/\/+$/, '');
+    out.push({ ...p, url: `${root}/chat/completions`, modelsUrl: `${root}/models`, key });
   }
   return out;
 }
@@ -162,13 +208,46 @@ export function createLlm(options: LlmOptions): LlmClient {
   const timeoutMs = options.timeoutMs ?? 60_000;
   const log = options.logger;
   const families = new Set<string>();
+  /** Model each provider actually serves this run, after any 404 → /models discovery. */
+  const resolvedModel = new Map<string, string | null>();
+
+  const ListSchema = z.object({ data: z.array(z.object({ id: z.string() })) });
+
+  /** Ask the provider which models exist and pick one (logged; ids are not secret). */
+  async function discoverModel(p: ResolvedProvider): Promise<string | undefined> {
+    let listed: string[];
+    try {
+      const res = await doFetch(p.modelsUrl, {
+        headers: p.key ? { authorization: `Bearer ${p.key}` } : {},
+        signal: AbortSignal.timeout(timeoutMs),
+      });
+      const parsed = res.ok ? ListSchema.safeParse(await res.json().catch(() => null)) : null;
+      listed = parsed?.success ? parsed.data.data.map((m) => m.id) : [];
+    } catch {
+      listed = [];
+    }
+    const chosen = chooseModel(p, listed);
+    if (chosen) {
+      log?.warn('llm.model_switched', { provider: p.id, from: p.model, to: chosen });
+    } else {
+      log?.warn('llm.model_unavailable', {
+        provider: p.id,
+        configured: [p.model, ...(p.models ?? [])],
+        listed_count: listed.length,
+        // A short sample so the owner/engineer can update providers.json.
+        sample: listed.slice(0, 25),
+      });
+    }
+    return chosen;
+  }
 
   async function callProvider(
     p: ResolvedProvider,
+    model: string,
     req: LlmRequest,
   ): Promise<{ ok: true; res: LlmResponse } | { ok: false; status: number; reason: string }> {
     const body = {
-      model: p.model,
+      model,
       messages: req.messages,
       temperature: req.temperature ?? 0.2,
       ...(req.maxTokens || p.limits.maxOutputTokens
@@ -209,7 +288,7 @@ export function createLlm(options: LlmOptions): LlmClient {
         };
         return {
           ok: true,
-          res: { text, provider: p.id, model: p.model, family: p.family, usage },
+          res: { text, provider: p.id, model, family: familyOf(model, p.family), usage },
         };
       }
       last = { status: res.status, reason: `HTTP ${res.status}` };
@@ -237,8 +316,29 @@ export function createLlm(options: LlmOptions): LlmClient {
       options.budget?.assertAvailable();
       const candidates = availableProviders(providers, options.env, req.excludeFamily);
       const attempts: LlmUnavailable['attempts'] = [];
+      const excluded = new Set(
+        (typeof req.excludeFamily === 'string'
+          ? [req.excludeFamily]
+          : (req.excludeFamily ?? [])
+        ).map((f) => f.toLowerCase()),
+      );
       for (const p of candidates) {
-        const r = await callProvider(p, req);
+        let model = resolvedModel.get(p.id);
+        if (model === null) continue; // discovery already found nothing usable this run
+        model ??= p.model;
+        if (excluded.has(familyOf(model, p.family))) continue;
+        let r = await callProvider(p, model, req);
+        if (!r.ok && r.status === 404 && !resolvedModel.has(p.id)) {
+          // The model was renamed or retired: look up what the provider serves now, once.
+          const found = await discoverModel(p);
+          resolvedModel.set(p.id, found ?? null);
+          if (found && found !== model && !excluded.has(familyOf(found, p.family))) {
+            model = found;
+            r = await callProvider(p, model, req);
+          }
+        } else if (r.ok) {
+          resolvedModel.set(p.id, model);
+        }
         if (r.ok) {
           families.add(r.res.family);
           log?.info('llm.usage', {
