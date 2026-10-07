@@ -178,8 +178,47 @@ describe('createLlm().chat', () => {
       'llm.retry',
       'llm.retry',
       'llm.fallback',
+      'llm.provider_down',
       'llm.usage',
     ]);
+  });
+
+  it('never retries a timeout; falls through to the next provider at once', async () => {
+    const f = fakeFetch((req) => {
+      if (req.url.includes('one.test')) throw new DOMException('timed out', 'TimeoutError');
+      return jsonResponse(completion('from two'));
+    });
+    const log = memoryLogger('t');
+    const llm = createLlm({ env: ENV, providers: P, fetch: f, sleep: noSleep, logger: log });
+    const r = await llm.chat({ messages: msg });
+    expect(r.provider).toBe('two');
+    expect(f.calls.filter((c) => c.url.includes('one.test'))).toHaveLength(1);
+    expect(log.lines.map((l) => l.event)).toContain('llm.timeout');
+  });
+
+  it('skips a provider for the rest of the run once it is down (circuit breaker)', async () => {
+    const f = fakeFetch((req) =>
+      req.url.includes('one.test') ? jsonResponse({}, 503) : jsonResponse(completion('ok')),
+    );
+    const llm = createLlm({ env: ENV, providers: P, fetch: f, sleep: noSleep, maxRetries: 1 });
+    await llm.chat({ messages: msg });
+    await llm.chat({ messages: msg });
+    await llm.chat({ messages: msg });
+    const hosts = f.calls.map((c) => new URL(c.url).host);
+    expect(hosts.filter((h) => h === 'one.test')).toHaveLength(2); // first call's 2 tries only
+    expect(hosts.filter((h) => h === 'two.test')).toHaveLength(3);
+  });
+
+  it('keeps a provider after a 400 or malformed answer (may be request-specific)', async () => {
+    let n = 0;
+    const f = fakeFetch((req) => {
+      if (req.url.includes('one.test'))
+        return n++ === 0 ? jsonResponse({}, 400) : jsonResponse(completion('back'));
+      return jsonResponse(completion('two'));
+    });
+    const llm = createLlm({ env: ENV, providers: P, fetch: f, sleep: noSleep });
+    expect((await llm.chat({ messages: msg })).provider).toBe('two');
+    expect((await llm.chat({ messages: msg })).provider).toBe('one');
   });
 
   it('does not retry a 401; moves straight to the next provider', async () => {

@@ -106,6 +106,11 @@ Statuses: **Accepted**, **Proposed** (engineer's recommendation, not yet exercis
   provider offers. The family is inferred from the model actually used (`familyOf`), so the
   Verifier's "different family" rule holds after a switch. Groq's free tier now serves
   `openai/gpt-oss-*` (family `gpt`), so Gemini + Groq still give two independent families.
+- **Update 2026-10-07 (circuit breaker):** the next run spent ~4 minutes on Gemini — four
+  "503 busy" answers, then four 60-second timeouts — before Groq answered. Now a timeout is never
+  retried, and a provider that times out, stays busy (429/5xx) after its retries or refuses the
+  key (401/403) is skipped for the rest of that run (`llm.provider_down`). A 400 or malformed
+  answer does not trip it, since those can depend on the request.
 
 ### ADR-014 — Additions to the prescribed repo structure
 
