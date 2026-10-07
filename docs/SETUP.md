@@ -73,8 +73,7 @@ no write access to `main` and never merge red CI yourself.
 Settings (your account) → Developer settings → GitHub Apps → _New GitHub App_: no webhook;
 repository permissions **Contents: RW, Pull requests: RW, Issues: RW, Actions: R, Metadata: R**
 (Actions: R lets the Orchestrator see failing workflows, because the App token replaces the
-workflow token); install it
-on this repo only. Save the App ID as variable `AGENT_APP_ID` and the private key as secret
+workflow token); install it on this repo only. Save the App ID as variable `AGENT_APP_ID` and the private key as secret
 `AGENT_APP_PRIVATE_KEY`. Agents and the usage report use it to open PRs (so CI runs on them);
 without it every agent run is forced into dry-run (§8).
 
