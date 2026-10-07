@@ -4,7 +4,9 @@ Makes each new tool findable: product page copy, meta tags, schema.org and help 
 
 ## Trigger
 
-A PR labelled `type:tool` or `type:product` is merged (`pull_request: closed` + merged), or `workflow_dispatch`.
+A PR labelled `type:tool` or `type:product` is merged (`pull_request: closed` + merged), or `workflow_dispatch`
+(`.github/workflows/agent-seo-listing.yml`). The slug comes from the PR's changed files
+(`site/src/tools/<slug>/` or `products/<id>/`) or the dispatch input → `--slug <slug>`.
 
 ## Inputs
 
@@ -18,7 +20,17 @@ The merged tool's `meta.json`, formula, EN + HI strings; `company/policies/brand
    `Product` + `Offer` for paid items — price only from approved data).
 3. Write 1 EN + 1 HI help article (600–1,000 words): worked example using the tool, formula
    explanation, disclaimer, internal links.
-4. Validate JSON-LD, lengths and links; open PR `agent/seo-listing/<slug>`.
+4. Validate JSON-LD, lengths and links; open PR `agent/seo-listing/<slug>` with
+   `site/src/content/articles/<slug>.{en,hi}.md` + `<slug>.seo.json` (meta, FAQ, JSON-LD) and
+   the producer model family in the body (for the Verifier).
+
+How numbers stay honest: the model writes prose only and may cite example values as `[[key]]`
+placeholders; the worked example is computed by the real tools-core function
+(`src/tools.ts`), any ₹ / lakh / crore / % figure the model types that the tool did not compute is
+rejected, and JSON-LD, links and the disclaimer (`company/policies/disclaimers.md`) are built by
+code. No `Offer`/price unless the product is `live` in `products/catalog.json`. Tools without an
+adapter in `src/tools.ts`, or whose data is not verified (stamp duty today), escalate instead.
+No LLM key → logs the computed example and exits 0 without drafting.
 
 ## Output schema
 
@@ -44,7 +56,7 @@ The merged tool's `meta.json`, formula, EN + HI strings; `company/policies/brand
 
 ## Token budget per run
 
-40,000 tokens.
+40,000 tokens (daily cap 80,000).
 
 ## Escalation rule
 

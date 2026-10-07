@@ -1,0 +1,27 @@
+name: Agent — Verifier
+
+# Independent second opinion (agents/verifier/PROCEDURE.md) on PRs that touch formulas, data,
+# prices, legal or published text. Sets the commit status `verifier` and one PR comment.
+# Fork PRs never run (no secrets for fork code); the owner verifies those by hand.
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, labeled]
+    paths:
+      - 'tools-core/**'
+      - 'data/**'
+      - 'products/**'
+      - 'legal/**'
+      - 'company/policies/**'
+      - 'site/src/content/**'
+
+permissions:
+  contents: read
+
+jobs:
+  verifier:
+    if: vars.AGENTS_ENABLED == 'true' && github.event.pull_request.head.repo.full_name == github.repository
+    uses: ./.github/workflows/agent-run.yml
+    with:
+      agent: verifier
+      args: --pr ${{ github.event.pull_request.number }}
+    secrets: inherit

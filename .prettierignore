@@ -5,3 +5,4 @@ package-lock.json
 company/ledger/*.csv
 company/reports/agent-logs
 .lighthouseci
+company/reports/usage

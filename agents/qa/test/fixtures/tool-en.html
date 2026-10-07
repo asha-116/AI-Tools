@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>EMI calculator · ChangeLens</title>
+    <meta name="description" content="Calculate the monthly EMI &amp; total interest." />
+    <style>
+      .x::after {
+        content: 'For estimation only — verify with a professional.';
+      }
+    </style>
+  </head>
+  <body>
+    <header><a class="brand" href="/">ChangeLens</a></header>
+    <main class="wrap">
+      <article class="tool">
+        <h1>EMI calculator</h1>
+        <section class="card results">
+          <p>Monthly EMI <strong>₹21,696</strong></p>
+        </section>
+        <section class="card">
+          <h2 data-x>How it is calculated</h2>
+          <p class="formula"><code>EMI = P × r × (1 + r)ⁿ ÷ ((1 + r)ⁿ − 1)</code></p>
+          <p>P = loan amount, r = monthly rate, n = number of instalments.</p>
+          <h2>Assumptions</h2>
+          <ul>
+            <li>The interest rate stays the same for the whole tenure.</li>
+            <li>Processing fees &amp; insurance are not included.</li>
+          </ul>
+          <p class="disclaimer">
+            <strong>For estimation only — verify with a professional.</strong>
+          </p>
+        </section>
+      </article>
+    </main>
+    <footer>
+      <p>
+        Our calculators are for estimation only — verify with a professional. Nothing on this site
+        is legal, tax or financial advice.
+      </p>
+    </footer>
+    <script type="module">
+      console.log('For estimation only — verify with a professional.');
+    </script>
+  </body>
+</html>

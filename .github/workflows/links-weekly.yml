@@ -1,0 +1,106 @@
+name: Weekly link check
+
+# QA agent (agents/qa/PROCEDURE.md step 5, ADR-006): checks EXTERNAL links once a week, so
+# third-party outages never block a PR (PR CI checks repo-internal links offline).
+# Covers the Markdown docs and the data files (e.g. the official source URL of every stamp-duty
+# rate). Broken links open one Issue, updated in place (marker <!-- agent:qa:links -->), and
+# closed again once everything passes.
+# Costs nothing until the owner sets the repository variable AGENTS_ENABLED=true.
+on:
+  schedule:
+    - cron: '23 3 * * 1' # Mondays 03:23 UTC (08:53 IST)
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: links-weekly
+  cancel-in-progress: true
+
+jobs:
+  links:
+    name: External link check
+    if: ${{ vars.AGENTS_ENABLED == 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      issues: write
+    steps:
+      - uses: actions/checkout@v7
+      - name: Check links (online)
+        id: lychee
+        uses: lycheeverse/lychee-action@v2
+        with:
+          # 403/429: sites that block or rate-limit bots are not broken links.
+          args: >-
+            --no-progress --max-retries 3 --timeout 30
+            --accept '100..=103,200..=299,403,429'
+            './**/*.md' './data/**/*.json' './products/**/*.json'
+          output: lychee/out.md
+          format: markdown
+          fail: false
+      - name: Open, update or close the broken-links Issue
+        uses: actions/github-script@v8
+        env:
+          EXIT_CODE: ${{ steps.lychee.outputs.exit_code }}
+        with:
+          script: |
+            const fs = require('node:fs');
+            const MARKER = '<!-- agent:qa:links -->';
+            const runUrl = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
+            const issues = await github.paginate(github.rest.issues.listForRepo, {
+              ...context.repo,
+              state: 'open',
+              labels: 'agent:qa',
+              per_page: 100,
+            });
+            const open = issues.find((i) => !i.pull_request && i.body?.includes(MARKER));
+            const broken = process.env.EXIT_CODE !== '0';
+
+            if (!broken) {
+              if (open) {
+                await github.rest.issues.createComment({
+                  ...context.repo,
+                  issue_number: open.number,
+                  body: `All external links pass again ([run](${runUrl})). Closing.`,
+                });
+                await github.rest.issues.update({
+                  ...context.repo,
+                  issue_number: open.number,
+                  state: 'closed',
+                  state_reason: 'completed',
+                });
+              }
+              core.info('No broken links.');
+              return;
+            }
+
+            let report = fs.existsSync('lychee/out.md')
+              ? fs.readFileSync('lychee/out.md', 'utf8')
+              : '(no report file — see the run log)';
+            if (report.length > 60000) report = `${report.slice(0, 60000)}\n\n… truncated, see the run log.`;
+            const body = [
+              MARKER,
+              'The weekly external link check found broken links. Fix or replace each link, or add',
+              'it to `.lycheeignore` with a reason if it only fails for bots. For a broken **rate',
+              'source** in `data/`, re-verify the rate before changing the URL (AGENTS.md rule 6).',
+              '',
+              `Last checked: ${new Date().toISOString().slice(0, 10)} · [workflow run](${runUrl})`,
+              '',
+              report,
+            ].join('\n');
+
+            if (open) {
+              await github.rest.issues.update({ ...context.repo, issue_number: open.number, body });
+              core.info(`Updated issue #${open.number}`);
+            } else {
+              const { data } = await github.rest.issues.create({
+                ...context.repo,
+                title: 'Broken external links (weekly link check)',
+                body,
+                labels: ['agent:qa', 'type:bug'],
+              });
+              core.info(`Opened issue #${data.number}`);
+            }

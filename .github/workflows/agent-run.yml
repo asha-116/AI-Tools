@@ -1,0 +1,109 @@
+name: Agent run (reusable)
+
+# Every agent workflow (agent-<name>.yml) calls this with `uses: ./.github/workflows/agent-run.yml`.
+# Safety switches (docs/SETUP.md §8):
+#   - vars.AGENTS_ENABLED == 'true'  → callers run at all (checked in each caller's job `if:`).
+#   - vars.AGENTS_LIVE == 'true'     → DRY_RUN=false; otherwise every GitHub write is a no-op.
+#   - Live runs need the agents' GitHub App (vars.AGENT_APP_ID + secrets.AGENT_APP_PRIVATE_KEY,
+#     ADR-015) so CI runs on agent PRs; without it the run is forced to dry-run.
+# Agents can open Issues and PRs on agent/* branches. They can never merge or push to main.
+on:
+  workflow_call:
+    inputs:
+      agent:
+        description: Agent folder name under agents/ (e.g. orchestrator)
+        type: string
+        required: true
+      args:
+        description: Extra CLI arguments passed to the agent
+        type: string
+        required: false
+        default: ''
+    secrets:
+      AGENT_APP_PRIVATE_KEY:
+        required: false
+      GEMINI_API_KEY:
+        required: false
+      GROQ_API_KEY:
+        required: false
+      CEREBRAS_API_KEY:
+        required: false
+      OPENROUTER_API_KEY:
+        required: false
+      RAZORPAY_KEY_ID:
+        required: false
+      RAZORPAY_KEY_SECRET:
+        required: false
+      CLOUDFLARE_API_TOKEN:
+        required: false
+      CLOUDFLARE_ACCOUNT_ID:
+        required: false
+
+permissions:
+  contents: read
+
+jobs:
+  run:
+    name: Run ${{ inputs.agent }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    concurrency:
+      group: agent-${{ inputs.agent }}
+      cancel-in-progress: false
+    steps:
+      - name: Mint GitHub App token
+        id: app
+        if: vars.AGENT_APP_ID != ''
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ vars.AGENT_APP_ID }}
+          private-key: ${{ secrets.AGENT_APP_PRIVATE_KEY }}
+
+      - name: Decide dry-run
+        id: mode
+        env:
+          LIVE: ${{ vars.AGENTS_LIVE }}
+          HAS_APP: ${{ steps.app.outputs.token != '' }}
+        run: |
+          if [ "$LIVE" = "true" ] && [ "$HAS_APP" = "true" ]; then
+            echo "dry_run=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "dry_run=true" >> "$GITHUB_OUTPUT"
+            echo "::notice::DRY_RUN — nothing will be written to GitHub (AGENTS_LIVE='$LIVE', GitHub App token: $HAS_APP)"
+          fi
+
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+
+      - name: Run agent
+        env:
+          DRY_RUN: ${{ steps.mode.outputs.dry_run }}
+          GITHUB_TOKEN: ${{ steps.app.outputs.token || github.token }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          CEREBRAS_API_KEY: ${{ secrets.CEREBRAS_API_KEY }}
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          RAZORPAY_KEY_ID: ${{ secrets.RAZORPAY_KEY_ID }}
+          RAZORPAY_KEY_SECRET: ${{ secrets.RAZORPAY_KEY_SECRET }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          ORDERS_D1_ID: ${{ vars.ORDERS_D1_ID }} # Controller: D1 orders export (not a secret)
+          AGENT: ${{ inputs.agent }}
+          AGENT_ARGS: ${{ inputs.args }}
+        # Inputs go through env, never interpolated into the script.
+        run: |
+          # shellcheck disable=SC2086
+          npm run agent -- "$AGENT" $AGENT_ARGS
+
+      - name: Keep the run log
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: agent-log-${{ inputs.agent }}-${{ github.run_id }}
+          path: company/reports/agent-logs/
+          if-no-files-found: ignore
+          retention-days: 30

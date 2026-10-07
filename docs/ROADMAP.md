@@ -56,21 +56,23 @@ Phases and acceptance criteria. Tick items as they land; each phase ends with a 
 
 ## Phase 4 — Agents v1
 
-- [ ] `agents/lib`: LLM client + fallback + budgets, redaction, schema validation, logging, dry-run
-- [ ] Orchestrator, Builder, QA, Verifier, Controller — dry-run, then live
-- [ ] GitHub App token for agent PRs (so CI runs on them — see ADR-015)
+- [x] `agents/lib`: LLM client + fallback + budgets, redaction, schema validation, logging, dry-run
+- [x] Orchestrator, Builder, QA, Verifier, Controller — dry-run (built 2026-10-06)
+- [ ] … then live — owner: keys + GitHub App + `AGENTS_LIVE=true` (docs/SETUP.md §8)
+- [ ] GitHub App token for agent PRs (so CI runs on them — see ADR-015) — workflows ready; owner creates the App
 - [ ] **Done when:** one unattended cycle: Orchestrator Issue → Builder PR → QA + Verifier pass →
       owner merges → site deploys → Controller reports
 
 ## Phase 5 — Agents v2 (growth + support)
 
-- [ ] Demand Researcher, SEO/Listing, Social (draft-only), Support (redaction + refund threshold)
+- [x] Demand Researcher, SEO/Listing, Social (draft-only), Support (redaction + refund threshold) — dry-run
 - [ ] **Done when:** a week of daily reports exists and owner workload per RUNBOOK ≤ 2 h/week
 
 ## Phase 6 — Hardening
 
-- [ ] Free-tier usage monitoring, alert at 70% of any limit
-- [ ] Auto-Issue on any workflow failure
-- [ ] Backup/export script for ledger and memory
-- [ ] Monthly cost report
+- [x] Free-tier usage monitoring, alert at 70% of any limit
+- [x] Auto-Issue on any workflow failure
+- [x] Backup/export script for ledger and memory
+- [x] Monthly cost report
 - [ ] **Done when:** `docs/COSTS.md` shows current usage for every service and every alert path is tested
+      — alert paths unit-tested; needs one real run of Usage report + Backup by the owner

@@ -18,20 +18,58 @@ jobs:
     name: Lint, typecheck, test, structure
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    # Step outcomes feed the QA summary comment (qa-summary job, agents/qa/src/summary.mjs).
+    outputs:
+      install: ${{ steps.install.outcome }}
+      lint: ${{ steps.lint.outcome }}
+      format: ${{ steps.format.outcome }}
+      typecheck: ${{ steps.typecheck.outcome }}
+      site_check: ${{ steps.site_check.outcome }}
+      bilingual: ${{ steps.bilingual.outcome }}
+      tests: ${{ steps.tests.outcome }}
+      build: ${{ steps.build.outcome }}
+      pages: ${{ steps.pages.outcome }}
+      structure: ${{ steps.structure.outcome }}
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-node@v7
         with:
           node-version-file: .nvmrc
           cache: npm
-      - run: npm ci
-      - run: npm run lint
-      - run: npm run format:check
-      - run: npm run typecheck
-      - run: npm run check:site
-      - run: npm run test:coverage
-      - run: npm run build:site
-      - run: npm run check:structure
+      - id: install
+        run: npm ci
+      # After a successful install every check runs even if an earlier one failed, so one PR
+      # run reports all problems at once. The job still fails if any step fails.
+      - id: lint
+        run: npm run lint
+      - id: format
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        run: npm run format:check
+      - id: typecheck
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        run: npm run typecheck
+      - id: site_check
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        run: npm run check:site
+      - name: 'QA: bilingual strings (EN = HI keys, no English left in Hindi)'
+        id: bilingual
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        run: npm run qa:bilingual
+      - id: tests
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        run: npm run test:coverage
+      - id: build
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        run: npm run build:site
+      - name: 'QA: built pages (tool disclaimer/formula/assumptions, templates without price)'
+        id: pages
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
+        env:
+          QA_REQUIRE_DIST: '1'
+        run: npm run qa:pages
+      - id: structure
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        run: npm run check:structure
 
   secrets:
     name: Secret scan (gitleaks)
@@ -84,3 +122,41 @@ jobs:
           path: .lighthouseci
           include-hidden-files: true
           retention-days: 7
+
+  # QA agent (agents/qa/PROCEDURE.md step 8): one PR comment, updated in place, summarising
+  # every check above. Tiny job (no install, sparse checkout). Runs when checks fail, but not
+  # when a newer push cancelled this run. Skipped for PRs from forks, whose token cannot comment.
+  qa-summary:
+    name: QA summary comment
+    needs: [checks, secrets, links, lighthouse]
+    if: ${{ !cancelled() && github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          sparse-checkout: agents/qa/src
+      - name: Post or update the QA comment
+        uses: actions/github-script@v8
+        # A failed comment must never turn a green PR red.
+        continue-on-error: true
+        env:
+          NEEDS: ${{ toJSON(needs) }}
+        with:
+          script: |
+            const { pathToFileURL } = require('node:url');
+            const { buildReport, renderComment, upsertComment } = await import(
+              pathToFileURL(`${process.env.GITHUB_WORKSPACE}/agents/qa/src/summary.mjs`).href
+            );
+            const pr = context.payload.pull_request.number;
+            const report = buildReport(JSON.parse(process.env.NEEDS), pr);
+            const body = renderComment(report, {
+              runUrl: `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`,
+              sha: context.payload.pull_request.head.sha,
+            });
+            const action = await upsertComment(github, { ...context.repo, issue_number: pr }, body);
+            core.info(`QA comment ${action}: overall ${report.overall}`);
+            await core.summary.addRaw(body).write();

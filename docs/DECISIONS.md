@@ -91,13 +91,15 @@ Statuses: **Accepted**, **Proposed** (engineer's recommendation, not yet exercis
 
 - **Decision:** zod for LLM output and config validation in `agents/`; JSON Schema files for
   data in `data/` (language-neutral, readable by non-TS tools).
-- **Status:** Proposed — Phase 4.
+- **Status:** Accepted (2026-10-06): zod 4.6.5, exact-pinned runtime dependency.
 
 ### ADR-013 — LLM provider fallback order
 
 - **Decision (initial):** Gemini (Flash) → Groq (Llama) → Cerebras → OpenRouter free models → Ollama (local).
   Verifier picks the first provider whose **model family** differs from the producer's.
-- **Status:** Proposed — Phase 4; finalised after measuring quality and free-tier limits.
+- **Status:** Implemented 2026-10-06 in `agents/lib/src/providers.json` (families gemini, llama,
+  qwen, deepseek). Model names are unverified guesses until the owner checks each provider;
+  finalise after measuring quality and limits.
 
 ### ADR-014 — Additions to the prescribed repo structure
 
@@ -235,3 +237,119 @@ NOTHING`), so duplicates and both events for one payment are harmless. It stores
 - **Alternatives:** hand-made Google Sheets (no review trail, drift); a JS spreadsheet engine
   to evaluate formulas in CI (GPL/commercial licences or abandoned projects).
 - **Status:** Accepted. Owner opens the files in Google Sheets / Excel before the first sale.
+
+### ADR-025 — Agent runtime: compiled TypeScript, one reusable workflow, dry-run by default
+
+- **Context:** Phase 4 agents share an LLM client, budgets, redaction, logging and GitHub access,
+  and must be safe to switch on gradually.
+- **Decision:**
+  - `agents/lib` is the only runtime. Agents are compiled with `tsc -p agents/tsconfig.json`
+    (root `..`, so shared code in `workers/lib` compiles too) to `agents/dist` and run as
+    `npm run agent -- <name>`; each `agents/<name>/src/run.ts` exports `main()`. No `tsx`.
+  - LLM: OpenAI-compatible free providers in order, retry with backoff + jitter on 429/5xx,
+    fall through on failure, `excludeFamily` for the Verifier. Budgets `{perRun, daily}` are
+    enforced inside the client; a budget stop or escalation exits 0, only crashes exit 1.
+  - The LLM client does **not** redact automatically: any agent that handles customer text
+    (Support) must call `redact` first; tests assert it.
+  - GitHub writes are no-ops unless `DRY_RUN` is exactly `false`; PR branches must be
+    `agent/<agent>/<slug>`; there is no merge method. One commit per PR via the git data API.
+  - `.github/workflows/agent-run.yml` (reusable) sets `DRY_RUN=false` only when the variable
+    `AGENTS_LIVE=true` **and** a GitHub App token exists (ADR-015); every caller's job is guarded
+    by `AGENTS_ENABLED=true`, so nothing costs Actions minutes until the owner switches it on.
+    Run logs are kept as 30-day artifacts.
+- **Alternatives:** `tsx` at runtime (new dependency); one workflow per agent with copied steps
+  (drift in safety switches).
+- **Status:** Accepted (2026-10-06).
+
+### ADR-026 — Free-tier monitoring and failure alerts without paid tools
+
+- **Decision:** a monthly `usage.yml` computes Actions minutes from job timings (each job rounded
+  up, like billing — the billing API needs an owner token), Cloudflare usage from the GraphQL
+  Analytics API (daily limits compared with the busiest day) and LLM tokens from agent logs,
+  against limits kept as data in `data/free-tier-limits.json`. At ≥ 70% it opens one
+  `needs-owner` Issue (deduped by a hidden marker). `failure-alert.yml` opens one Issue per
+  failing workflow on `main` or schedules (PR failures stay on the PR).
+- **Status:** Accepted (2026-10-06). Cloudflare GraphQL field names are unverified until the
+  first real run.
+
+### ADR-027 — Backups as 90-day workflow artifacts; waitlist excluded
+
+- **Decision:** weekly `backup.yml` exports D1 `toolshop-orders` (whitelisted columns; aborts if
+  any value looks like an email) and tars `company/ledger` + `company/memory`, with SHA-256
+  manifest, as a 90-day artifact. The waitlist (emails) is never exported by automation — only
+  by the owner, to their own device (RUNBOOK).
+- **Alternatives:** committing backups to git (history can't be deleted; rejected).
+- **Status:** Accepted (2026-10-06). If the repo becomes public, artifacts are visible to
+  signed-in users; they hold IDs, amounts and email HMACs only.
+
+### ADR-028 — Controller: deterministic ledger in IST business days
+
+- **Decision:** the Controller is pure arithmetic in integer paise (no LLM). Business day = IST
+  calendar day; weekly P&L per ISO week in `company/reports/weekly/`. Ledger CSVs hold IDs and
+  amounts only and every write passes a PII guard. Only the `product` note of a payment is kept;
+  all other notes are dropped (Payment Page fields can carry buyer data).
+- **Assumptions to confirm with a Razorpay test payment:** `fee` includes GST and `tax` is the
+  GST part; list endpoints use `from`/`to`/`count`/`skip`; settlement check uses a fixed 2-day lag
+  (weekends/holidays will cause false alarms until Razorpay's settlement recon API is used).
+- **Status:** Accepted for dry-run (2026-10-06).
+
+### ADR-029 — QA checks are tests, not a separate service
+
+- **Decision:** the QA agent's deterministic checks run as vitest tests in CI: EN/HI parity
+  everywhere (strings, specs, data `_hi` fields; Latin words in Hindi only from
+  `agents/qa/allowed-latin.json`, changed by PR), built tool pages show formula, assumptions and
+  disclaimer, template pages show no price and a "coming soon" badge. One PR comment
+  (`<!-- agent:qa -->`) is updated in place by a job with its own minimal permissions; it never
+  fails a PR. Online link checks run weekly once agents are enabled.
+- **Status:** Accepted (2026-10-06).
+
+### ADR-030 — Builder does only the tests-first half; Verifier is independent and label-gated
+
+- **Context:** free-tier models cannot be trusted to write production formula code, and the
+  Verifier must never check its own family's work (AGENTS.md).
+- **Decision:**
+  - The **Builder** turns an `agent:builder` Issue into a draft PR with a known-answer fixture
+    (every case must cite a URL that appears in the Issue), a test skeleton and a PLAN.md. A
+    person or coding session implements the function until CI is green. It escalates instead of
+    building for pricing/legal Issues, uncited Issues or disagreeing sources.
+  - The **Verifier** runs on PRs touching formulas, data, products, legal, policies or content.
+    Formula cases (≤ 10, seeded from the PR number) are computed by a model of a **different
+    family** from the formula description only, then compared with our function within ₹1 or
+    0.01%. Changes to `legal/`, `company/policies/` or any price fail without the
+    `approved-by-owner` label (no model involved). No independent provider → failure, never
+    self-verification.
+- **Known risk:** the Verifier executes the PR's code in a job that holds the agents' App token
+  and model keys. Fork PRs are excluded, but a same-repo PR (including one opened by an agent)
+  could change what runs. Mitigation before `AGENTS_LIVE=true`: keep model keys low-privilege
+  free-tier keys, keep the App's permissions minimal, and review agent PRs before they get the
+  `labeled` trigger.
+- **Status:** Accepted for dry-run (2026-10-06).
+
+### ADR-031 — Support: templates only, every refund to the owner, no inbox yet
+
+- **Decision:** the Support agent redacts every message (and strips links, which may carry
+  download tokens) before any model call, classifies it (keyword fallback without a model),
+  and replies only with owner-approved templates from `company/knowledge-base/` (EN + HI; all
+  `draft` until a human approves them). Refund threshold stays ₹0: every refund request becomes
+  a `needs-owner` Issue with a masked payment ID. Legal threats, chargebacks and unclear
+  messages go to the owner. Logs hold a hashed message ref, category and outcome — never text.
+  It runs every 6 hours, only when `SUPPORT_INBOX` is set.
+- **Open:** the inbox. Recommended: Cloudflare Email Routing → Worker → D1 queue (free, raw mail
+  never reaches GitHub); alternative: Gmail API via OAuth.
+- **Status:** Accepted for dry-run (2026-10-06).
+
+### ADR-032 — Growth agents: research off by default, numbers from code, drafts only
+
+- **Decision:**
+  - **Demand Researcher** fetches only allow-listed sources whose `terms_checked` the owner has
+    set in `agents/demand-researcher/sources.json` (all off today), honours robots.txt, max 50
+    fetches/run, strips usernames and redacts before any model call. Scores are computed in
+    code; an idea needs ≥ 2 fetched evidence URLs.
+  - **SEO/Listing** lets the model write prose only; every number in a worked example comes from
+    the real tools-core function (unknown figures are rejected), JSON-LD and disclaimers are
+    built in code, and no `Offer`/price appears until a product is `live`. Stamp-duty content
+    waits for a verified state.
+  - **Social** writes drafts to `company/social-queue/` via PR and never calls a social API
+    (tested). News, politics, regulation and competitor topics go to the owner.
+- **Open:** wiring `site/src/content/articles/` into pages (no content collection yet).
+- **Status:** Accepted for dry-run (2026-10-06).

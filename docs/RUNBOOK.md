@@ -22,7 +22,9 @@ anything irreversible. Everything you need arrives as a GitHub notification.
 
 ## Monthly (≈ 30 min)
 
-- `docs/COSTS.md`: any service > 70% of its free tier? Decide: reduce, switch, or pay.
+- Usage: open the latest **Usage report** run (Actions) or `company/reports/usage/`. An Issue
+  _Free-tier usage at or above 70%_ (`needs-owner`, `type:infra`, `type:alert`) means decide:
+  reduce, switch, or pay.
 - Re-verify rates older than 180 days when the Orchestrator flags them.
 - Read the monthly summary in `company/memory/`.
 
@@ -64,3 +66,23 @@ anything irreversible. Everything you need arrives as a GitHub notification.
    - **Row is fine:** they probably typed a different email. Ask which email they paid with
      (Razorpay dashboard → Payments shows it) and tell them to use exactly that one.
 3. Links expire after 72 hours by design; the same page always gives fresh ones.
+
+## "Workflow failed" Issues (Phase 6)
+
+One Issue per workflow, labelled `type:bug` + `needs-owner` + `type:alert`, opened only for runs on
+`main` or scheduled runs (PR failures show on the PR). Open the run link; re-run if it was a
+one-off, otherwise fix by PR. Close the Issue when the next run is green — repeat failures arrive
+as comments while it is open. Turn alerts off with the variable `FAILURE_ALERTS_ENABLED=false`.
+
+## Backups (Phase 6)
+
+Actions → **Backup** → latest run → artifact `backup-<n>` (kept 90 days): `orders.json` (payment
+IDs, products, amounts, email HMACs — no emails), `company.tar.gz` (ledger + memory),
+`manifest.json` (SHA-256 checksums). Restore ledger/memory with `tar -xzf company.tar.gz` at the
+repo root. Run it by hand before risky changes.
+
+**Waitlist (manual, owner only).** The waitlist holds email addresses and is never backed up by
+automation. To keep a copy, on your own computer run
+`npx wrangler@4.143.0 d1 export toolshop-waitlist --remote --output waitlist-$(date +%F).sql`.
+Keep it only on your device or encrypted storage. Never commit it, attach it to an Issue or paste
+it into an AI tool. Delete old copies.

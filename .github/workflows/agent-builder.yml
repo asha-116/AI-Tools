@@ -1,0 +1,29 @@
+name: Agent — Builder
+
+# Drafts the tests-first half of an Issue (agents/builder/PROCEDURE.md): known-answer fixture,
+# failing test and PLAN.md on agent/builder/<n>-<slug>, as a DRAFT PR for a human to implement.
+on:
+  issues:
+    types: [labeled]
+  workflow_dispatch:
+    inputs:
+      issue:
+        description: Issue number labelled agent:builder
+        type: number
+        required: true
+
+permissions:
+  contents: read
+
+jobs:
+  builder:
+    if: >-
+      vars.AGENTS_ENABLED == 'true' &&
+      (github.event_name == 'workflow_dispatch' ||
+      (github.event.label.name == 'agent:builder' &&
+      !contains(github.event.issue.labels.*.name, 'needs-owner')))
+    uses: ./.github/workflows/agent-run.yml
+    with:
+      agent: builder
+      args: --issue ${{ github.event_name == 'workflow_dispatch' && inputs.issue || github.event.issue.number }}
+    secrets: inherit

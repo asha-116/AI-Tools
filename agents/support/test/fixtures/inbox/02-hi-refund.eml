@@ -1,0 +1,18 @@
+Message-ID: <fake-0002@example.com>
+From: "Nakli Grahak" <nakli.grahak@example.com>
+Subject: =?utf-8?B?ZmFrZQ==?=
+Date: Tue, 06 Oct 2026 08:00:00 +0530
+Content-Type: multipart/alternative; boundary="FAKEBOUNDARY"
+
+--FAKEBOUNDARY
+Content-Type: text/plain; charset=utf-8
+
+नमस्ते, मेरा नाम नकली ग्राहक है।
+मुझे कमीशन लेजर पसंद नहीं आया, कृपया मेरे पैसे वापस कर दीजिए।
+पेमेंट ID: pay_TESTREFUND0001
+फ़ोन: +91 99999 99999
+--FAKEBOUNDARY
+Content-Type: text/html; charset=utf-8
+
+<p>html part is ignored</p>
+--FAKEBOUNDARY--

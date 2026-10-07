@@ -4,17 +4,40 @@ Living status log. Update at the end of every session (see `AGENTS.md` §1).
 
 ## Current phase
 
-**Phase 3 — Paid products, payment, delivery** (started 2026-10-05). Payment + delivery backbone
-merged; both templates, their "coming soon" pages and the legal drafts built (part 2). **Owner, 2026-10-05:** payment provider stays **Razorpay**; payment
-setup, business details and prices come later; the site shows paid templates as **coming soon**
-with no price. Phase 2: EMI and commission live; stamp duty live as "coming soon" until the
-owner verifies a state. Phase 1 is done: the site is live at
-**https://tools.changelense.in** and the waitlist records sign-ups (first one confirmed
-2026-09-29). Brand is now **ChangeLens** (ADR-019). Phase 1 is merged; going live
-still needs the owner's Cloudflare setup (`docs/SETUP.md` §5).
+**Phases 4–6 built in dry-run (2026-10-06); everything left needs the owner.** All nine agents,
+the shared runtime and the Phase 6 hardening exist, are tested and run cleanly without keys —
+but nothing runs on a schedule and nothing writes to GitHub until the owner switches it on
+(`docs/SETUP.md` §7–8). Phase 3's remaining steps (prices, Razorpay test mode, publishing legal
+pages) also wait on the owner. The site is live at **https://tools.changelense.in** with EMI and
+commission calculators, stamp duty "coming soon" (until a state is verified) and the two
+templates "coming soon".
 
 ## Done
 
+- 2026-10-06 — **Phases 4–6 in dry-run** (this PR; owner asked to split the work across agents
+  and finish all phases possible). Built by 8 agents in two waves, merged and checked together:
+  - **Wave 1:** `agents/lib` shared runtime (free-LLM client with fallback, budgets, redaction
+    with ≥ 60 EN/HI cases, zod validation, scrubbed logs, dry-run-by-default GitHub client with no
+    merge method, escalation) — ADR-025; **QA** checks in CI (EN/HI parity everywhere, built
+    pages show formula/assumptions/disclaimer, templates show no price, one PR comment) —
+    ADR-029; **Controller** core (ledger CSVs with IDs + amounts only, reconciliation to the
+    paisa, weekly P&L in IST) — ADR-028; **Phase 6** (monthly usage report with 70% alert,
+    Issue on any workflow failure, weekly backups without waitlist emails) — ADR-026/027.
+  - **Wave 2:** Orchestrator (daily plan ≤ 5 Issues + report), Builder (tests-first draft PRs),
+    Verifier (different model family, `approved-by-owner` gate for price/legal) — ADR-030;
+    Support (redact → classify → approved templates only, every refund to the owner) — ADR-031;
+    Demand Researcher, SEO/Listing, Social (sources off, numbers from code, drafts only) —
+    ADR-032.
+  - One reusable workflow `agent-run.yml`: dry-run unless `AGENTS_LIVE=true` **and** the agents'
+    GitHub App exist; every agent workflow guarded by `AGENTS_ENABLED=true` (0 minutes until set).
+  - Integration fixes found while merging: agents now build from the repo root (the Controller
+    shares `workers/lib` code); dry-run escalation no longer crashes without a token; failure
+    alerts cover all agent workflows; Support runs every 6 h (not 2 h) to fit the free minutes.
+  - Verified: `npm run ci` green — 1,118 tests, coverage 99.65% statements; every agent run
+    locally with no keys exits 0 (orchestrator, controller, builder, verifier,
+    demand-researcher, seo-listing, social, support).
+  - **Not verified:** nothing has run against real GitHub write APIs, LLM providers, Razorpay or
+    Cloudflare GraphQL. Provider model names in `agents/lib/src/providers.json` are unverified.
 - 2026-10-05 — **Phase 3, part 2: templates, pages, legal drafts** (this PR; built by five
   parallel agents, merged and checked together — owner asked for it):
   - `products/{lead-tracker,commission-ledger}/spec.json`: sheets, columns (EN + HI), Google
@@ -125,13 +148,14 @@ still needs the owner's Cloudflare setup (`docs/SETUP.md` §5).
 
 ## Exact next step
 
-1. Owner: merge Phase 3 part 2, then open the four .xlsx files (`npm run build:templates`, or
-   ask the engineer for them) in Google Sheets and Excel 365 — checklist in `products/README.md`.
-2. Owner: answer Q17 (template columns), Q19–Q22 (legal details and proposals, Hindi reviewer).
-3. Engineer, next: Phase 4 — `agents/lib` (LLM client with free-tier fallback, budgets,
-   redaction, schema validation, dry-run) and the first agents in dry-run, since Phase 3's
-   remaining steps (prices, Razorpay test mode, publishing legal pages) wait on the owner.
-4. Later (owner): business details, prices, then `docs/SETUP.md` §6 in Razorpay test mode.
+1. Owner: merge this PR (nothing turns on by merging).
+2. Owner, ~30 min, to switch agents on safely (`docs/SETUP.md` §7–8):
+   a. add free keys: `GEMINI_API_KEY` + `GROQ_API_KEY` (two families, so the Verifier works);
+   b. set `AGENTS_ENABLED=true` and read the next day's Orchestrator run log (artifact);
+   c. create the GitHub App (§3.4), then set `AGENTS_LIVE=true`.
+3. Owner: run **Usage report** and **Backup** once by hand (Actions → Run workflow).
+4. Engineer, next: answer the owner's choices below (inbox, research sources, content pages) and
+   act on the first live runs' findings; Phase 3 items when prices/legal details arrive.
 
 ## Blockers
 
@@ -183,3 +207,18 @@ still needs the owner's Cloudflare setup (`docs/SETUP.md` §5).
 22. **Hindi review** (new, expands 10): new Hindi to review — stamp-duty rule descriptions and
     surcharge names (`data/stamp-duty/*.json`), template pages, the two `guide.hi.md`, the
     Hindi workbooks, and `legal/*.hi.md`.
+23. **Agents go-live** (new): create the GitHub App (SETUP §3.4), add at least two free LLM keys
+    from different families (e.g. Gemini + Groq), then set `AGENTS_ENABLED=true`, and later
+    `AGENTS_LIVE=true`. Please also check the model names in `agents/lib/src/providers.json`.
+24. **Support inbox** (new): Cloudflare Email Routing → Worker (recommended, free, mail never
+    reaches GitHub) or Gmail API? Until decided, Support stays off.
+25. **Research sources** (new): which of the 5 candidates in
+    `agents/demand-researcher/sources.json` may we use after you read their terms? All are off.
+26. **Help articles** (new): the SEO agent writes Markdown into `site/src/content/articles/`;
+    shall we add article pages to the site (needs a small site change + your review per article)?
+27. **Verifier risk** (new, ADR-030): it runs PR code while holding the agent keys. OK to accept
+    with free-tier keys and a minimal App, or should agent PRs need a human label first?
+28. **Razorpay ledger assumptions** (new, ADR-028): confirm with your first test payment that
+    Razorpay's `fee` includes GST; settlement checks may raise false alarms around weekends.
+29. **Cloudflare token** (new): add "Account Analytics · Read" so the usage report can read
+    Cloudflare numbers.

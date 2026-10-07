@@ -6,6 +6,11 @@ Rule: **no paid component without an entry here and an owner-approved Issue.** A
 
 ## Services
 
+Current usage is generated monthly by `.github/workflows/usage.yml` into
+`company/reports/usage/<YYYY-MM>.md` (job summary + artifact `usage-report` until the agents'
+GitHub App exists). The limits it checks live in `data/free-tier-limits.json`; when you verify a
+limit below, update `last_verified` / `verified_by` there too.
+
 | Service                                | Used for                                   | Free-tier limit (to verify)                                                   | Current usage                  | Paid trigger                                                                   | Verified |
 | -------------------------------------- | ------------------------------------------ | ----------------------------------------------------------------------------- | ------------------------------ | ------------------------------------------------------------------------------ | -------- |
 | GitHub (Free) — repo, Issues, Projects | company OS                                 | unlimited private repos                                                       | —                              | —                                                                              | not yet  |
@@ -34,15 +39,22 @@ Rule: **no paid component without an entry here and an owner-approved Issue.** A
 
 ## Actions minutes budget (private repo)
 
+Agent runs include `npm ci` and the agents build (≈ 2 min each). Scheduled workflows cost 0 until
+`AGENTS_ENABLED=true` (docs/SETUP.md §8). Actual usage: `company/reports/usage/<YYYY-MM>.md`
+(monthly `usage.yml`).
+
 | Workflow                                     | Runs/month (est.) | Minutes/run (est.)                                        | Minutes/month       |
 | -------------------------------------------- | ----------------- | --------------------------------------------------------- | ------------------- |
-| CI (per PR/push)                             | 120               | 9 (4 parallel jobs; Lighthouse ~8 min: 14 pages × 3 runs) | 1,080               |
-| Orchestrator (daily)                         | 30                | 1                                                         | 30                  |
-| Controller (daily)                           | 30                | 1                                                         | 30                  |
+| CI (per PR/push)                             | 120               | 10 (5 jobs incl. QA summary; Lighthouse ~8 min: 14 pages) | 1,200               |
+| Orchestrator (daily)                         | 30                | 2                                                         | 60                  |
+| Controller (daily)                           | 30                | 2                                                         | 60                  |
 | Demand Researcher (weekly)                   | 4                 | 3                                                         | 12                  |
-| Support (every 2 h)                          | 360               | 1                                                         | 360                 |
+| Support (every 6 h recommended; 2 h = 720)   | 120               | 2                                                         | 240                 |
 | Builder / SEO / Social / Verifier (per task) | 60                | 3                                                         | 180                 |
-| **Total**                                    |                   |                                                           | **≈ 1,690 / 2,000** |
+| Usage report (monthly) + failure alerts      | 3                 | 1–2                                                       | 4                   |
+| Backup (weekly)                              | 4–5               | 1                                                         | 5                   |
+| Link check, online (weekly)                  | 4                 | 2                                                         | 8                   |
+| **Total**                                    |                   |                                                           | **≈ 1,770 / 2,000** |
 
 GitHub bills each job rounded up to the whole minute, so many tiny jobs cost more than they
 look. Keep jobs short, cache `npm`, and combine steps. If usage passes 70%, reduce Support to
