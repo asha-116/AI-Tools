@@ -1,44 +1,70 @@
 {
-  "$comment": "Free-tier LLM providers in fallback order (ADR-013). Model names and limits change often: re-check each provider's docs and docs/COSTS.md before relying on them. A provider is skipped when its key env var (or base-URL env var) is unset. Never add a paid model here.",
+  "$comment": "Free-tier LLM providers in fallback order (ADR-013). `model` is tried first, then `models` in order; if the provider answers 404 (model renamed or retired), the client asks GET /models and picks from `models`, then the first stable id matching `modelPattern` — logged as llm.model_switched / llm.model_unavailable. The family used is inferred from the model id (familyOf). A provider is skipped when its key env var (or base-URL env var) is unset. Never add a paid model here: OpenRouter is restricted to ':free' ids even during discovery.",
   "providers": [
     {
       "id": "gemini",
       "baseUrl": "https://generativelanguage.googleapis.com/v1beta/openai",
       "keyEnv": "GEMINI_API_KEY",
-      "model": "gemini-2.5-flash",
+      "model": "gemini-3.5-flash",
+      "models": ["gemini-3.8-flash", "gemini-3-flash", "gemini-3.5-flash-lite", "gemini-2.5-flash"],
+      "modelPattern": "^gemini-[0-9.]+-flash(-lite)?$",
       "family": "gemini",
-      "limits": { "rpm": 10, "rpd": 250, "maxOutputTokens": 8192 }
+      "limits": {
+        "rpm": 10,
+        "rpd": 250,
+        "maxOutputTokens": 8192
+      }
     },
     {
       "id": "groq",
       "baseUrl": "https://api.groq.com/openai/v1",
       "keyEnv": "GROQ_API_KEY",
-      "model": "llama-3.3-70b-versatile",
-      "family": "llama",
-      "limits": { "rpm": 30, "rpd": 1000, "maxOutputTokens": 8192 }
+      "model": "openai/gpt-oss-120b",
+      "models": ["openai/gpt-oss-20b", "llama-3.3-70b-versatile"],
+      "modelPattern": "^(openai/gpt-oss|llama|qwen)",
+      "family": "gpt",
+      "limits": {
+        "rpm": 30,
+        "rpd": 1000,
+        "maxOutputTokens": 8192
+      }
     },
     {
       "id": "cerebras",
       "baseUrl": "https://api.cerebras.ai/v1",
       "keyEnv": "CEREBRAS_API_KEY",
       "model": "qwen-3-32b",
+      "models": ["gpt-oss-120b", "llama-3.3-70b"],
+      "modelPattern": "^(qwen|llama|gpt-oss)",
       "family": "qwen",
-      "limits": { "rpm": 30, "rpd": 14400, "maxOutputTokens": 8192 }
+      "limits": {
+        "rpm": 30,
+        "rpd": 14400,
+        "maxOutputTokens": 8192
+      }
     },
     {
       "id": "openrouter",
       "baseUrl": "https://openrouter.ai/api/v1",
       "keyEnv": "OPENROUTER_API_KEY",
       "model": "deepseek/deepseek-chat-v3-0324:free",
+      "models": ["deepseek/deepseek-chat:free"],
+      "modelPattern": "^deepseek/.*:free$",
       "family": "deepseek",
-      "limits": { "rpm": 20, "rpd": 50, "maxOutputTokens": 4096 }
+      "limits": {
+        "rpm": 20,
+        "rpd": 50,
+        "maxOutputTokens": 4096
+      }
     },
     {
       "id": "ollama",
       "baseUrlEnv": "OLLAMA_BASE_URL",
       "model": "qwen2.5:7b",
       "family": "qwen",
-      "limits": { "maxOutputTokens": 4096 }
+      "limits": {
+        "maxOutputTokens": 4096
+      }
     }
   ]
 }

@@ -14,6 +14,10 @@ templates "coming soon".
 
 ## Done
 
+- 2026-10-07 — Owner added `GEMINI_API_KEY` + `GROQ_API_KEY` and `AGENTS_ENABLED=true`. First
+  Orchestrator runs: GitHub reads failed (fixed: asha-116/AI-Tools#14), then both AI services
+  answered 404 — configured models retired on the free tiers. Fix: model discovery via
+  `GET /models` + preference lists (ADR-013 update).
 - 2026-10-07 — Phases 4–6 merged (asha-116/AI-Tools#13). Owner ran **Usage report** and
   **Backup** by hand: both green. Backup archived ledger + memory (orders export skipped:
   `ORDERS_D1_ID` not set yet, as expected). Actions use so far this month: 133 of 2,000 billed

@@ -4,7 +4,9 @@ import { BudgetExceeded, LlmUnavailable } from '../src/errors.js';
 import {
   availableProviders,
   backoffMs,
+  chooseModel,
   createLlm,
+  familyOf,
   loadProviders,
   type Provider,
 } from '../src/llm.js';
@@ -281,5 +283,183 @@ describe('createLlm().chat', () => {
     const text = JSON.stringify(log.lines);
     expect(text).not.toMatch(/SECRET-PROMPT|SECRET-REPLY/);
     expect(text).not.toContain(KEY_A);
+  });
+});
+
+describe('familyOf / chooseModel', () => {
+  it('infers the family from the model id, falling back to the provider family', () => {
+    expect(familyOf('gemini-3.5-flash', 'x')).toBe('gemini');
+    expect(familyOf('models/gemma-3-27b-it', 'x')).toBe('gemini');
+    expect(familyOf('openai/gpt-oss-120b', 'llama')).toBe('gpt');
+    expect(familyOf('llama-3.3-70b-versatile', 'x')).toBe('llama');
+    expect(familyOf('qwen-3-32b', 'x')).toBe('qwen');
+    expect(familyOf('deepseek/deepseek-chat:free', 'x')).toBe('deepseek');
+    expect(familyOf('mixtral-8x7b', 'x')).toBe('mistral');
+    expect(familyOf('moonshotai/kimi-k2', 'x')).toBe('kimi');
+    expect(familyOf('something-new', 'fallback')).toBe('fallback');
+  });
+
+  const prov: Provider = {
+    id: 'g',
+    baseUrl: 'https://g.test/v1',
+    keyEnv: 'K',
+    model: 'gemini-2.5-flash',
+    models: ['gemini-3.5-flash', 'gemini-3.5-flash-lite'],
+    modelPattern: '^gemini-[0-9.]+-flash',
+    family: 'gemini',
+    limits: {},
+  };
+
+  it('prefers the configured model, then the list in order (models/ prefix ignored)', () => {
+    expect(chooseModel(prov, ['models/gemini-2.5-flash', 'gemini-3.5-flash'])).toBe(
+      'gemini-2.5-flash',
+    );
+    expect(chooseModel(prov, ['models/gemini-3.5-flash-lite', 'models/gemini-3.5-flash'])).toBe(
+      'gemini-3.5-flash',
+    );
+  });
+
+  it('falls back to the pattern but never picks previews or non-chat models', () => {
+    expect(
+      chooseModel(prov, [
+        'gemini-3.9-flash-preview-0101',
+        'gemini-3.8-flash-image',
+        'text-embedding-004',
+        'gemini-3.8-flash',
+      ]),
+    ).toBe('gemini-3.8-flash');
+    expect(chooseModel(prov, ['gemini-3.9-flash-exp'])).toBeUndefined();
+    expect(chooseModel({ ...prov, modelPattern: undefined }, ['other'])).toBeUndefined();
+  });
+});
+
+describe('model discovery after a 404', () => {
+  const G: Provider = {
+    id: 'g',
+    baseUrl: 'https://g.test/v1',
+    keyEnv: 'ONE_KEY',
+    model: 'old-model',
+    models: ['gemini-3.5-flash'],
+    family: 'gemini',
+    limits: {},
+  };
+  const Q: Provider = {
+    id: 'q',
+    baseUrl: 'https://q.test/v1',
+    keyEnv: 'TWO_KEY',
+    model: 'llama-3.3-70b-versatile',
+    modelPattern: '^openai/gpt-oss',
+    family: 'llama',
+    limits: {},
+  };
+
+  it('looks up /models once, switches model, logs the switch and reports the real family', async () => {
+    const f = fakeFetch((req) => {
+      if (req.url.endsWith('/models')) {
+        expect(req.headers['authorization']).toBe(`Bearer ${KEY_A}`);
+        return jsonResponse({ data: [{ id: 'models/gemini-3.5-flash' }] });
+      }
+      const model = (req.body as { model: string }).model;
+      return model === 'gemini-3.5-flash'
+        ? jsonResponse(completion('hi'))
+        : jsonResponse({ error: 'not found' }, 404);
+    });
+    const logger = memoryLogger();
+    const llm = createLlm({ env: ENV, providers: [G], fetch: f, sleep: noSleep, logger });
+    const r1 = await llm.chat({ messages: msg });
+    expect(r1).toMatchObject({ model: 'gemini-3.5-flash', family: 'gemini', provider: 'g' });
+    const r2 = await llm.chat({ messages: msg });
+    expect(r2.model).toBe('gemini-3.5-flash');
+    // 404 + /models + retry, then a direct call: discovery happened once.
+    expect(f.calls.map((c) => c.url.split('/').pop())).toEqual([
+      'completions',
+      'models',
+      'completions',
+      'completions',
+    ]);
+    expect(logger.lines.find((l) => l['event'] === 'llm.model_switched')).toMatchObject({
+      provider: 'g',
+      from: 'old-model',
+      to: 'gemini-3.5-flash',
+    });
+  });
+
+  it('when nothing fits, logs a sample of listed ids, skips the provider for the run and falls back', async () => {
+    const f = fakeFetch((req) => {
+      if (req.url.startsWith('https://g.test') && req.url.endsWith('/models')) {
+        return jsonResponse({ data: [{ id: 'unrelated-1' }, { id: 'unrelated-2' }] });
+      }
+      if (req.url.startsWith('https://g.test')) return jsonResponse({}, 404);
+      return jsonResponse(completion('from q'));
+    });
+    const logger = memoryLogger();
+    const llm = createLlm({ env: ENV, providers: [G, Q], fetch: f, sleep: noSleep, logger });
+    expect((await llm.chat({ messages: msg })).provider).toBe('q');
+    expect(logger.lines.find((l) => l['event'] === 'llm.model_unavailable')).toMatchObject({
+      provider: 'g',
+      listed_count: 2,
+      sample: ['unrelated-1', 'unrelated-2'],
+    });
+    await llm.chat({ messages: msg });
+    expect(f.calls.filter((c) => c.url.startsWith('https://g.test'))).toHaveLength(2);
+  });
+
+  it('treats an unreadable /models list as "nothing fits"', async () => {
+    const f = fakeFetch((req) =>
+      req.url.endsWith('/models') ? jsonResponse({ nope: true }, 500) : jsonResponse({}, 404),
+    );
+    const llm = createLlm({ env: ENV, providers: [G], fetch: f, sleep: noSleep });
+    await expect(llm.chat({ messages: msg })).rejects.toBeInstanceOf(LlmUnavailable);
+    const g = fakeFetch((req) => {
+      if (req.url.endsWith('/models')) throw new Error('network');
+      return jsonResponse({}, 404);
+    });
+    const llm2 = createLlm({ env: ENV, providers: [G], fetch: g, sleep: noSleep });
+    await expect(llm2.chat({ messages: msg })).rejects.toBeInstanceOf(LlmUnavailable);
+  });
+
+  it('never lets a discovered model of an excluded family answer (Verifier independence)', async () => {
+    const f = fakeFetch((req) => {
+      if (req.url.endsWith('/models'))
+        return jsonResponse({ data: [{ id: 'openai/gpt-oss-120b' }] });
+      const model = (req.body as { model: string }).model;
+      return model === 'openai/gpt-oss-120b'
+        ? jsonResponse(completion('x'))
+        : jsonResponse({}, 404);
+    });
+    const llm = createLlm({ env: ENV, providers: [Q], fetch: f, sleep: noSleep });
+    await expect(llm.chat({ messages: msg, excludeFamily: 'gpt' })).rejects.toBeInstanceOf(
+      LlmUnavailable,
+    );
+    // Without the exclusion the same switch is fine, and the family is the real one.
+    const llm2 = createLlm({ env: ENV, providers: [Q], fetch: f, sleep: noSleep });
+    expect(await llm2.chat({ messages: msg })).toMatchObject({ family: 'gpt' });
+    expect(await llm2.chat({ messages: msg, excludeFamily: 'gpt' }).catch((e) => e)).toBeInstanceOf(
+      LlmUnavailable,
+    );
+  });
+});
+
+describe('zero-cost rule during discovery', () => {
+  it('never picks a paid OpenRouter model, even when it matches the pattern', () => {
+    const or: Provider = {
+      id: 'or',
+      baseUrl: 'https://openrouter.ai/api/v1',
+      keyEnv: 'K',
+      model: 'deepseek/a:free',
+      modelPattern: '^deepseek/',
+      family: 'deepseek',
+      limits: {},
+    };
+    expect(chooseModel(or, ['deepseek/paid-model', 'deepseek/b:free'])).toBe('deepseek/b:free');
+    expect(chooseModel(or, ['deepseek/paid-model'])).toBeUndefined();
+  });
+
+  it('the shipped providers give the Verifier at least two families from Gemini + Groq keys', () => {
+    const fams = availableProviders(loadProviders(), {
+      GEMINI_API_KEY: 'k',
+      GROQ_API_KEY: 'k',
+    }).map((p) => familyOf(p.model, p.family));
+    expect(new Set(fams).size).toBe(2);
   });
 });
