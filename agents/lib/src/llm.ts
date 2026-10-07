@@ -120,7 +120,7 @@ export interface LlmOptions {
   logger?: Logger;
   /** Checked before and charged after every call. */
   budget?: Budget;
-  /** Retries per provider on 429/5xx/network errors. Default 3. */
+  /** Retries per provider on 429/5xx/network errors (never on a timeout). Default 3. */
   maxRetries?: number;
   baseDelayMs?: number;
   maxDelayMs?: number;
@@ -210,6 +210,11 @@ export function createLlm(options: LlmOptions): LlmClient {
   const families = new Set<string>();
   /** Model each provider actually serves this run, after any 404 → /models discovery. */
   const resolvedModel = new Map<string, string | null>();
+  /**
+   * Circuit breaker: providers that timed out, stayed busy after every retry, or refused the
+   * key are skipped for the rest of the run, so one unhealthy provider costs minutes once.
+   */
+  const down = new Set<string>();
 
   const ListSchema = z.object({ data: z.array(z.object({ id: z.string() })) });
 
@@ -270,6 +275,12 @@ export function createLlm(options: LlmOptions): LlmClient {
         });
       } catch (e) {
         last = { status: 0, reason: e instanceof Error ? e.name : 'network' };
+        // A provider that did not answer within timeoutMs is overloaded: retrying only burns
+        // another full timeout of Actions minutes. Move on to the next provider instead.
+        if (last.reason === 'TimeoutError' || last.reason === 'AbortError') {
+          log?.warn('llm.timeout', { provider: p.id, timeout_ms: timeoutMs, attempt });
+          break;
+        }
         log?.warn('llm.retry', { provider: p.id, status: 0, attempt });
         if (attempt < maxRetries) await sleep(backoffMs(attempt, baseDelayMs, maxDelayMs, random));
         continue;
@@ -325,6 +336,7 @@ export function createLlm(options: LlmOptions): LlmClient {
       for (const p of candidates) {
         let model = resolvedModel.get(p.id);
         if (model === null) continue; // discovery already found nothing usable this run
+        if (down.has(p.id)) continue;
         model ??= p.model;
         if (excluded.has(familyOf(model, p.family))) continue;
         let r = await callProvider(p, model, req);
@@ -353,6 +365,17 @@ export function createLlm(options: LlmOptions): LlmClient {
         }
         attempts.push({ provider: p.id, status: r.status, reason: r.reason });
         log?.warn('llm.fallback', { provider: p.id, status: r.status, reason: r.reason });
+        // A 400 or a malformed answer may depend on this request; these will not change soon.
+        if (
+          r.status === 0 ||
+          r.status === 401 ||
+          r.status === 403 ||
+          r.status === 429 ||
+          r.status >= 500
+        ) {
+          down.add(p.id);
+          log?.warn('llm.provider_down', { provider: p.id, status: r.status, reason: r.reason });
+        }
       }
       throw new LlmUnavailable(attempts);
     },

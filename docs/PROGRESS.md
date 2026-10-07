@@ -14,6 +14,11 @@ templates "coming soon".
 
 ## Done
 
+- 2026-10-07 — Third Orchestrator run worked (dry-run): Groq `openai/gpt-oss-120b` planned 5
+  tasks. Two fixes: Gemini was overloaded and cost ~4 minutes of retries — now a timeout is not
+  retried and a failing provider is skipped for the rest of the run (ADR-013 update); the planned
+  tasks were stale because `company/goals.md` still described Phase 0 — rewritten as a **draft
+  for the owner to confirm**.
 - 2026-10-07 — Owner added `GEMINI_API_KEY` + `GROQ_API_KEY` and `AGENTS_ENABLED=true`. First
   Orchestrator runs: GitHub reads failed (fixed: asha-116/AI-Tools#14), then both AI services
   answered 404 — configured models retired on the free tiers. Fix: model discovery via
