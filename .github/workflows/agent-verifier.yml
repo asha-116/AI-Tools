@@ -15,7 +15,12 @@ on:
       - 'site/src/content/**'
 
 permissions:
+  # Read-only. Agents read Issues, PRs and workflow runs to plan and to avoid duplicates;
+  # every write uses the agents' GitHub App token instead (ADR-015, ADR-025).
   contents: read
+  issues: read
+  pull-requests: read
+  actions: read
 
 jobs:
   verifier:

@@ -14,6 +14,10 @@ templates "coming soon".
 
 ## Done
 
+- 2026-10-07 — Phases 4–6 merged (asha-116/AI-Tools#13). Owner ran **Usage report** and
+  **Backup** by hand: both green. Backup archived ledger + memory (orders export skipped:
+  `ORDERS_D1_ID` not set yet, as expected). Actions use so far this month: 133 of 2,000 billed
+  minutes (6.7%; CI 113, Deploy 16) — counted from job timings.
 - 2026-10-06 — **Phases 4–6 in dry-run** (this PR; owner asked to split the work across agents
   and finish all phases possible). Built by 8 agents in two waves, merged and checked together:
   - **Wave 1:** `agents/lib` shared runtime (free-LLM client with fallback, budgets, redaction
@@ -153,7 +157,7 @@ templates "coming soon".
    a. add free keys: `GEMINI_API_KEY` + `GROQ_API_KEY` (two families, so the Verifier works);
    b. set `AGENTS_ENABLED=true` and read the next day's Orchestrator run log (artifact);
    c. create the GitHub App (§3.4), then set `AGENTS_LIVE=true`.
-3. Owner: run **Usage report** and **Backup** once by hand (Actions → Run workflow).
+3. ~~Owner: run **Usage report** and **Backup** once by hand~~ — done 2026-10-07, both green.
 4. Engineer, next: answer the owner's choices below (inbox, research sources, content pages) and
    act on the first live runs' findings; Phase 3 items when prices/legal details arrive.
 
