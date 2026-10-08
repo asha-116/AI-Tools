@@ -150,6 +150,7 @@ async function computeWithLlm(
     },
     formulaAnswersFor(requested),
     `verifier ${s.entry.id} cases`,
+    { log: ctx.log },
   );
   families.add(response.family);
   return new Map(data.results.map((r) => [r.id, r.values]));
@@ -261,6 +262,7 @@ async function checkClaims(
     },
     ClaimsReviewSchema,
     'verifier claims',
+    { log: ctx.log },
   );
   families.add(response.family);
   const known = new Set(sources);

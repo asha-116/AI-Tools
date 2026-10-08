@@ -171,6 +171,7 @@ export async function seoListing(ctx: AgentContext, opts: SeoOptions): Promise<S
       },
       schema,
       'seo-listing draft',
+      { log: ctx.log },
     );
     draft = r.data;
     family = r.response.family;

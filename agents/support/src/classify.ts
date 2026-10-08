@@ -130,6 +130,7 @@ export async function classify(
       },
       ClassificationSchema,
       'support classification',
+      { log: ctx.log },
     );
     return { ...data, classifier: 'llm' };
   } catch (e) {

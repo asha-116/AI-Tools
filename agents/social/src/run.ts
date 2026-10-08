@@ -131,6 +131,7 @@ export async function social(ctx: AgentContext, opts: SocialOptions): Promise<So
       },
       schema,
       'social draft',
+      { log: ctx.log },
     );
   } catch (e) {
     if (e instanceof LlmUnavailable && e.attempts.length === 0) {
