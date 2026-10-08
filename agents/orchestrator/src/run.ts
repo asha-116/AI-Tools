@@ -157,6 +157,7 @@ export async function draftTasks(
     },
     DraftSchema,
     'orchestrator plan',
+    { log: ctx.log },
   );
   return { candidates: data.candidates, family: response.family };
 }

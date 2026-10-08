@@ -14,6 +14,10 @@ templates "coming soon".
 
 ## Done
 
+- 2026-10-08 — Owner created the agents' GitHub App (`AGENT_APP_ID` + key): the token step is
+  green and the App can read the repo. That run showed Gemini returning an invalid plan twice,
+  which would have opened a `needs-owner` Issue; now another model family gets two tries first
+  and the error is logged (ADR-012 update). Next: re-run the Orchestrator, then `AGENTS_LIVE`.
 - 2026-10-07 — Third Orchestrator run worked (dry-run): Groq `openai/gpt-oss-120b` planned 5
   tasks. Two fixes: Gemini was overloaded and cost ~4 minutes of retries — now a timeout is not
   retried and a failing provider is skipped for the rest of the run (ADR-013 update); the planned

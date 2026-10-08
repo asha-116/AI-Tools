@@ -229,6 +229,7 @@ export async function research(
       },
       IdeasSchema,
       'demand-researcher ideas',
+      { log: ctx.log },
     );
     ideas = r.data.ideas;
   } catch (e) {

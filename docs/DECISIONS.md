@@ -92,6 +92,11 @@ Statuses: **Accepted**, **Proposed** (engineer's recommendation, not yet exercis
 - **Decision:** zod for LLM output and config validation in `agents/`; JSON Schema files for
   data in `data/` (language-neutral, readable by non-TS tools).
 - **Status:** Accepted (2026-10-06): zod 4.6.5, exact-pinned runtime dependency.
+- **Update 2026-10-08:** a run where Gemini returned an invalid plan twice would have opened a
+  `needs-owner` Issue although Groq was available. Now `chatJson` gives a model of another
+  family the same two tries (keeping the caller's exclusions, so the Verifier stays independent)
+  and escalates only if that fails too or no other family exists. Each invalid reply is logged
+  as `llm.invalid_output` with the validation error (field names, never the reply).
 
 ### ADR-013 — LLM provider fallback order
 

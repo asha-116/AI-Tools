@@ -1,8 +1,9 @@
 // Validate LLM JSON with zod (ADR-012): invalid → retry once with the error → Escalation.
 
 import { z } from 'zod';
-import { Escalation } from './errors.js';
+import { Escalation, LlmUnavailable } from './errors.js';
 import type { LlmClient, LlmRequest, LlmResponse } from './llm.js';
+import type { Logger } from './log.js';
 
 /** Parse JSON from an LLM reply, tolerating a ```json fence or text around one object/array. */
 export function parseJsonLoose(text: string): unknown {
@@ -50,11 +51,15 @@ export async function validateWithRetry<S extends z.ZodType>(
   call: (feedback?: string) => Promise<string>,
   schema: S,
   label = 'LLM output',
+  /** Told about each invalid reply (the validation error names fields, never the reply). */
+  onInvalid?: (error: string, attempt: number) => void,
 ): Promise<z.infer<S>> {
   const first = check(schema, await call());
   if (first.ok) return first.data;
+  onInvalid?.(first.error, 0);
   const second = check(schema, await call(first.error));
   if (second.ok) return second.data;
+  onInvalid?.(second.error, 1);
   throw new Escalation({
     title: `Invalid ${label} after retry`,
     context: `The model returned output that failed schema validation twice.\n\nLast error:\n${second.error}`,
@@ -70,33 +75,66 @@ export async function validateWithRetry<S extends z.ZodType>(
 
 /**
  * The usual case: chat in JSON mode and validate. On a retry the model sees its previous answer
- * and the validation error. Returns the data and the response that produced it (for `family`).
+ * and the validation error. If that model fails twice, a model of another family gets the same
+ * two tries before anyone is asked: free models differ a lot in how well they follow a schema.
+ * Returns the data and the response that produced it (for `family`).
  */
 export async function chatJson<S extends z.ZodType>(
   llm: LlmClient,
   request: LlmRequest,
   schema: S,
   label?: string,
+  options: { log?: Logger } = {},
 ): Promise<{ data: z.infer<S>; response: LlmResponse }> {
   let response: LlmResponse | undefined;
-  const data = await validateWithRetry(
-    async (feedback) => {
-      const messages =
-        feedback === undefined || response === undefined
-          ? request.messages
-          : [
-              ...request.messages,
-              { role: 'assistant' as const, content: response.text },
-              {
-                role: 'user' as const,
-                content: `Your previous reply was invalid:\n${feedback}\nReply again with only the corrected JSON.`,
-              },
-            ];
-      response = await llm.chat({ ...request, messages, jsonMode: request.jsonMode ?? true });
-      return response.text;
-    },
-    schema,
-    label,
-  );
-  return { data, response: response as LlmResponse };
+  const attempt = (req: LlmRequest): Promise<z.infer<S>> => {
+    response = undefined;
+    return validateWithRetry(
+      async (feedback) => {
+        const messages =
+          feedback === undefined || response === undefined
+            ? req.messages
+            : [
+                ...req.messages,
+                { role: 'assistant' as const, content: response.text },
+                {
+                  role: 'user' as const,
+                  content: `Your previous reply was invalid:\n${feedback}\nReply again with only the corrected JSON.`,
+                },
+              ];
+        response = await llm.chat({ ...req, messages, jsonMode: req.jsonMode ?? true });
+        return response.text;
+      },
+      schema,
+      label,
+      (error, n) =>
+        options.log?.warn('llm.invalid_output', {
+          label: label ?? 'LLM output',
+          provider: response?.provider,
+          model: response?.model,
+          attempt: n,
+          error,
+        }),
+    );
+  };
+
+  let data: z.infer<S>;
+  try {
+    data = await attempt(request);
+  } catch (e) {
+    const failed = response?.family;
+    if (!(e instanceof Escalation) || failed === undefined) throw e;
+    const excluded =
+      typeof request.excludeFamily === 'string'
+        ? [request.excludeFamily]
+        : [...(request.excludeFamily ?? [])];
+    try {
+      data = await attempt({ ...request, excludeFamily: [...excluded, failed] });
+    } catch (e2) {
+      // No other family available: report the original invalid output.
+      if (e2 instanceof LlmUnavailable) throw e;
+      throw e2;
+    }
+  }
+  return { data, response: response as unknown as LlmResponse };
 }

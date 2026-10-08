@@ -4,6 +4,7 @@
 import { Budget, type BudgetLimits } from './budget.js';
 import { loadConfig } from './config.js';
 import { escalate } from './escalate.js';
+import { LlmUnavailable } from './errors.js';
 import {
   assertAgentBranch,
   commentMarker,
@@ -100,6 +101,10 @@ export function fakeLlm(
     async chat(req) {
       defaults.budget?.assertAvailable();
       requests.push(req);
+      // Like the real client: a fake with one family has no provider left once it is excluded.
+      const excluded =
+        typeof req.excludeFamily === 'string' ? [req.excludeFamily] : (req.excludeFamily ?? []);
+      if (excluded.includes(defaults.family ?? 'fake')) throw new LlmUnavailable([]);
       const next = queue.shift();
       if (next === undefined) throw new Error('fakeLlm: no queued reply left');
       if (next instanceof Error) throw next;

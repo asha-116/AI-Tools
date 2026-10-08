@@ -3,10 +3,37 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { z } from 'zod';
-import { Escalation } from '../src/errors.js';
+import { Escalation, LlmUnavailable } from '../src/errors.js';
+import type { LlmClient, LlmRequest } from '../src/llm.js';
 import { promptSections, readAgentFile, renderTemplate } from '../src/prompt.js';
 import { chatJson, parseJsonLoose, validateWithRetry } from '../src/schema.js';
-import { fakeLlm } from '../src/testing.js';
+import { fakeLlm, memoryLogger } from '../src/testing.js';
+
+/** Two families: 'gemini' answers unless excluded, then 'gpt'. Replies are queued per family. */
+function twoFamilies(replies: Record<'gemini' | 'gpt', string[]>): LlmClient & {
+  requests: LlmRequest[];
+} {
+  const requests: LlmRequest[] = [];
+  return {
+    requests,
+    familiesUsed: () => [],
+    async chat(req) {
+      requests.push(req);
+      const ex =
+        typeof req.excludeFamily === 'string' ? [req.excludeFamily] : (req.excludeFamily ?? []);
+      const family = (['gemini', 'gpt'] as const).find((f) => !ex.includes(f));
+      const text = family ? replies[family].shift() : undefined;
+      if (!family || text === undefined) throw new LlmUnavailable([]);
+      return {
+        text,
+        provider: family,
+        model: `${family}-m`,
+        family,
+        usage: { prompt: 1, completion: 1 },
+      };
+    },
+  };
+}
 
 const S = z.object({ n: z.number().int(), tag: z.enum(['a', 'b']) });
 
@@ -85,6 +112,46 @@ describe('chatJson', () => {
     expect(retry).toHaveLength(3);
     expect(retry[1]).toEqual({ role: 'assistant', content: '{"n":"x"}' });
     expect(retry[2]?.content).toMatch(/previous reply was invalid/);
+  });
+  it('after two invalid replies, gives a model of another family two tries before escalating', async () => {
+    const llm = twoFamilies({ gemini: ['{}', '{"n":"x"}'], gpt: ['{"n":2,"tag":"b"}'] });
+    const log = memoryLogger('t');
+    const { data, response } = await chatJson(
+      llm,
+      { messages: [{ role: 'user', content: 'go' }], excludeFamily: 'llama' },
+      S,
+      'thing',
+      { log },
+    );
+    expect(data).toEqual({ n: 2, tag: 'b' });
+    expect(response.family).toBe('gpt');
+    // The second family starts fresh (no earlier answer) and keeps the caller's exclusions.
+    expect(llm.requests[2]).toMatchObject({
+      excludeFamily: ['llama', 'gemini'],
+      messages: [{ role: 'user', content: 'go' }],
+    });
+    const invalid = log.lines.filter((l) => l.event === 'llm.invalid_output');
+    expect(invalid.map((l) => [l['provider'], l['attempt']])).toEqual([
+      ['gemini', 0],
+      ['gemini', 1],
+    ]);
+    expect(String(invalid[0]?.['error'])).toMatch(/n/);
+  });
+  it('escalates with the first error when no other family is available', async () => {
+    const llm = fakeLlm(['{}', '{"n":"x"}'], { family: 'gemini' });
+    const err = await chatJson(llm, { messages: [] }, S, 'thing').catch((e: unknown) => e);
+    expect(err).toBeInstanceOf(Escalation);
+    expect(llm.requests).toHaveLength(3);
+  });
+  it('escalates when the second family is invalid too', async () => {
+    const llm = twoFamilies({ gemini: ['{}', '{}'], gpt: ['[]', '{}'] });
+    await expect(chatJson(llm, { messages: [] }, S, 'thing')).rejects.toBeInstanceOf(Escalation);
+    expect(llm.requests).toHaveLength(4);
+  });
+  it('does not try another family for errors other than invalid output', async () => {
+    const llm = fakeLlm([new Error('boom')]);
+    await expect(chatJson(llm, { messages: [] }, S)).rejects.toThrow('boom');
+    expect(llm.requests).toHaveLength(1);
   });
   it('respects an explicit jsonMode: false', async () => {
     const llm = fakeLlm(['{"n":1,"tag":"a"}']);

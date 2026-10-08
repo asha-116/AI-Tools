@@ -307,6 +307,7 @@ export async function build(
     },
     planSchemaFor(urls),
     'builder plan',
+    { log: ctx.log },
   );
   const family = response.family;
   if (plan.needs_pricing_or_legal) {
