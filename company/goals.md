@@ -18,5 +18,4 @@ waitlist, calculators, paid-template delivery (Razorpay, test mode, templates sh
 ## This week
 
 - Owner creates the agents' GitHub App, then sets `AGENTS_LIVE=true`.
-- Agents: read the dry-run logs and report only real problems found in the repository state.
 - Owner opens the template `.xlsx` files in Google Sheets and confirms they work.
