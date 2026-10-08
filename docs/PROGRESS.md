@@ -14,6 +14,11 @@ templates "coming soon".
 
 ## Done
 
+- 2026-10-08 — **Agents are live** (`AGENTS_LIVE=true`). First live Orchestrator run opened
+  asha-116/AI-Tools#19–#21 and the daily-report PR asha-116/AI-Tools#22; CI ran on it (the App
+  token works). The Builder bounced #20 (a config script, not a calculator) back as #23, and #21
+  went to QA, which never reads Issues. Fix: Orchestrator Issues go only to `builder`
+  (calculator/template) or the new `engineer` label (ADR-030 update).
 - 2026-10-08 — Owner created the agents' GitHub App (`AGENT_APP_ID` + key): the token step is
   green and the App can read the repo. That run showed Gemini returning an invalid plan twice,
   which would have opened a `needs-owner` Issue; now another model family gets two tries first

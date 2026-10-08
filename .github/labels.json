@@ -20,6 +20,11 @@
     "description": "Work for the Demand Researcher agent"
   },
   { "name": "agent:builder", "color": "5319e7", "description": "Work for the Builder agent" },
+  {
+    "name": "agent:engineer",
+    "color": "5319e7",
+    "description": "Work for a human engineer or coding session"
+  },
   { "name": "agent:qa", "color": "5319e7", "description": "Work for the QA agent" },
   { "name": "agent:verifier", "color": "5319e7", "description": "Work for the Verifier agent" },
   {

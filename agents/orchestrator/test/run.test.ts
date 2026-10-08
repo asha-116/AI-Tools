@@ -150,7 +150,7 @@ describe('orchestrate', () => {
           }),
           candidate({
             title: 'Propose launch price for the lead tracker',
-            agent: 'controller',
+            agent: 'engineer',
             type: 'product',
             needs_owner: true,
             impact: 2,
@@ -171,7 +171,7 @@ describe('orchestrate', () => {
 
     // LLM prompt: goals and state in, PII out.
     const sent = s.llm.requests[0]?.messages ?? [];
-    expect(sent[0]?.content).toContain('builder, qa, verifier');
+    expect(sent[0]?.content).toContain('builder, engineer');
     expect(sent[1]?.content).toContain('Collect 50 waitlist sign-ups');
     expect(sent[1]?.content).toContain('Failing workflows: Deploy');
     expect(sent[1]?.content).toContain('- quiet day');
@@ -189,7 +189,10 @@ describe('orchestrate', () => {
       'Re-verify data/stamp-duty/KA.json (last verified 2026-01-01)',
       'Propose launch price for the lead tracker',
     ]);
-    expect(created[3]?.labels).toEqual(['agent:controller', 'type:product', 'needs-owner']);
+    expect(created[3]?.labels).toEqual(['agent:engineer', 'type:product', 'needs-owner']);
+    // Non-calculator work never goes to the Builder (it would bounce back to the owner).
+    expect(created[0]?.labels[0]).toBe('agent:engineer');
+    expect(created[1]?.labels[0]).toBe('agent:engineer');
     expect(created[0]?.body).toContain('https://github.com/o/r/actions/runs/77');
     expect(r.issues).toHaveLength(4);
     expect(() => OutputSchema.parse(r)).not.toThrow();

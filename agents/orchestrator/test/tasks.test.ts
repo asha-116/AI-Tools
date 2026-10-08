@@ -21,6 +21,7 @@ describe('schemas', () => {
     expect(() => CandidateSchema.parse(candidate({ title: 'x'.repeat(81) }))).toThrow();
     expect(() => CandidateSchema.parse(candidate({ token_budget: 20_001 }))).toThrow();
     expect(() => CandidateSchema.parse({ ...candidate(), agent: 'orchestrator' })).toThrow();
+    expect(() => CandidateSchema.parse({ ...candidate(), agent: 'controller' })).toThrow();
     expect(() => DraftSchema.parse({ candidates: Array(9).fill(candidate()) })).toThrow();
     const issue = toIssue(toTask(candidate(), 'llm'));
     expect(() =>
@@ -36,11 +37,27 @@ describe('schemas', () => {
   });
 });
 
+describe('assignee', () => {
+  it('keeps calculator/template work with the Builder and sends the rest to the engineer', () => {
+    expect(toTask(candidate({ agent: 'builder', type: 'tool' }), 'llm').agent).toBe('builder');
+    expect(toTask(candidate({ agent: 'builder', type: 'product' }), 'llm').agent).toBe('builder');
+    const infra = toTask(candidate({ agent: 'builder', type: 'infra' }), 'llm');
+    expect(infra.agent).toBe('engineer');
+    expect(infra.labels[0]).toBe('agent:engineer');
+    expect(
+      stateTasks({
+        failing: [],
+        staleData: [{ path: 'data/x.json', last_verified: '2026-01-01', days: 280 }],
+      })[0]?.agent,
+    ).toBe('engineer');
+  });
+});
+
 describe('labels', () => {
   it('has one agent and one type label, priority unless normal, needs-owner when flagged', () => {
-    expect(taskLabels(candidate())).toEqual(['agent:builder', 'type:content']);
+    expect(taskLabels(candidate())).toEqual(['agent:engineer', 'type:content']);
     expect(taskLabels(candidate({ priority: 'high', needs_owner: true }))).toEqual([
-      'agent:builder',
+      'agent:engineer',
       'type:content',
       'priority:high',
       'needs-owner',
@@ -83,7 +100,7 @@ describe('rankTasks', () => {
 });
 
 describe('stateTasks', () => {
-  it('turns failing workflows and stale data into builder tasks', () => {
+  it('turns failing workflows and stale data into engineer tasks', () => {
     const out = stateTasks({
       failing: [
         {
@@ -113,7 +130,7 @@ describe('stateTasks', () => {
     expect(out[0]?.title).toBe('Fix failing workflow: Deploy');
     expect(out[1]?.title.endsWith('…')).toBe(true);
     expect(out[1]?.inputs).toEqual(['u', 'X'.repeat(90)]);
-    expect(out[2]?.labels).toEqual(['agent:builder', 'type:data']);
+    expect(out[2]?.labels).toEqual(['agent:engineer', 'type:data']);
     for (const task of out) expect(() => CandidateSchema.parse(task)).not.toThrow();
   });
 });

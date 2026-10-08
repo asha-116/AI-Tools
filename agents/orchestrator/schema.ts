@@ -3,17 +3,15 @@
 
 import { z } from 'zod';
 
-/** Agents the Orchestrator may assign work to (never itself). */
-export const TASK_AGENTS = [
-  'builder',
-  'qa',
-  'verifier',
-  'demand-researcher',
-  'seo-listing',
-  'social',
-  'support',
-  'controller',
-] as const;
+/**
+ * Who an Orchestrator Issue can go to. Only the Builder reads Issues (calculator, formula and
+ * template work); the other agents run on their own schedules and never pick up an Issue, so
+ * everything else goes to `engineer` — a human or coding session working the Issue queue.
+ */
+export const TASK_AGENTS = ['builder', 'engineer'] as const;
+
+/** Issue types the Builder can do (tests-first, from cited worked examples). */
+export const BUILDER_TYPES = ['tool', 'product'] as const;
 
 export const TASK_TYPES = ['tool', 'product', 'content', 'data', 'infra', 'idea'] as const;
 export const PRIORITIES = ['high', 'normal', 'low'] as const;
