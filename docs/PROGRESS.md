@@ -14,6 +14,11 @@ templates "coming soon".
 
 ## Done
 
+- 2026-10-09 — **Home loan eligibility calculator** (owner: "build other useful tools", ADR-036):
+  `/tools/eligibility/` and `/hi/tools/eligibility/` — take-home income (plus co-applicant),
+  existing EMIs and the bank's FOIR limit give the largest loan and its EMI; an optional
+  property price shows the buyer's own money needed. Next tools in the queue: carpet / built-up
+  / super built-up area with price per sq ft, then rental yield.
 - 2026-10-09 — **Guntha live** for Maharashtra and Karnataka: owner verified 1 guntha = 1/40 acre
   (1,089 sq ft) against Karnataka RTC and Maharashtra 7/12; `guntha.json` is now `verified`.
 - 2026-10-09 — Land units, Maharashtra + Karnataka first (owner's choice): the converter now

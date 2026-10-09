@@ -45,3 +45,9 @@ export {
   type PrepaymentResult,
   type RepaymentSummary,
 } from './prepayment.js';
+export {
+  computeEligibility,
+  ELIGIBILITY_LIMITS,
+  type EligibilityInput,
+  type EligibilityResult,
+} from './eligibility.js';

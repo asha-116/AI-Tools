@@ -1,0 +1,68 @@
+{
+  "$comment": "Known answers for home-loan eligibility by FOIR (fixed obligations to income ratio). Published worked examples found via web search on 2026-10-09 (direct fetch of the pages is blocked in the build environment). Rounded figures carry a tolerance; the ₹57,61,542 figure is exact to the rupee. Exact behaviour is also checked in tools-core/test/eligibility.test.ts against the present value of an annuity (https://en.wikipedia.org/wiki/Mortgage_calculator) and against computeEmi.",
+  "accessed": "2026-10-09",
+  "cases": [
+    {
+      "name": "₹1 lakh a month, 50% FOIR, no existing EMIs, 8.5%, 20 years",
+      "input": {
+        "monthlyIncome": 100000,
+        "existingEmis": 0,
+        "foirPercent": 50,
+        "annualRatePercent": 8.5,
+        "tenureMonths": 240
+      },
+      "expect": { "availableEmi": 50000, "maxLoan": 5761542 },
+      "tolerance": { "maxLoanPercent": 0.001 },
+      "sources": [
+        "https://homefirstindia.com/blog/article/home-loan-eligibility-on-a-100000-salary/"
+      ],
+      "quote": "Using an indicative interest rate of 8.5% per annum over a 20-year tenure … 50% … ₹50,000 … ₹57,61,542"
+    },
+    {
+      "name": "₹50,000 a month, 50% FOIR, no existing EMIs, 8.5%, 20 years",
+      "input": {
+        "monthlyIncome": 50000,
+        "existingEmis": 0,
+        "foirPercent": 50,
+        "annualRatePercent": 8.5,
+        "tenureMonths": 240
+      },
+      "expect": { "availableEmi": 25000, "maxLoan": 2880000 },
+      "tolerance": { "maxLoanPercent": 0.5 },
+      "sources": ["https://eligibilitytools.in/guides/home-loan-eligibility-india/"],
+      "quote": "quick reference assuming 8.5% interest, 20-year tenure, zero existing EMIs, 50% FOIR … about ₹28.8 lakh for ₹50,000 income"
+    },
+    {
+      "name": "₹80,000 a month, 50% FOIR, no existing EMIs, 8.5%, 20 years",
+      "input": {
+        "monthlyIncome": 80000,
+        "existingEmis": 0,
+        "foirPercent": 50,
+        "annualRatePercent": 8.5,
+        "tenureMonths": 240
+      },
+      "expect": { "availableEmi": 40000, "maxLoan": 4600000 },
+      "tolerance": { "maxLoanPercent": 1 },
+      "sources": [
+        "https://www.utkarsh.bank.in/blogs/how-much-home-loan-can-i-get-salary-foir-rules"
+      ],
+      "quote": "reduces your home loan eligibility from about Rs 46 lakh (no existing EMIs) to about Rs 29 lakh (with Rs 15,000 existing EMI) at 8.5% for 20 years"
+    },
+    {
+      "name": "₹80,000 a month, 50% FOIR, ₹15,000 existing EMIs, 8.5%, 20 years",
+      "input": {
+        "monthlyIncome": 80000,
+        "existingEmis": 15000,
+        "foirPercent": 50,
+        "annualRatePercent": 8.5,
+        "tenureMonths": 240
+      },
+      "expect": { "availableEmi": 25000, "maxLoan": 2900000 },
+      "tolerance": { "maxLoanPercent": 1 },
+      "sources": [
+        "https://www.utkarsh.bank.in/blogs/how-much-home-loan-can-i-get-salary-foir-rules"
+      ],
+      "quote": "reduces your home loan eligibility from about Rs 46 lakh (no existing EMIs) to about Rs 29 lakh (with Rs 15,000 existing EMI) at 8.5% for 20 years"
+    }
+  ]
+}

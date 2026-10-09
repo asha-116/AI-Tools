@@ -10,11 +10,13 @@ import regionalUnits from '../../../data/land-units/regional.json' with { type: 
 import standardUnits from '../../../data/land-units/standard.json' with { type: 'json' };
 import {
   computeCommission,
+  computeEligibility,
   computeEmi,
   computePrepayment,
   convertArea,
   type AreaUnit,
   type CommissionInput,
+  type EligibilityInput,
   type EmiInput,
   type PrepaymentInput,
 } from '../../../tools-core/src/index.js';
@@ -155,6 +157,28 @@ export const FORMULAS: FormulaEntry[] = [
         baselineInterest: r.baseline.totalInterest,
         months: r.withPrepayment.months,
       };
+    },
+  },
+  {
+    id: 'eligibility',
+    functionName: 'computeEligibility',
+    sourceFiles: ['tools-core/src/eligibility.ts'],
+    fixture: 'tools-core/test/fixtures/eligibility-known-answers.json',
+    description: [
+      'Home-loan eligibility by FOIR (fixed obligations to income ratio): the largest loan whose',
+      'EMI fits within the share of income the lender allows for all EMIs',
+      '(source: https://en.wikipedia.org/wiki/Mortgage_calculator, present value of an annuity).',
+      'Inputs: monthlyIncome; existingEmis; foirPercent; annualRatePercent; tenureMonths n.',
+      'maxTotalEmi = monthlyIncome × foirPercent / 100.',
+      'availableEmi = maxTotalEmi − existingEmis, or 0 if that is negative.',
+      'r = annualRatePercent / 1200. maxLoan = availableEmi × (1 − (1 + r)^(−n)) / r;',
+      'when r = 0, maxLoan = availableEmi × n. Do not round any output.',
+    ].join(' '),
+    toInput: (c) => (c.input ?? {}) as Record<string, unknown>,
+    fields: () => ['maxTotalEmi', 'availableEmi', 'maxLoan'],
+    run: (input) => {
+      const r = computeEligibility(input as unknown as EligibilityInput);
+      return { maxTotalEmi: r.maxTotalEmi, availableEmi: r.availableEmi, maxLoan: r.maxLoan };
     },
   },
   {

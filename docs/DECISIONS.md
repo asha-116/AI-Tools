@@ -430,3 +430,20 @@ NOTHING`), so duplicates and both events for one payment are harmless. It stores
 - The Verifier recomputes the EMI and baseline interest for every case, and the shortened
   tenure where a closed form exists; its expression evaluator gained `ln` and `ceil`.
 - **Status:** Accepted (2026-10-09). Hindi text needs a human review before it is promoted.
+
+### ADR-036 — Home-loan eligibility calculator: FOIR is user-entered, no LTV in v1
+
+- **Context:** owner asked for more useful tools (2026-10-09). Agents' most common question
+  from buyers is "how much loan will I get?". Banks answer with FOIR (all EMIs as a share of
+  take-home income), but the limit differs by bank and by income band (40%–60% in the sources),
+  and it is lender policy, not an RBI rate.
+- **Decision:** `tools-core/src/eligibility.ts`: available EMI = income × FOIR% − existing EMIs
+  (never below 0); largest loan = present value of that EMI at the rate and tenure, i.e. the
+  inverse of `computeEmi` (tests round-trip it). FOIR is an input with default 50%, like the
+  commission page's GST: no lender limit is held as data. Co-applicant income is added to
+  income. An optional property price shows the own money needed (price − loan). The RBI
+  loan-to-value cap is left out of v1 (it is a regulatory rate: it would need a verified data
+  file); the assumptions say banks also cap the loan by property value. Four published cases,
+  one exact to the rupee (₹1 lakh, 50%, 8.5%, 20 years → ₹57,61,542). "FOIR" added to the
+  QA list of English terms allowed in Hindi, as Indian bank sites use it in Hindi too.
+- **Status:** Accepted (2026-10-09). Hindi text needs a human review before it is promoted.

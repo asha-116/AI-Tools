@@ -1,0 +1,230 @@
+---
+import { strings, type Lang } from '../../i18n/strings';
+import meta from './meta.json';
+import { DEFAULT_STATE, evaluate, formatInr, formatPercent, type EligibilityField } from './logic';
+import { eligibilityStrings } from './strings';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = eligibilityStrings[lang];
+const common = strings[lang];
+// Server-render the default result so the page is useful before (or without) JavaScript.
+const initial = evaluate(DEFAULT_STATE);
+const r = initial.ok ? initial.result : null;
+const clientStrings = { share: t.share, shareCopied: t.shareCopied };
+
+type Field = { name: EligibilityField; label: string; error: string; mode: string };
+const incomeFields: Field[] = [
+  { name: 'income', label: t.incomeLabel, error: t.errorIncome, mode: 'numeric' },
+  { name: 'coIncome', label: t.coIncomeLabel, error: t.errorCoIncome, mode: 'numeric' },
+  { name: 'existing', label: t.existingLabel, error: t.errorExisting, mode: 'numeric' },
+  { name: 'foir', label: t.foirLabel, error: t.errorFoir, mode: 'decimal' },
+];
+const loanFields: Field[] = [
+  { name: 'rate', label: t.rateLabel, error: t.errorRate, mode: 'decimal' },
+  { name: 'years', label: t.yearsLabel, error: t.errorYears, mode: 'decimal' },
+  { name: 'propertyPrice', label: t.priceLabel, error: t.errorPrice, mode: 'numeric' },
+];
+---
+
+<article class="tool">
+  <p class="crumb"><a href={lang === 'en' ? '/' : '/hi/'}>← {t.backHome}</a></p>
+  <h1>{t.h1}</h1>
+  <p class="lead">{t.lead}</p>
+
+  <form id="elig-form" class="card" data-strings={JSON.stringify(clientStrings)} novalidate>
+    {
+      [
+        [t.incomeLegend, incomeFields],
+        [t.loanLegend, loanFields],
+      ].map(([legend, fields]) => (
+        <fieldset>
+          <legend>{legend as string}</legend>
+          {(fields as Field[]).map((f) => (
+            <div class="field">
+              <label for={`elig-${f.name}`}>{f.label}</label>
+              <input
+                id={`elig-${f.name}`}
+                name={f.name}
+                inputmode={f.mode as 'numeric' | 'decimal'}
+                autocomplete="off"
+                value={DEFAULT_STATE[f.name]}
+                aria-describedby={`elig-${f.name}-error`}
+              />
+              <p id={`elig-${f.name}-error`} class="error" data-error={f.name} hidden>
+                {f.error}
+              </p>
+            </div>
+          ))}
+        </fieldset>
+      ))
+    }
+  </form>
+
+  <section class="card results" aria-live="polite">
+    <p class="result-main">
+      <span>{t.resultLoan}</span>
+      <strong data-out="loan">{r ? formatInr(r.maxLoan) : '—'}</strong>
+    </p>
+    <p class="result-sub">
+      <span>{t.resultEmi}</span>
+      <strong data-out="emi">{r ? formatInr(r.availableEmi) : '—'}</strong>
+    </p>
+    <p class="note" data-note="no-room" hidden={!r || r.availableEmi > 0}>{t.noRoom}</p>
+    <dl>
+      <div>
+        <dt>{t.rowLimit}</dt>
+        <dd data-out="limit">{r ? formatInr(r.maxTotalEmi) : '—'}</dd>
+      </div>
+      <div>
+        <dt>{t.rowExisting}</dt>
+        <dd data-out="existing">{r ? formatPercent(r.currentFoirPercent) : '—'}</dd>
+      </div>
+      <div data-row="down" hidden={r?.downPayment === undefined}>
+        <dt>{t.rowDown}</dt>
+        <dd data-out="down">{r?.downPayment === undefined ? '—' : formatInr(r.downPayment)}</dd>
+      </div>
+    </dl>
+    <button type="button" class="button secondary" id="elig-share">{t.share}</button>
+  </section>
+
+  <section class="card">
+    <h2>{t.formulaTitle}</h2>
+    <p class="formula"><code>{meta.formula}</code></p>
+    <p>{t.formulaWhere}</p>
+    <h2>{t.assumptionsTitle}</h2>
+    <ul>
+      {t.assumptions.map((a) => <li>{a}</li>)}
+    </ul>
+    <p class="disclaimer"><strong>{common.toolDisclaimer}</strong></p>
+  </section>
+</article>
+
+<script>
+  import { initEligibility } from './client';
+  initEligibility(document, window);
+</script>
+
+<style>
+  .tool {
+    max-width: 40rem;
+  }
+  .crumb {
+    margin: 16px 0 0;
+  }
+  h1 {
+    font-size: clamp(1.75rem, 6vw, 2.25rem);
+    line-height: 1.2;
+    margin: 8px 0;
+  }
+  h2 {
+    font-size: 1.1875rem;
+    margin: 0 0 8px;
+  }
+  .lead {
+    color: var(--muted);
+  }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+    margin: 16px 0;
+  }
+  .card h2 + p,
+  .card ul {
+    margin-top: 0;
+  }
+  fieldset {
+    border: 0;
+    margin: 0 0 8px;
+    padding: 0;
+    min-width: 0;
+  }
+  legend {
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+  .field {
+    display: grid;
+    gap: 4px;
+    margin-bottom: 12px;
+  }
+  input {
+    min-height: 48px;
+    padding: 10px 12px;
+    font: inherit;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--bg);
+    color: var(--fg);
+    width: 100%;
+    min-width: 0;
+  }
+  input[aria-invalid='true'] {
+    border-color: var(--error);
+    border-width: 2px;
+  }
+  .error {
+    color: var(--error);
+    margin: 0;
+    font-size: 0.9375rem;
+  }
+  .result-main,
+  .result-sub {
+    display: flex;
+    flex-direction: column;
+    margin: 0 0 12px;
+  }
+  .result-main strong {
+    font-size: clamp(2rem, 9vw, 2.75rem);
+    line-height: 1.1;
+    color: var(--brand);
+  }
+  .result-sub strong {
+    font-size: 1.375rem;
+  }
+  .note {
+    margin: 0 0 12px;
+    color: var(--error);
+  }
+  dl {
+    display: grid;
+    gap: 6px;
+    margin: 0 0 12px;
+  }
+  dl div {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    border-top: 1px solid var(--border);
+    padding-top: 6px;
+  }
+  dd {
+    margin: 0;
+    font-weight: 600;
+    text-align: right;
+    white-space: nowrap;
+  }
+  .formula code {
+    font-size: 1.0625rem;
+    overflow-wrap: anywhere;
+  }
+  .button {
+    min-height: 48px;
+    padding: 12px 20px;
+    border: 2px solid var(--brand);
+    border-radius: var(--radius);
+    background: transparent;
+    color: var(--brand);
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .disclaimer {
+    margin-bottom: 0;
+  }
+</style>

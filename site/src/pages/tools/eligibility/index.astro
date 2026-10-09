@@ -1,0 +1,11 @@
+---
+import Base from '../../../layouts/Base.astro';
+import EligibilityCalculator from '../../../tools/eligibility/EligibilityCalculator.astro';
+import { eligibilityStrings } from '../../../tools/eligibility/strings';
+
+const t = eligibilityStrings.en;
+---
+
+<Base lang="en" title={t.metaTitle} description={t.metaDescription} path="/tools/eligibility/">
+  <EligibilityCalculator lang="en" />
+</Base>

@@ -89,6 +89,15 @@ function oracleArea(i: { value: number; from: string; to: string }): Record<stri
   return { result: (i.value * (AREA_SQ_FT[i.from] ?? NaN)) / (AREA_SQ_FT[i.to] ?? NaN) };
 }
 
+/** Independent oracle for the eligibility entry (present value of an annuity). */
+function oracleEligibility(i: Record<string, number>): Record<string, number> {
+  const maxTotalEmi = (i.monthlyIncome ?? 0) * ((i.foirPercent ?? 0) / 100);
+  const availableEmi = Math.max(0, maxTotalEmi - (i.existingEmis ?? 0));
+  const r = (i.annualRatePercent ?? 0) / 1200;
+  const n = i.tenureMonths ?? 0;
+  return { maxTotalEmi, availableEmi, maxLoan: (availableEmi * (1 - (1 + r) ** -n)) / r };
+}
+
 /** Independent oracle for the prepayment entry (closed forms). */
 function oraclePrepayment(i: {
   principal: number;
@@ -129,9 +138,11 @@ function scriptedLlm(
               ? oracleEmi(c.input as Record<string, number>)
               : c.id.startsWith('area')
                 ? oracleArea(c.input as { value: number; from: string; to: string })
-                : c.id.startsWith('prepayment')
-                  ? oraclePrepayment(c.input as Parameters<typeof oraclePrepayment>[0])
-                  : oracleCommission(c.input as unknown as CommIn);
+                : c.id.startsWith('eligibility')
+                  ? oracleEligibility(c.input as Record<string, number>)
+                  : c.id.startsWith('prepayment')
+                    ? oraclePrepayment(c.input as Parameters<typeof oraclePrepayment>[0])
+                    : oracleCommission(c.input as unknown as CommIn);
             const skew = opts.skew?.(c.id, formulaCalls) ?? 0;
             return {
               id: c.id,
@@ -378,7 +389,13 @@ describe('verify — formulas (PROCEDURE step 2)', () => {
     const b = await run(files);
     expect(a.r.report.cases.map((c) => c.input)).toEqual(b.r.report.cases.map((c) => c.input));
     expect(new Set(a.r.report.cases.map((c) => c.formula))).toEqual(
-      new Set(['computeEmi', 'computeCommission', 'computePrepayment', 'convertArea']),
+      new Set([
+        'computeEmi',
+        'computeCommission',
+        'computePrepayment',
+        'computeEligibility',
+        'convertArea',
+      ]),
     );
     expect(a.r.status.state).toBe('success');
   });
