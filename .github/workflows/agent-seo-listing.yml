@@ -24,12 +24,12 @@ permissions:
 jobs:
   resolve:
     name: Resolve tool slug
+    # Any merged PR: the step below finds the tool from its changed files (site/src/tools/<slug>/
+    # or products/<id>/); no tool → nothing runs. Labels were easy to forget (ADR-040).
     if: >-
       vars.AGENTS_ENABLED == 'true' &&
       (github.event_name == 'workflow_dispatch' ||
-       (github.event.pull_request.merged == true &&
-        (contains(github.event.pull_request.labels.*.name, 'type:tool') ||
-         contains(github.event.pull_request.labels.*.name, 'type:product'))))
+       github.event.pull_request.merged == true)
     runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions:

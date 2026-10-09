@@ -4,9 +4,10 @@ Makes each new tool findable: product page copy, meta tags, schema.org and help 
 
 ## Trigger
 
-A PR labelled `type:tool` or `type:product` is merged (`pull_request: closed` + merged), or `workflow_dispatch`
-(`.github/workflows/agent-seo-listing.yml`). The slug comes from the PR's changed files
-(`site/src/tools/<slug>/` or `products/<id>/`) or the dispatch input → `--slug <slug>`.
+A merged PR that changes `site/src/tools/<slug>/` or `products/<id>/` (`pull_request: closed` +
+merged; no label needed), or `workflow_dispatch` (`.github/workflows/agent-seo-listing.yml`). The
+slug comes from the PR's changed files or the dispatch input → `--slug <slug>`. Every tool page
+has an adapter in `src/tools.ts` (a test fails if one is missing).
 
 ## Inputs
 

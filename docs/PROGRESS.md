@@ -14,6 +14,9 @@ templates "coming soon".
 
 ## Done
 
+- 2026-10-09 — **Growth, step 2** (ADR-040): the SEO/Listing and Social agents now know all nine
+  tools (worked examples computed by the real calculators) and run for every merged PR that
+  changes a tool, without a label. Sitemap merged (asha-116/AI-Tools#42).
 - 2026-10-09 — **Growth, step 1** (owner: "an advertisement agent that brings traffic",
   ADR-040): `sitemap.xml` + `robots.txt` pointing to it, optional Search Console tag, owner
   steps in `docs/SETUP.md` §5.5a. Rent vs buy merged (asha-116/AI-Tools#41). Found: the SEO and

@@ -47,8 +47,7 @@ describe('renderArticle', () => {
     expect(md).toContain(`> ${ctx.disclaimer.en}`);
     expect(linkTargets(md)).toEqual([
       '/tools/emi/',
-      '/tools/commission/',
-      '/tools/stamp-duty/',
+      ...TOOLS.filter((t) => t.slug !== 'emi').map((t) => t.path('en')),
       '/',
     ]);
   });

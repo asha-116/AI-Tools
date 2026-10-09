@@ -238,11 +238,18 @@ describe('ideas helpers', () => {
       { en: 'EMI calculator', hi: 'EMI कैलकुलेटर' },
       { en: 'emi  calculator!', hi: 'EMI कैलकुलेटर' },
     ]);
-    expect(seeds.slice(0, 2)).toEqual([
+    // Profession seeds come first so they are never crowded out by a long tool list.
+    expect(seeds[0]).toEqual({ q: 'real estate agent calculator', lang: 'en' });
+    expect(seeds.filter((x) => x.q.startsWith('emi'))).toEqual([
       { q: 'emi calculator', lang: 'en' },
       { q: 'emi कैलकुलेटर', lang: 'hi' },
     ]);
     expect(seeds).toContainEqual({ q: 'property dealer excel template', lang: 'en' });
+    const many = Array.from({ length: 30 }, (_, i) => ({
+      en: `tool ${String(i)}`,
+      hi: `टूल ${String(i)}`,
+    }));
+    expect(buildSeeds(many)).toContainEqual({ q: 'प्रॉपर्टी डीलर कैलकुलेटर', lang: 'hi' });
     expect(seeds).toContainEqual({ q: 'प्रॉपर्टी डीलर कैलकुलेटर', lang: 'hi' });
     expect(buildSeeds([], 3)).toHaveLength(3);
   });

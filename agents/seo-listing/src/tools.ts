@@ -4,15 +4,35 @@
 
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
+import areaMeta from '../../../site/src/tools/area/meta.json' with { type: 'json' };
+import carpetMeta from '../../../site/src/tools/carpet-area/meta.json' with { type: 'json' };
+import eligibilityMeta from '../../../site/src/tools/eligibility/meta.json' with { type: 'json' };
+import prepaymentMeta from '../../../site/src/tools/prepayment/meta.json' with { type: 'json' };
+import rvbMeta from '../../../site/src/tools/rent-vs-buy/meta.json' with { type: 'json' };
+import yieldMeta from '../../../site/src/tools/rental-yield/meta.json' with { type: 'json' };
+import standardUnits from '../../../data/land-units/standard.json' with { type: 'json' };
 import {
   computeCommission,
+  computeEligibility,
   computeEmi,
+  computeLoading,
+  computePrepayment,
+  computeRentalYield,
+  computeRentVsBuy,
   computeStampDuty,
+  convertArea,
+  type AreaUnit,
   type StateRates,
 } from '../../../tools-core/src/index.js';
 import { formatInr, formatInrExact } from '../../../site/src/lib/format.js';
+import { areaStrings } from '../../../site/src/tools/area/strings.js';
+import { carpetStrings } from '../../../site/src/tools/carpet-area/strings.js';
 import { commissionStrings } from '../../../site/src/tools/commission/strings.js';
+import { eligibilityStrings } from '../../../site/src/tools/eligibility/strings.js';
 import { emiStrings } from '../../../site/src/tools/emi/strings.js';
+import { prepayStrings } from '../../../site/src/tools/prepayment/strings.js';
+import { rvbStrings } from '../../../site/src/tools/rent-vs-buy/strings.js';
+import { yieldStrings } from '../../../site/src/tools/rental-yield/strings.js';
 import { sdStrings } from '../../../site/src/tools/stamp-duty/strings.js';
 
 export type Lang = 'en' | 'hi';
@@ -257,6 +277,305 @@ const stampDuty: ToolInfo = {
   },
 };
 
+// ---------- Shared helpers for the newer tools ----------
+
+const grouped = new Intl.NumberFormat('en-IN', { maximumFractionDigits: 2 });
+
+/** A plain number with a unit, e.g. "43,560 sq ft" / "43,560 वर्ग फ़ुट". */
+const amount = (key: string, label: Bilingual, value: number, unit: Bilingual): ExampleValue => ({
+  key,
+  label,
+  value,
+  display: {
+    en: `${grouped.format(value)} ${unit.en}`.trim(),
+    hi: `${grouped.format(value)} ${unit.hi}`.trim(),
+  },
+});
+
+const pct = (key: string, label: Bilingual, value: number): ExampleValue => {
+  const v = Math.round(value * 100) / 100;
+  return { key, label, value: v, display: { en: `${v}%`, hi: `${v}%` } };
+};
+
+/** Page formula (meta.json) plus the page's own explanation line, in both languages. */
+function textOf(
+  meta: { formula: string },
+  strings: Record<Lang, Parameters<typeof pick>[0] & { formulaWhere: string }>,
+): Record<Lang, ToolText> {
+  return {
+    en: { ...pick(strings.en), formula: [meta.formula, strings.en.formulaWhere] },
+    hi: { ...pick(strings.hi), formula: [meta.formula, strings.hi.formulaWhere] },
+  };
+}
+
+const SAME_CODE: Bilingual = {
+  en: 'Example inputs from a published worked example; results computed by the same code the calculator uses.',
+  hi: 'प्रकाशित उदाहरण के इनपुट; नतीजे उसी कोड से निकाले गए हैं जो कैलकुलेटर इस्तेमाल करता है।',
+};
+
+const YEARS: Bilingual = { en: 'years', hi: 'साल' };
+const MONTHS: Bilingual = { en: 'months', hi: 'महीने' };
+const SQFT: Bilingual = { en: 'sq ft', hi: 'वर्ग फ़ुट' };
+
+// ---------- Land area ----------
+
+const unit = (id: string): AreaUnit => {
+  const u = standardUnits.units.find((x) => x.id === id);
+  if (!u) throw new Error(`unknown unit ${id}`);
+  return { id: u.id, sq_m: u.sq_m };
+};
+
+const area: ToolInfo = {
+  slug: 'area',
+  moneyTopic: false,
+  text: textOf(areaMeta, areaStrings),
+  path: toolPath('area'),
+  lastVerified: metaReviewed('area'),
+  example() {
+    const acre = unit('acre');
+    const to = (id: string) => convertArea(1, acre, unit(id));
+    return {
+      inputs: [amount('acres', { en: 'Area', hi: 'क्षेत्रफल' }, 1, { en: 'acre', hi: 'एकड़' })],
+      outputs: [
+        amount('sq_ft', { en: 'Square feet', hi: 'वर्ग फ़ुट' }, to('sq_ft'), SQFT),
+        amount('gaj', { en: 'Gaj (sq yd)', hi: 'गज़' }, to('sq_yd'), { en: 'gaj', hi: 'गज़' }),
+        amount('sq_m', { en: 'Square metres', hi: 'वर्ग मीटर' }, to('sq_m'), {
+          en: 'sq m',
+          hi: 'वर्ग मीटर',
+        }),
+        amount('hectare', { en: 'Hectare', hi: 'हेक्टेयर' }, to('hectare'), {
+          en: 'hectare',
+          hi: 'हेक्टेयर',
+        }),
+      ],
+      source: {
+        en: 'Unit sizes from data/land-units/standard.json (exact definitions); results computed by the converter’s own code.',
+        hi: 'इकाइयों के माप data/land-units/standard.json से (सटीक परिभाषाएँ); नतीजे कन्वर्टर के अपने कोड से।',
+      },
+    };
+  },
+};
+
+// ---------- Prepayment ----------
+
+// Published case (tools-core/test/fixtures/prepayment-known-answers.json):
+// ₹25 lakh at 9% for 20 years, ₹2 lakh prepaid at the start → about 195 months.
+const PREPAY_INPUT = {
+  principal: 2_500_000,
+  annualRatePercent: 9,
+  tenureMonths: 240,
+  lumpSums: [{ month: 0, amount: 200_000 }],
+};
+
+const prepayment: ToolInfo = {
+  slug: 'prepayment',
+  moneyTopic: true,
+  text: textOf(prepaymentMeta, prepayStrings),
+  path: toolPath('prepayment'),
+  lastVerified: metaReviewed('prepayment'),
+  example() {
+    const r = computePrepayment(PREPAY_INPUT);
+    return {
+      inputs: [
+        money('principal', { en: 'Loan amount', hi: 'लोन राशि' }, PREPAY_INPUT.principal),
+        percent('rate', { en: 'Interest rate (per year)', hi: 'ब्याज दर (सालाना)' }, 9),
+        amount('tenure', { en: 'Tenure', hi: 'अवधि' }, 20, YEARS),
+        money('prepaid', { en: 'One-time prepayment now', hi: 'अभी एकमुश्त प्रीपेमेंट' }, 200_000),
+      ],
+      outputs: [
+        money('emi', { en: 'EMI (unchanged)', hi: 'EMI (वही)' }, r.emi),
+        money('saved', { en: 'Interest saved', hi: 'ब्याज की बचत' }, r.interestSaved),
+        amount(
+          'months_saved',
+          { en: 'Loan ends sooner by', hi: 'लोन इतना जल्दी खत्म' },
+          r.monthsSaved,
+          MONTHS,
+        ),
+        amount('months_new', { en: 'New tenure', hi: 'नई अवधि' }, r.withPrepayment.months, MONTHS),
+      ],
+      source: SAME_CODE,
+    };
+  },
+};
+
+// ---------- Loan eligibility ----------
+
+// Published case (tools-core/test/fixtures/eligibility-known-answers.json): ₹1 lakh a month,
+// 50% FOIR, no EMIs, 8.5% for 20 years → ₹57,61,542.
+const ELIG_INPUT = {
+  monthlyIncome: 100_000,
+  existingEmis: 0,
+  foirPercent: 50,
+  annualRatePercent: 8.5,
+  tenureMonths: 240,
+};
+
+const eligibility: ToolInfo = {
+  slug: 'eligibility',
+  moneyTopic: true,
+  text: textOf(eligibilityMeta, eligibilityStrings),
+  path: toolPath('eligibility'),
+  lastVerified: metaReviewed('eligibility'),
+  example() {
+    const r = computeEligibility(ELIG_INPUT);
+    return {
+      inputs: [
+        money('income', { en: 'Take-home income per month', hi: 'मासिक आय (हाथ में)' }, 100_000),
+        percent('foir', { en: 'Bank’s FOIR limit', hi: 'बैंक की FOIR सीमा' }, 50),
+        percent('rate', { en: 'Interest rate (per year)', hi: 'ब्याज दर (सालाना)' }, 8.5),
+        amount('tenure', { en: 'Tenure', hi: 'अवधि' }, 20, YEARS),
+      ],
+      outputs: [
+        money('emi', { en: 'EMI that fits', hi: 'EMI जो संभव है' }, r.availableEmi),
+        money('loan', { en: 'Largest loan', hi: 'सबसे बड़ा लोन' }, r.maxLoan),
+      ],
+      source: SAME_CODE,
+    };
+  },
+};
+
+// ---------- Carpet area ----------
+
+// Published case (tools-core/test/fixtures/loading-known-answers.json): ₹1.80 crore for
+// 1,500 sq ft super built-up with 1,050 sq ft carpet → ₹17,143 per carpet sq ft.
+const CARPET_INPUT = { carpet: 1050, superBuiltUp: 1500, totalPrice: 18_000_000 };
+
+const carpetArea: ToolInfo = {
+  slug: 'carpet-area',
+  moneyTopic: true,
+  text: textOf(carpetMeta, carpetStrings),
+  path: toolPath('carpet-area'),
+  lastVerified: metaReviewed('carpet-area'),
+  example() {
+    const r = computeLoading(CARPET_INPUT);
+    return {
+      inputs: [
+        amount('sba', { en: 'Super built-up area', hi: 'सुपर बिल्ट-अप एरिया' }, 1500, SQFT),
+        amount('carpet', { en: 'RERA carpet area', hi: 'RERA कारपेट एरिया' }, 1050, SQFT),
+        money('total_price', { en: 'Total price', hi: 'कुल कीमत' }, CARPET_INPUT.totalPrice),
+      ],
+      outputs: [
+        pct(
+          'loading',
+          { en: 'Loading on carpet area', hi: 'कारपेट एरिया पर लोडिंग' },
+          r.loadingOnCarpetPercent,
+        ),
+        amount('common', { en: 'Common area', hi: 'कॉमन एरिया' }, r.commonArea, SQFT),
+        money(
+          'rate_sba',
+          { en: 'Price per sq ft (super built-up)', hi: 'प्रति वर्ग फ़ुट (सुपर बिल्ट-अप)' },
+          r.ratePerSuperBuiltUp ?? 0,
+        ),
+        money(
+          'rate_carpet',
+          { en: 'Price per sq ft of carpet', hi: 'कारपेट के प्रति वर्ग फ़ुट' },
+          r.ratePerCarpet ?? 0,
+        ),
+      ],
+      source: SAME_CODE,
+    };
+  },
+};
+
+// ---------- Rental yield ----------
+
+// Published case (tools-core/test/fixtures/rental-yield-known-answers.json): Pune ₹60 lakh,
+// ₹20,000 a month, half a month empty, ₹30,000 costs → 4% gross, 3.33% net.
+const YIELD_INPUT = {
+  propertyValue: 6_000_000,
+  monthlyRent: 20_000,
+  vacancyMonths: 0.5,
+  yearlyCosts: 30_000,
+};
+
+const rentalYield: ToolInfo = {
+  slug: 'rental-yield',
+  moneyTopic: true,
+  text: textOf(yieldMeta, yieldStrings),
+  path: toolPath('rental-yield'),
+  lastVerified: metaReviewed('rental-yield'),
+  example() {
+    const r = computeRentalYield(YIELD_INPUT);
+    return {
+      inputs: [
+        money('value', { en: 'Property value', hi: 'प्रॉपर्टी की कीमत' }, 6_000_000),
+        money('rent', { en: 'Rent per month', hi: 'मासिक किराया' }, 20_000),
+        amount('vacancy', { en: 'Months empty per year', hi: 'साल में खाली महीने' }, 0.5, MONTHS),
+        money('costs', { en: 'Owner’s yearly costs', hi: 'मालिक के सालाना खर्च' }, 30_000),
+      ],
+      outputs: [
+        pct('gross', { en: 'Gross yield', hi: 'ग्रॉस यील्ड' }, r.grossYieldPercent),
+        pct('net', { en: 'Net yield', hi: 'नेट यील्ड' }, r.netYieldPercent),
+        money('income', { en: 'Net income a year', hi: 'सालाना नेट आय' }, r.netIncome),
+      ],
+      source: SAME_CODE,
+    };
+  },
+};
+
+// ---------- Rent vs buy ----------
+
+// The calculator's default inputs; the published parts are the EMI (₹60 lakh at 8.5% for 20
+// years ≈ ₹52,000) and rent escalation (tools-core/test/fixtures/rent-vs-buy-known-answers.json).
+const RVB_INPUT = {
+  propertyValue: 7_500_000,
+  downPayment: 1_500_000,
+  purchaseCosts: 500_000,
+  annualRatePercent: 8.5,
+  tenureMonths: 240,
+  ownerYearlyCosts: 30_000,
+  appreciationPercent: 5,
+  monthlyRent: 25_000,
+  rentIncreasePercent: 5,
+  investReturnPercent: 8,
+  years: 10,
+};
+
+const rentVsBuy: ToolInfo = {
+  slug: 'rent-vs-buy',
+  moneyTopic: true,
+  text: textOf(rvbMeta, rvbStrings),
+  path: toolPath('rent-vs-buy'),
+  lastVerified: metaReviewed('rent-vs-buy'),
+  example() {
+    const r = computeRentVsBuy(RVB_INPUT);
+    return {
+      inputs: [
+        money('value', { en: 'Property value', hi: 'प्रॉपर्टी की कीमत' }, 7_500_000),
+        money('down', { en: 'Down payment', hi: 'डाउन पेमेंट' }, 1_500_000),
+        percent('rate', { en: 'Loan rate (per year)', hi: 'लोन दर (सालाना)' }, 8.5),
+        money('rent', { en: 'Rent per month now', hi: 'अभी मासिक किराया' }, 25_000),
+        percent(
+          'rent_increase',
+          { en: 'Rent increase per year', hi: 'किराये में सालाना बढ़ोतरी' },
+          5,
+        ),
+        percent(
+          'appreciation',
+          { en: 'Assumed property value change per year', hi: 'मान लिया गया सालाना कीमत बदलाव' },
+          5,
+        ),
+        percent('return', { en: 'Assumed return on savings', hi: 'मान लिया गया बचत पर रिटर्न' }, 8),
+        amount('years', { en: 'Compared over', hi: 'तुलना की अवधि' }, 10, YEARS),
+      ],
+      outputs: [
+        money('emi', { en: 'EMI', hi: 'EMI' }, r.emi),
+        money('buyer', { en: 'Buyer has at the end', hi: 'अंत में खरीदार के पास' }, r.buyerWealth),
+        money(
+          'renter',
+          { en: 'Renter has at the end', hi: 'अंत में किरायेदार के पास' },
+          r.renterWealth,
+        ),
+        money('rent_paid', { en: 'Rent paid in total', hi: 'कुल किराया' }, r.rentPaid),
+      ],
+      source: {
+        en: 'Example inputs (the property value change and return are assumptions — change them and the result can flip); results computed by the calculator’s own code.',
+        hi: 'उदाहरण के इनपुट (कीमत में बदलाव और रिटर्न अनुमान हैं — इन्हें बदलने से नतीजा उलट सकता है); नतीजे कैलकुलेटर के अपने कोड से।',
+      },
+    };
+  },
+};
+
 function pick(s: {
   metaTitle: string;
   metaDescription: string;
@@ -273,7 +592,17 @@ function pick(s: {
   };
 }
 
-export const TOOLS: readonly ToolInfo[] = [emi, commission, stampDuty];
+export const TOOLS: readonly ToolInfo[] = [
+  emi,
+  commission,
+  stampDuty,
+  area,
+  prepayment,
+  eligibility,
+  carpetArea,
+  rentalYield,
+  rentVsBuy,
+];
 
 export function findTool(slug: string): ToolInfo | undefined {
   return TOOLS.find((t) => t.slug === slug);
