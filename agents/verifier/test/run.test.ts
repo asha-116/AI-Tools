@@ -507,6 +507,42 @@ describe('verify — claims and text (PROCEDURE step 3)', () => {
     expect(r.status.state).toBe('failure');
   });
 
+  it('a claim with no source is "check by hand" when its file cites sources, else unsourced', async () => {
+    const noSource = (file: string) => ({
+      file,
+      claim: '1 cent = 435.6 sq ft',
+      source: '',
+      status: 'unsourced',
+      note: '',
+    });
+    const llm = scriptedLlm({
+      claims: {
+        claims: [noSource('data/x.json'), noSource('site/src/content/en/a.md')],
+        advice: [],
+        missing_disclaimer: [],
+      },
+    });
+    const github = gh({
+      'site/src/content/en/a.md': 'For estimation only — verify with a professional.',
+    });
+    const { r } = await run(
+      [
+        {
+          filename: 'data/x.json',
+          status: 'added',
+          patch: '+ "sources": [{ "url": "https://1acre.in/land-unit-converter/cent-to-sqft" }]',
+        },
+        { filename: 'site/src/content/en/a.md', status: 'added', patch: '+A cent is 435.6 sq ft' },
+      ],
+      { llm, github },
+    );
+    expect(r.report.claims.map((c) => c.status)).toEqual(['unchecked', 'unsourced']);
+    expect(r.report.claims[0]?.note).toContain('check this claim against them by hand');
+    expect(r.report.reasons).toEqual([
+      'unsourced claim (site/src/content/en/a.md): 1 cent = 435.6 sq ft',
+    ]);
+  });
+
   it('accepts EN or HI disclaimers and passes clean text', async () => {
     const github = gh({
       'site/src/content/en/a.md': 'For estimation only — verify with a professional.',

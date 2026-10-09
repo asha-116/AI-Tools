@@ -266,6 +266,10 @@ async function checkClaims(
   );
   families.add(response.family);
   const known = new Set(sources);
+  /** Files whose own added lines cite at least one URL (e.g. a data file's `sources`). */
+  const citing = new Set(
+    files.filter((f) => extractUrls(f.patch ?? '').length > 0).map((f) => f.filename),
+  );
   const reasons: string[] = [];
   const claims: Claim[] = data.claims.map((c) => {
     let { status, note } = c;
@@ -273,6 +277,12 @@ async function checkClaims(
     if ((status === 'supported' || status === 'unchecked') && !known.has(c.source)) {
       status = 'unsourced';
       note = `${note} (cited URL not found in this PR)`.trim();
+    }
+    // A claim the model left without a source, in a file that cites its own sources, is not
+    // unsourced: a person checks it against them. A URL the model invented stays unsourced.
+    if (status === 'unsourced' && c.source.trim() === '' && citing.has(c.file)) {
+      status = 'unchecked';
+      note = `${note} (the file cites sources; check this claim against them by hand)`.trim();
     }
     if (status === 'contradicted')
       reasons.push(`claim contradicted by its source (${c.file}): ${c.claim}`);

@@ -5,13 +5,30 @@
 // - VerifierReportSchema: the agent's own output (posted in the PR comment as JSON).
 
 import { z } from 'zod';
+import { evaluate } from './src/expr.js';
 
-const finite = z.number().refine((n) => Number.isFinite(n), 'must be a finite number');
+/** A number, or an arithmetic expression the model wrote that we evaluate exactly (src/expr.ts). */
+const answerValue = z.union([z.number(), z.string()]).transform((v, ctx) => {
+  if (typeof v === 'number') {
+    if (Number.isFinite(v)) return v;
+    ctx.addIssue({ code: 'custom', message: 'must be a finite number' });
+    return z.NEVER;
+  }
+  try {
+    return evaluate(v);
+  } catch (e) {
+    ctx.addIssue({
+      code: 'custom',
+      message: `cannot evaluate "${v.slice(0, 80)}": ${e instanceof Error ? e.message : String(e)}`,
+    });
+    return z.NEVER;
+  }
+});
 
-/** One computed case: `values` maps each requested output field to a number. */
+/** One computed case: `values` maps each requested output field to a number or an expression. */
 export const FormulaAnswerSchema = z.object({
   id: z.string().min(1),
-  values: z.record(z.string(), finite),
+  values: z.record(z.string(), answerValue),
 });
 
 export const FormulaAnswersSchema = z.object({

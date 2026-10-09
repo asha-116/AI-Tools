@@ -351,6 +351,13 @@ NOTHING`), so duplicates and both events for one payment are harmless. It stores
   invented `public/` and `tests/` paths. Now every Orchestrator Issue goes to `agent:engineer`,
   who quotes the examples and re-labels it `agent:builder`; the prompt gets a generated
   "what already exists" list (calculators, templates, real paths).
+- **Update 2026-10-09 (Verifier arithmetic):** on its first live formula run
+  (asha-116/AI-Tools#33) the Verifier failed correct EMI code: Gemini's own EMI arithmetic was
+  off by up to ₹4,600 (₹1 crore, 10.5%, 120 months: banks and our code say ₹1,34,935).
+  The verifier model now answers each field as an arithmetic expression that the Verifier
+  evaluates exactly (`agents/verifier/src/expr.ts`, no identifiers or code). The model still
+  derives the formula independently. Unsourced-claim noise was also cut: a claim with no source
+  in a file that cites sources is "check by hand", and repo-process statements are not claims.
 
 ### ADR-031 — Support: templates only, every refund to the owner, no inbox yet
 
