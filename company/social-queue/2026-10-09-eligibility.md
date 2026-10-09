@@ -3,8 +3,8 @@ status: draft
 slug: eligibility
 date: 2026-10-09
 type: new-tool
-generated_by: "agent:social"
-producer_family: "gpt"
+generated_by: 'agent:social'
+producer_family: 'gpt'
 ---
 
 # Social draft — eligibility (2026-10-09)
@@ -13,11 +13,11 @@ producer_family: "gpt"
 
 ## Script (30–45 s)
 
-Want to know exactly how much home loan a buyer can get? Use our free eligibility calculator. Step 1: Open the tool and type the buyer’s take‑home income as ₹1,00,000. Step 2: Set the bank’s FOIR limit to 50%. Step 3: Enter the interest rate 8.5% and the loan tenure 20 years. Step 4: The calculator instantly shows the maximum EMI ₹50,000 and the largest loan amount ₹57,61,542. Takeaway: The result follows the same FOIR rule banks use.
+Want to know exactly how much home loan your buyer can afford? Open the Home loan eligibility calculator. Enter the monthly take‑home income as ₹1,00,000. The tool applies the bank’s FOIR limit of 50% and shows the maximum EMI you can service, for example ₹50,000 per month. It then calculates the largest loan amount, around ₹57,61,542, based on an interest rate of 8.5% over a tenure of 20 years. Use this calculator to match the buyer’s budget with bank limits – no guesswork needed.
 
 ## Caption (EN)
 
-Find the exact home loan amount a buyer can afford. Enter ₹1,00,000, FOIR 50%, rate 8.5% and tenure 20 years to get EMI ₹50,000 and loan ₹57,61,542.
+Check the exact home loan amount a buyer can qualify for—just enter ₹1,00,000 and let the calculator do the rest.
 
 https://tools.changelense.in/tools/eligibility/
 
@@ -25,7 +25,7 @@ For estimation only — verify with a professional.
 
 ## Caption (HI)
 
-जानिए खरीदार कितनी होम लोन ले सकता है। आय ₹1,00,000, FOIR 50%, ब्याज दर 8.5% और अवधि 20 साल भरें, फिर EMI ₹50,000 और लोन ₹57,61,542 देखें।
+बस ₹1,00,000 डालें, देखें संभव ₹50,000 और कुल लोन ₹57,61,542 — तुरंत परिणाम।
 
 https://tools.changelense.in/hi/tools/eligibility/
 
@@ -33,8 +33,8 @@ https://tools.changelense.in/hi/tools/eligibility/
 
 ## Pin text
 
-Free home loan eligibility calculator – see max loan in seconds
+Calculate buyer’s home loan eligibility in seconds – enter income, see EMI & loan amount.
 
 ## Hashtags
 
-#RealEstateIndia #HomeLoan #AgentTools #IndiaProperty #FreeCalc
+#RealEstateIndia #HomeLoan #AgentTools #FreeCalculator
