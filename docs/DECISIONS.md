@@ -475,3 +475,22 @@ NOTHING`), so duplicates and both events for one payment are harmless. It stores
   interest; no benchmarks, no verdicts. Four published cases (Brigade 4% gross, Housing.com 5%
   net, NoBroker 3.6%/3.2%, Fermor Pune 3.33% net with half a month empty).
 - **Status:** Accepted (2026-10-09). Hindi text needs a human review before it is promoted.
+
+### ADR-039 — Rent vs buy: equal monthly spending, numbers only
+
+- **Context:** owner asked for a rent vs buy tool (2026-10-09). Published comparisons disagree on
+  method; many ignore that the renter keeps the down payment and the monthly gap, which tilts
+  the answer. Saying "buy" or "rent" would be investment advice (AGENTS.md rule 9).
+- **Decision:** `tools-core/src/rentVsBuy.ts` simulates month by month over whole years. The
+  buyer pays the down payment and purchase costs, then the EMI (until the loan ends) and yearly
+  owner costs; the renter pays rent rising once a year and invests the buyer's upfront money.
+  Each month, whoever spends less invests the difference at the same return (compounded so a
+  year earns exactly the yearly %). At the end: buyer = property value (yearly appreciation,
+  may be negative) − loan left + buyer's investments; renter = renter's investments. The page
+  shows both and their difference with a neutral note, before tax, without selling costs.
+  Appreciation and investment return are labelled as the user's own assumptions.
+- Known answers: published rent-escalation total (Pune lease, ₹1.49 crore over 5 years) and
+  EMI (₹60 lakh at 8.5% for 20 years ≈ ₹52,000); tests check loan balance, compound growth,
+  the geometric series and the equal-spending bookkeeping against closed forms. The Verifier
+  recomputes EMI, loan left, rent paid and property value.
+- **Status:** Accepted (2026-10-09). Hindi text needs a human review before it is promoted.

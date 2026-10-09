@@ -1,0 +1,39 @@
+{
+  "$comment": "Known answers for the rent vs buy comparison. The whole comparison has no single published answer (every source makes different assumptions), so each part is checked on its own: published worked examples found via web search on 2026-10-09 (direct fetch blocked in the build environment) for rent with yearly escalation and for the EMI, and tools-core/test/rentVsBuy.test.ts checks the rest against closed forms — loan balance (https://en.wikipedia.org/wiki/Mortgage_calculator), compound growth (https://en.wikipedia.org/wiki/Compound_interest) and the geometric series (https://en.wikipedia.org/wiki/Geometric_series).",
+  "accessed": "2026-10-09",
+  "cases": [
+    {
+      "name": "Pune lease: ₹2.25 lakh a month, 5% more each year, 5 years ≈ ₹1.49 crore",
+      "input": {
+        "propertyValue": 30000000,
+        "downPayment": 30000000,
+        "annualRatePercent": 8.5,
+        "tenureMonths": 240,
+        "monthlyRent": 225000,
+        "rentIncreasePercent": 5,
+        "years": 5
+      },
+      "expect": { "rentPaid": 14900000 },
+      "tolerance": { "percent": 0.5 },
+      "sources": [
+        "https://rentu.in/news/10000084/a-pune-property-owned-by-the-priyanka-chopra-family-is-let-out-at-about-225-lakh-a-month"
+      ],
+      "quote": "₹2.25 lakh/month with a 5% annual escalation … the projected five-year rental income is about ₹1.49 crore"
+    },
+    {
+      "name": "₹75 lakh flat, ₹15 lakh down, ₹60 lakh loan at 8.5% for 20 years: EMI ≈ ₹52,000",
+      "input": {
+        "propertyValue": 7500000,
+        "downPayment": 1500000,
+        "annualRatePercent": 8.5,
+        "tenureMonths": 240,
+        "monthlyRent": 25000,
+        "years": 10
+      },
+      "expect": { "emi": 52000 },
+      "tolerance": { "percent": 0.5 },
+      "sources": ["https://n.holisticinvestment.in/rent-vs-home-loan-emi-in-india/"],
+      "quote": "a down payment of Rs 15 lakh, a loan of Rs 60 lakh, 8.5% interest and a 20-year tenure, with an EMI of roughly Rs 52,000 per month"
+    }
+  ]
+}

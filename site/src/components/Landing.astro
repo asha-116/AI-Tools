@@ -62,6 +62,14 @@ const clientStrings = {
     </li>
     <li class="idea">
       <p class="kind kind-free">{t.kindFree}</p>
+      <h3>{t.rvbCardTitle}</h3>
+      <p>{t.rvbCardSummary}</p>
+      <a class="button" href={lang === 'en' ? '/tools/rent-vs-buy/' : '/hi/tools/rent-vs-buy/'}>
+        {t.openTool}
+      </a>
+    </li>
+    <li class="idea">
+      <p class="kind kind-free">{t.kindFree}</p>
       <h3>{t.yieldCardTitle}</h3>
       <p>{t.yieldCardSummary}</p>
       <a class="button" href={lang === 'en' ? '/tools/rental-yield/' : '/hi/tools/rental-yield/'}>

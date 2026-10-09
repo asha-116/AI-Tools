@@ -65,3 +65,9 @@ export {
   type RentalYieldInput,
   type RentalYieldResult,
 } from './rentalYield.js';
+export {
+  computeRentVsBuy,
+  RENT_VS_BUY_LIMITS,
+  type RentVsBuyInput,
+  type RentVsBuyResult,
+} from './rentVsBuy.js';

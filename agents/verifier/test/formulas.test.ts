@@ -57,6 +57,7 @@ describe('selectEntries', () => {
       'eligibility',
       'loading',
       'rental-yield',
+      'rent-vs-buy',
       'area',
     ]);
   });
@@ -260,5 +261,16 @@ describe('rental-yield entry', () => {
     const ours = runOurs(e, cases[3]?.input ?? {});
     expect('values' in ours && ours.values.netIncome).toBe(200000);
     expect('values' in ours && Math.round((ours.values.netYieldPercent ?? 0) * 100)).toBe(333);
+  });
+});
+
+describe('rent-vs-buy entry', () => {
+  it('checks the closed-form parts; our run matches the published Pune rent total', () => {
+    const e = entry('rent-vs-buy');
+    const cases = loadCases(e, read);
+    expect(cases).toHaveLength(2);
+    const ours = runOurs(e, cases[0]?.input ?? {});
+    expect('values' in ours && Math.round((ours.values.rentPaid ?? 0) / 1e5)).toBe(149);
+    expect('values' in ours && ours.values.emi).toBe(0);
   });
 });

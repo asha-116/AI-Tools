@@ -14,6 +14,10 @@ templates "coming soon".
 
 ## Done
 
+- 2026-10-09 — **Rent vs buy calculator** (owner's pick, ADR-039): `/tools/rent-vs-buy/` and
+  `/hi/tools/rent-vs-buy/` — what a buyer and a renter each have after the same years when both
+  spend the same each month; numbers only, before tax. Rental yield merged
+  (asha-116/AI-Tools#40; Lighthouse job timeout raised to 30 min for the growing page list).
 - 2026-10-09 — **Rental yield calculator** (ADR-038): `/tools/rental-yield/` and
   `/hi/tools/rental-yield/` — gross and net yield, collected rent, net income and years of rent;
   before tax, numbers only. Carpet area tool merged (asha-116/AI-Tools#39). Owner chose GitHub's

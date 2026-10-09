@@ -54,6 +54,8 @@ const en = {
   carpetCardSummary: 'Loading %, common area and what each usable sq ft really costs.',
   yieldCardTitle: 'Rental yield calculator',
   yieldCardSummary: 'Gross and net rental yield and the yearly income from a property.',
+  rvbCardTitle: 'Rent vs buy calculator',
+  rvbCardSummary: 'What a buyer and a renter each have after the same years, with your numbers.',
   openTool: 'Open',
 };
 
@@ -110,6 +112,8 @@ const hi: Strings = {
   carpetCardSummary: 'लोडिंग %, कॉमन एरिया और इस्तेमाल लायक हर वर्ग फ़ुट की असली कीमत।',
   yieldCardTitle: 'रेंटल यील्ड कैलकुलेटर',
   yieldCardSummary: 'प्रॉपर्टी की ग्रॉस और नेट रेंटल यील्ड और सालाना आय।',
+  rvbCardTitle: 'किराया या खरीदें कैलकुलेटर',
+  rvbCardSummary: 'एक जैसे सालों के बाद खरीदार और किरायेदार के पास कितना, आपके आँकड़ों के साथ।',
   openTool: 'खोलें',
 };
 

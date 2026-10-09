@@ -1,0 +1,11 @@
+---
+import Base from '../../../../layouts/Base.astro';
+import RentVsBuyCalculator from '../../../../tools/rent-vs-buy/RentVsBuyCalculator.astro';
+import { rvbStrings } from '../../../../tools/rent-vs-buy/strings';
+
+const t = rvbStrings.hi;
+---
+
+<Base lang="hi" title={t.metaTitle} description={t.metaDescription} path="/tools/rent-vs-buy/">
+  <RentVsBuyCalculator lang="hi" />
+</Base>
