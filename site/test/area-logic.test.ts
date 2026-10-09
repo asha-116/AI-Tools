@@ -14,7 +14,15 @@ describe('area converter page logic', () => {
   const live = visibleUnits(ALL_UNITS, false);
 
   it('shows only verified units on the live site; drafts on owner review', () => {
-    expect(live.map((u) => u.id)).toEqual(['sq_ft', 'sq_yd', 'sq_m', 'are', 'acre', 'hectare']);
+    expect(live.map((u) => u.id)).toEqual([
+      'sq_ft',
+      'sq_yd',
+      'sq_m',
+      'are',
+      'acre',
+      'hectare',
+      'guntha',
+    ]);
     expect(visibleUnits(ALL_UNITS, true).length).toBeGreaterThan(live.length);
   });
 
@@ -30,6 +38,7 @@ describe('area converter page logic', () => {
       are: '40.4686',
       acre: '1',
       hectare: '0.4047',
+      guntha: '40',
     });
   });
 
@@ -41,7 +50,7 @@ describe('area converter page logic', () => {
   it('rejects bad input and units that are not shown', () => {
     expect(evaluate(live, { value: '-1', from: 'acre' })).toEqual({ ok: false, error: 'value' });
     expect(evaluate(live, { value: 'abc', from: 'acre' })).toEqual({ ok: false, error: 'value' });
-    expect(evaluate(live, { value: '1', from: 'guntha' })).toEqual({ ok: false, error: 'unit' });
+    expect(evaluate(live, { value: '1', from: 'marla' })).toEqual({ ok: false, error: 'unit' });
   });
 
   it('formats small and grouped numbers', () => {

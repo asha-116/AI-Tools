@@ -1,9 +1,9 @@
 {
-  "$comment": "Guntha for Maharashtra and Karnataka. A guntha is 1/40 of an acre (a square of 33 ft = 1,089 sq ft). Karnataka RTC extracts state extent as acres.guntas (e.g. 2.10 = 2 acres 10 guntas); Maharashtra 7/12 extracts print hectare-are, while guntha is used in sale talk. No government page could be fetched from the build environment, so this stays draft until the owner (or someone they name) checks the checklist and signs verified_by.",
+  "$comment": "Guntha for Maharashtra and Karnataka. A guntha is 1/40 of an acre (a square of 33 ft = 1,089 sq ft). Karnataka RTC extracts state extent as acres.guntas (e.g. 2.10 = 2 acres 10 guntas); Maharashtra 7/12 extracts print hectare-are, while guntha is used in sale talk. Verified by the owner on 2026-10-09 against the official land records (checklist below).",
   "dataset": "land-units",
   "states": ["MH", "KA"],
-  "status": "draft",
-  "verified_by": "not verified",
+  "status": "verified",
+  "verified_by": "repository owner (confirmed 2026-10-09 against Karnataka RTC acres.guntas and Maharashtra 7/12)",
   "last_verified": "2026-10-09",
   "verification_checklist": [
     "Open a Karnataka RTC (https://landrecords.karnataka.gov.in) and confirm extent is written as acres.guntas with 40 guntas to an acre.",

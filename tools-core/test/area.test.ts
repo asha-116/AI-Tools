@@ -44,9 +44,9 @@ describe('area known answers (cited sources)', () => {
 });
 
 describe('land-unit data files', () => {
-  it('standard units are verified, regional ones stay draft until a person checks them', () => {
+  it('standard units and the owner-verified guntha are live; other regional units stay draft', () => {
     expect(standard.status).toBe('verified');
-    expect(guntha.status).toBe('draft');
+    expect(guntha.status).toBe('verified'); // owner-confirmed for MH + KA, 2026-10-09
     expect(regional.status).toBe('draft');
   });
   it('ids are unique and every unit has EN + HI labels', () => {
