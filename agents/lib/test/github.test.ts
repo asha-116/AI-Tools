@@ -348,7 +348,8 @@ describe('GitHub writes when DRY_RUN=false', () => {
     expect(body('POST', '/git/trees')).toEqual({
       base_tree: 'tree0',
       tree: [
-        { path: 'tools-core/src/emi.ts', mode: '100644', type: 'blob', content: 'export {}' },
+        // Committed in the repo's Prettier style (src/format.ts).
+        { path: 'tools-core/src/emi.ts', mode: '100644', type: 'blob', content: 'export {};\n' },
         { path: 'old.md', mode: '100644', type: 'blob', sha: null },
       ],
     });

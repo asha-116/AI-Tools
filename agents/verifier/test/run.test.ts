@@ -599,7 +599,6 @@ describe('verify — claims and text (PROCEDURE step 3)', () => {
       'unsourced claim (data/x.json): Registration is 1%',
       'claim contradicted by its source (data/x.json): Women get 1% off',
       'advice-like language (site/src/content/en/a.md): You should claim this deduction',
-      'missing disclaimer: site/src/content/en/a.md',
     ]);
     expect(r.status.state).toBe('failure');
   });
@@ -676,17 +675,26 @@ describe('verify — claims and text (PROCEDURE step 3)', () => {
     expect(r.status.state).toBe('success');
   });
 
-  it('ignores model disclaimer findings outside published content', async () => {
+  it('ignores model disclaimer findings: the disclaimer is checked in code', async () => {
     const llm = scriptedLlm({
       claims: {
         claims: [],
         advice: [],
-        missing_disclaimer: [{ file: 'data/x.json' }],
+        missing_disclaimer: [{ file: 'data/x.json' }, { file: 'site/src/content/en/a.md' }],
       },
     });
-    const { r } = await run([{ filename: 'data/x.json', status: 'added', patch: '+ "a": 1' }], {
-      llm,
+    const github = gh({
+      'site/src/content/en/a.md': 'For estimation only — verify with a professional.',
     });
+    const { r } = await run(
+      [
+        { filename: 'data/x.json', status: 'added', patch: '+ "a": 1' },
+        { filename: 'site/src/content/en/a.md', status: 'added', patch: '+Hello' },
+        // Not a page: no disclaimer needed.
+        { filename: 'site/src/content/articles/a.seo.json', status: 'added', patch: '+{}' },
+      ],
+      { llm, github },
+    );
     expect(r.report.reasons).toEqual([]);
     expect(r.status.state).toBe('success');
   });
@@ -724,7 +732,8 @@ describe('verify — claims and text (PROCEDURE step 3)', () => {
     const { llm } = await run(files);
     const sent = llm.requests[0]?.messages[1]?.content ?? '';
     expect(sent).toContain('### data/d.md\n(not reviewed: text limit reached');
-    expect(sent.length).toBeLessThan(14_000);
+    // 12,000-character text cap + the claims prompt template.
+    expect(sent.length).toBeLessThan(14_500);
   });
 });
 

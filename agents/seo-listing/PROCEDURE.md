@@ -33,6 +33,9 @@ code. No `Offer`/price unless the product is `live` in `products/catalog.json`. 
 adapter in `src/tools.ts`, or whose data is not verified (stamp duty today), escalate instead.
 No LLM key → logs the computed example and exits 0 without drafting.
 
+Once merged, the site shows the article at `/guides/<slug>/` and `/hi/guides/<slug>/`
+(ADR-042); merging is the owner's approval to publish.
+
 ## Output schema
 
 ```json
