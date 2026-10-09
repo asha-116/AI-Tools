@@ -1,0 +1,134 @@
+{
+  "slug": "carpet-area",
+  "meta": {
+    "en": {
+      "title": "Carpet area price per sq ft calculator",
+      "description": "Calculate loading, common area and price per carpet sq ft using super built‑up and carpet figures."
+    },
+    "hi": {
+      "title": "कारपेट एरिया कीमत प्रति वर्ग फ़ुट कैलकुलेटर",
+      "description": "सुपर बिल्ट‑अप और कारपेट एरिया से लोडिंग, कॉमन एरिया और कारपेट प्रति वर्ग फ़ुट कीमत निकालें।"
+    }
+  },
+  "faq": {
+    "en": [
+      {
+        "q": "What is loading and why does it matter?",
+        "a": "Loading shows how much extra space is included in the super built‑up area compared to the carpet area. A higher loading means the buyer pays for common areas that are not usable."
+      },
+      {
+        "q": "How is price per carpet sq ft calculated?",
+        "a": "The tool divides the total price by the carpet area to give [[rate_carpet]]. This lets you compare flats on the same usable size."
+      },
+      {
+        "q": "Does the calculator include parking or GST?",
+        "a": "No. It uses only the area × rate. Additional charges like parking, GST, stamp duty are extra and should be added separately."
+      }
+    ],
+    "hi": [
+      {
+        "q": "लोडिंग क्या है और यह क्यों महत्वपूर्ण है?",
+        "a": "लोडिंग बताती है कि सुपर बिल्ट‑अप एरिया में कारपेट एरिया की तुलना में कितना अतिरिक्त स्पेस शामिल है। अधिक लोडिंग का मतलब है खरीदार को गैर‑उपयोगी हिस्से के लिए भी भुगतान करना पड़ता है।"
+      },
+      {
+        "q": "कारपेट प्रति वर्ग फ़ुट कीमत कैसे निकाली जाती है?",
+        "a": "कैल्कुलेटर कुल कीमत को कारपेट एरिया से भाग देता है, जिससे [[rate_carpet]] मिलती है। यह समान आकार के फ्लैट की तुलना में मदद करती है।"
+      },
+      {
+        "q": "क्या इस कैलकुलेटर में पार्किंग या GST शामिल है?",
+        "a": "नहीं। यह केवल एरिया × दर से कुल कीमत लेता है। अतिरिक्त खर्च अलग से जोड़ने होंगे।"
+      }
+    ]
+  },
+  "jsonld": {
+    "en": [
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Carpet area price per sq ft calculator",
+        "description": "Calculate loading, common area and price per carpet sq ft using super built‑up and carpet figures.",
+        "url": "https://tools.changelense.in/tools/carpet-area/",
+        "inLanguage": "en-IN",
+        "applicationCategory": "FinanceApplication",
+        "operatingSystem": "Any",
+        "isAccessibleForFree": true
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "inLanguage": "en-IN",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "What is loading and why does it matter?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Loading shows how much extra space is included in the super built‑up area compared to the carpet area. A higher loading means the buyer pays for common areas that are not usable."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "How is price per carpet sq ft calculated?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "The tool divides the total price by the carpet area to give [[rate_carpet]]. This lets you compare flats on the same usable size."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Does the calculator include parking or GST?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "No. It uses only the area × rate. Additional charges like parking, GST, stamp duty are extra and should be added separately."
+            }
+          }
+        ]
+      }
+    ],
+    "hi": [
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "कारपेट एरिया कीमत प्रति वर्ग फ़ुट कैलकुलेटर",
+        "description": "सुपर बिल्ट‑अप और कारपेट एरिया से लोडिंग, कॉमन एरिया और कारपेट प्रति वर्ग फ़ुट कीमत निकालें।",
+        "url": "https://tools.changelense.in/hi/tools/carpet-area/",
+        "inLanguage": "hi-IN",
+        "applicationCategory": "FinanceApplication",
+        "operatingSystem": "Any",
+        "isAccessibleForFree": true
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "inLanguage": "hi-IN",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "लोडिंग क्या है और यह क्यों महत्वपूर्ण है?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "लोडिंग बताती है कि सुपर बिल्ट‑अप एरिया में कारपेट एरिया की तुलना में कितना अतिरिक्त स्पेस शामिल है। अधिक लोडिंग का मतलब है खरीदार को गैर‑उपयोगी हिस्से के लिए भी भुगतान करना पड़ता है।"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "कारपेट प्रति वर्ग फ़ुट कीमत कैसे निकाली जाती है?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "कैल्कुलेटर कुल कीमत को कारपेट एरिया से भाग देता है, जिससे [[rate_carpet]] मिलती है। यह समान आकार के फ्लैट की तुलना में मदद करती है।"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "क्या इस कैलकुलेटर में पार्किंग या GST शामिल है?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "नहीं। यह केवल एरिया × दर से कुल कीमत लेता है। अतिरिक्त खर्च अलग से जोड़ने होंगे।"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "producer_family": "gpt"
+}
