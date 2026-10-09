@@ -359,6 +359,43 @@ describe('createLlm().chat', () => {
     expect(asked).toEqual(['llama-3.3-70b-versatile', 'openai/gpt-oss-120b']);
   });
 
+  it('when the other-family model is retired, discovery picks one outside the producer family', async () => {
+    const groq: Provider = {
+      id: 'groq',
+      baseUrl: 'https://groq.test/v1',
+      keyEnv: 'TWO_KEY',
+      model: 'openai/gpt-oss-120b',
+      models: ['llama-3.3-70b-versatile'],
+      modelPattern: '^(openai/gpt-oss|(meta-llama/)?llama|qwen)',
+      family: 'gpt',
+      limits: {},
+    };
+    const asked: string[] = [];
+    const f = fakeFetch((req) => {
+      if (req.url.endsWith('/models'))
+        return jsonResponse({
+          data: [{ id: 'openai/gpt-oss-120b' }, { id: 'meta-llama/llama-4-scout-17b' }],
+        });
+      const model = (req.body as { model: string }).model;
+      asked.push(model);
+      return model === 'llama-3.3-70b-versatile'
+        ? jsonResponse({ error: { code: 'model_not_found' } }, 404)
+        : jsonResponse(completion('ok'));
+    });
+    const llm = createLlm({ env: ENV, providers: [groq], fetch: f, sleep: noSleep });
+    const v = await llm.chat({ messages: msg, excludeFamily: 'gpt' });
+    expect(v).toMatchObject({ model: 'meta-llama/llama-4-scout-17b', family: 'llama' });
+    // The choice is remembered for the next Verifier request, and the usual model is untouched.
+    await llm.chat({ messages: msg, excludeFamily: 'gpt' });
+    expect(await llm.chat({ messages: msg })).toMatchObject({ family: 'gpt' });
+    expect(asked).toEqual([
+      'llama-3.3-70b-versatile',
+      'meta-llama/llama-4-scout-17b',
+      'meta-llama/llama-4-scout-17b',
+      'openai/gpt-oss-120b',
+    ]);
+  });
+
   it('sends no Authorization header to a keyless local provider; estimates missing usage', async () => {
     const f = fakeFetch(() => jsonResponse({ choices: [{ message: { content: 'abcdefgh' } }] }));
     const llm = createLlm({
@@ -565,6 +602,9 @@ describe('zero-cost rule during discovery', () => {
     };
     expect(chooseModel(or, ['deepseek/paid-model', 'deepseek/b:free'])).toBe('deepseek/b:free');
     expect(chooseModel(or, ['deepseek/paid-model'])).toBeUndefined();
+    expect(
+      chooseModel({ ...or, family: 'deepseek' }, ['deepseek/b:free'], new Set(['deepseek'])),
+    ).toBeUndefined();
   });
 
   it('the shipped providers give the Verifier at least two families from Gemini + Groq keys', () => {

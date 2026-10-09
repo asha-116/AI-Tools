@@ -21,7 +21,7 @@
       "keyEnv": "GROQ_API_KEY",
       "model": "openai/gpt-oss-120b",
       "models": ["openai/gpt-oss-20b", "llama-3.3-70b-versatile"],
-      "modelPattern": "^(openai/gpt-oss|llama|qwen)",
+      "modelPattern": "^(openai/gpt-oss|(meta-llama/)?llama|qwen)",
       "family": "gpt",
       "limits": {
         "rpm": 30,
