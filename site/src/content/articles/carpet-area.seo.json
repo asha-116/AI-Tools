@@ -3,7 +3,7 @@
   "meta": {
     "en": {
       "title": "Carpet area price per sq ft calculator",
-      "description": "Calculate loading, common area and price per carpet sq ft using super built‑up and carpet figures."
+      "description": "Calculate loading, common area and price per carpet sq ft using super built‑up and carpet values."
     },
     "hi": {
       "title": "कारपेट एरिया कीमत प्रति वर्ग फ़ुट कैलकुलेटर",
@@ -13,30 +13,38 @@
   "faq": {
     "en": [
       {
-        "q": "What is loading and why does it matter?",
-        "a": "Loading shows how much extra space is included in the super built‑up area compared to the carpet area. A higher loading means the buyer pays for common areas that are not usable."
+        "q": "What does loading represent in the calculation?",
+        "a": "Loading shows the proportion of common area relative to the carpet area. It is calculated as ((super built‑up – carpet) ÷ carpet) × 100, expressed as [[loading]]."
       },
       {
-        "q": "How is price per carpet sq ft calculated?",
-        "a": "The tool divides the total price by the carpet area to give [[rate_carpet]]. This lets you compare flats on the same usable size."
+        "q": "How is the price per carpet square foot different from the advertised price per super built‑up foot?",
+        "a": "Price per carpet sq ft uses the carpet area [[carpet]] in the denominator, giving the cost of the space the buyer actually uses. The advertised price per super built‑up foot uses [[sba]] and spreads the price over a larger area, so the per‑foot figure appears lower."
       },
       {
-        "q": "Does the calculator include parking or GST?",
-        "a": "No. It uses only the area × rate. Additional charges like parking, GST, stamp duty are extra and should be added separately."
+        "q": "Can I use the calculator for projects that include parking in the built‑up area?",
+        "a": "The calculator only works with the super built‑up and carpet figures you enter. Parking, GST, stamp duty and other charges are not part of the calculation and must be added separately."
+      },
+      {
+        "q": "What if the builder reports loading as a share of super built‑up?",
+        "a": "The tool also shows loading calculated as (common area ÷ super built‑up) × 100, so you can see both perspectives."
       }
     ],
     "hi": [
       {
-        "q": "लोडिंग क्या है और यह क्यों महत्वपूर्ण है?",
-        "a": "लोडिंग बताती है कि सुपर बिल्ट‑अप एरिया में कारपेट एरिया की तुलना में कितना अतिरिक्त स्पेस शामिल है। अधिक लोडिंग का मतलब है खरीदार को गैर‑उपयोगी हिस्से के लिए भी भुगतान करना पड़ता है।"
+        "q": "लोडिंग का मतलब क्या है?",
+        "a": "लोडिंग दर्शाता है कि कारपेट एरिया की तुलना में साझा क्षेत्र कितना है। यह ((सुपर बिल्ट‑अप – कारपेट) ÷ कारपेट) × 100 से निकाला जाता है, यानी [[loading]]।"
       },
       {
-        "q": "कारपेट प्रति वर्ग फ़ुट कीमत कैसे निकाली जाती है?",
-        "a": "कैल्कुलेटर कुल कीमत को कारपेट एरिया से भाग देता है, जिससे [[rate_carpet]] मिलती है। यह समान आकार के फ्लैट की तुलना में मदद करती है।"
+        "q": "कारपेट प्रति वर्ग फ़ुट कीमत और सुपर बिल्ट‑अप प्रति वर्ग फ़ुट कीमत में क्या अंतर है?",
+        "a": "कारपेट कीमत कुल कीमत को [[carpet]] से भाग देती है, जिससे खरीदार को मिलने वाली वास्तविक जगह की लागत मिलती है। सुपर बिल्ट‑अप कीमत कुल कीमत को [[sba]] से भाग देती है, इसलिए प्रति फुट कम दिखती है।"
       },
       {
-        "q": "क्या इस कैलकुलेटर में पार्किंग या GST शामिल है?",
-        "a": "नहीं। यह केवल एरिया × दर से कुल कीमत लेता है। अतिरिक्त खर्च अलग से जोड़ने होंगे।"
+        "q": "क्या मैं इस टूल में पार्किंग या GST को शामिल कर सकता हूँ?",
+        "a": "नहीं, टूल केवल सुपर बिल्ट‑अप, कारपेट और कुल कीमत पर काम करता है। पार्किंग, GST, स्टाम्प ड्यूटी आदि को अलग से जोड़ना होगा।"
+      },
+      {
+        "q": "यदि बिल्डर लोडिंग को सुपर बिल्ट‑अप के प्रतिशत में बताता है तो?",
+        "a": "टूल दोनों तरीके दिखाता है; आप (कॉमन एरिया ÷ सुपर बिल्ट‑अप) × 100 से भी लोडिंग देख सकते हैं।"
       }
     ]
   },
@@ -46,7 +54,7 @@
         "@context": "https://schema.org",
         "@type": "WebApplication",
         "name": "Carpet area price per sq ft calculator",
-        "description": "Calculate loading, common area and price per carpet sq ft using super built‑up and carpet figures.",
+        "description": "Calculate loading, common area and price per carpet sq ft using super built‑up and carpet values.",
         "url": "https://tools.changelense.in/tools/carpet-area/",
         "inLanguage": "en-IN",
         "applicationCategory": "FinanceApplication",
@@ -60,26 +68,34 @@
         "mainEntity": [
           {
             "@type": "Question",
-            "name": "What is loading and why does it matter?",
+            "name": "What does loading represent in the calculation?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "Loading shows how much extra space is included in the super built‑up area compared to the carpet area. A higher loading means the buyer pays for common areas that are not usable."
+              "text": "Loading shows the proportion of common area relative to the carpet area. It is calculated as ((super built‑up – carpet) ÷ carpet) × 100, expressed as [[loading]]."
             }
           },
           {
             "@type": "Question",
-            "name": "How is price per carpet sq ft calculated?",
+            "name": "How is the price per carpet square foot different from the advertised price per super built‑up foot?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "The tool divides the total price by the carpet area to give [[rate_carpet]]. This lets you compare flats on the same usable size."
+              "text": "Price per carpet sq ft uses the carpet area [[carpet]] in the denominator, giving the cost of the space the buyer actually uses. The advertised price per super built‑up foot uses [[sba]] and spreads the price over a larger area, so the per‑foot figure appears lower."
             }
           },
           {
             "@type": "Question",
-            "name": "Does the calculator include parking or GST?",
+            "name": "Can I use the calculator for projects that include parking in the built‑up area?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "No. It uses only the area × rate. Additional charges like parking, GST, stamp duty are extra and should be added separately."
+              "text": "The calculator only works with the super built‑up and carpet figures you enter. Parking, GST, stamp duty and other charges are not part of the calculation and must be added separately."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "What if the builder reports loading as a share of super built‑up?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "The tool also shows loading calculated as (common area ÷ super built‑up) × 100, so you can see both perspectives."
             }
           }
         ]
@@ -104,26 +120,34 @@
         "mainEntity": [
           {
             "@type": "Question",
-            "name": "लोडिंग क्या है और यह क्यों महत्वपूर्ण है?",
+            "name": "लोडिंग का मतलब क्या है?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "लोडिंग बताती है कि सुपर बिल्ट‑अप एरिया में कारपेट एरिया की तुलना में कितना अतिरिक्त स्पेस शामिल है। अधिक लोडिंग का मतलब है खरीदार को गैर‑उपयोगी हिस्से के लिए भी भुगतान करना पड़ता है।"
+              "text": "लोडिंग दर्शाता है कि कारपेट एरिया की तुलना में साझा क्षेत्र कितना है। यह ((सुपर बिल्ट‑अप – कारपेट) ÷ कारपेट) × 100 से निकाला जाता है, यानी [[loading]]।"
             }
           },
           {
             "@type": "Question",
-            "name": "कारपेट प्रति वर्ग फ़ुट कीमत कैसे निकाली जाती है?",
+            "name": "कारपेट प्रति वर्ग फ़ुट कीमत और सुपर बिल्ट‑अप प्रति वर्ग फ़ुट कीमत में क्या अंतर है?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "कैल्कुलेटर कुल कीमत को कारपेट एरिया से भाग देता है, जिससे [[rate_carpet]] मिलती है। यह समान आकार के फ्लैट की तुलना में मदद करती है।"
+              "text": "कारपेट कीमत कुल कीमत को [[carpet]] से भाग देती है, जिससे खरीदार को मिलने वाली वास्तविक जगह की लागत मिलती है। सुपर बिल्ट‑अप कीमत कुल कीमत को [[sba]] से भाग देती है, इसलिए प्रति फुट कम दिखती है।"
             }
           },
           {
             "@type": "Question",
-            "name": "क्या इस कैलकुलेटर में पार्किंग या GST शामिल है?",
+            "name": "क्या मैं इस टूल में पार्किंग या GST को शामिल कर सकता हूँ?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "नहीं। यह केवल एरिया × दर से कुल कीमत लेता है। अतिरिक्त खर्च अलग से जोड़ने होंगे।"
+              "text": "नहीं, टूल केवल सुपर बिल्ट‑अप, कारपेट और कुल कीमत पर काम करता है। पार्किंग, GST, स्टाम्प ड्यूटी आदि को अलग से जोड़ना होगा।"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "यदि बिल्डर लोडिंग को सुपर बिल्ट‑अप के प्रतिशत में बताता है तो?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "टूल दोनों तरीके दिखाता है; आप (कॉमन एरिया ÷ सुपर बिल्ट‑अप) × 100 से भी लोडिंग देख सकते हैं।"
             }
           }
         ]
