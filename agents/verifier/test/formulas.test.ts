@@ -53,6 +53,7 @@ describe('selectEntries', () => {
     expect(selectEntries(['tools-core/src/numbers.ts']).entries.map((e) => e.id)).toEqual([
       'emi',
       'commission',
+      'area',
     ]);
   });
   it('reports formula files without a registered known-answer fixture', () => {
@@ -186,5 +187,26 @@ describe('sampling', () => {
     expect(allocate(10, 1)).toEqual([10]);
     expect(allocate(10, 3)).toEqual([4, 3, 3]);
     expect(allocate(10, 0)).toEqual([]);
+  });
+});
+
+describe('area entry', () => {
+  it('maps the area source, data and fixture files, and our run reproduces every known answer', () => {
+    expect(selectEntries(['tools-core/src/area.ts']).entries.map((e) => e.id)).toEqual(['area']);
+    expect(selectEntries(['data/land-units/regional.json']).entries.map((e) => e.id)).toEqual([
+      'area',
+    ]);
+    const e = entry('area');
+    const doc = JSON.parse(read(e.fixture)) as { cases: Array<Record<string, unknown>> };
+    const cases = loadCases(e, read);
+    expect(cases).toHaveLength(doc.cases.length);
+    cases.forEach((c, i) => {
+      expect(e.fields(c.input)).toEqual(['result']);
+      const ours = runOurs(e, c.input);
+      expect('values' in ours && ours.values.result).toBeCloseTo(doc.cases[i]?.expect as number, 6);
+    });
+    expect(runOurs(e, { value: 1, from: 'acre', to: 'bigha' })).toEqual({
+      error: 'unknown area unit bigha',
+    });
   });
 });

@@ -71,6 +71,23 @@ function oracleCommission(i: CommIn): Record<string, number> {
 }
 
 /** An LLM that answers formula prompts with the oracle (optionally skewed) and claims prompts with `claims`. */
+/** Independent oracle: unit sizes in sq ft as the cited sources state them. */
+const AREA_SQ_FT: Record<string, number> = {
+  sq_ft: 1,
+  sq_yd: 9,
+  sq_m: 1 / 0.09290304,
+  acre: 43560,
+  hectare: 10000 / 0.09290304,
+  guntha: 1089,
+  cent: 435.6,
+  ground: 2400,
+  marla: 272.25,
+  kanal: 5445,
+};
+function oracleArea(i: { value: number; from: string; to: string }): Record<string, number> {
+  return { result: (i.value * (AREA_SQ_FT[i.from] ?? NaN)) / (AREA_SQ_FT[i.to] ?? NaN) };
+}
+
 function scriptedLlm(
   opts: { skew?: (id: string, call: number) => number; claims?: unknown; family?: string } = {},
 ): LlmClient & { requests: LlmRequest[] } {
@@ -91,7 +108,9 @@ function scriptedLlm(
           results: cases.map((c) => {
             const v = c.id.startsWith('emi')
               ? oracleEmi(c.input as Record<string, number>)
-              : oracleCommission(c.input as unknown as CommIn);
+              : c.id.startsWith('area')
+                ? oracleArea(c.input as { value: number; from: string; to: string })
+                : oracleCommission(c.input as unknown as CommIn);
             const skew = opts.skew?.(c.id, formulaCalls) ?? 0;
             return {
               id: c.id,
@@ -338,7 +357,7 @@ describe('verify — formulas (PROCEDURE step 2)', () => {
     const b = await run(files);
     expect(a.r.report.cases.map((c) => c.input)).toEqual(b.r.report.cases.map((c) => c.input));
     expect(new Set(a.r.report.cases.map((c) => c.formula))).toEqual(
-      new Set(['computeEmi', 'computeCommission']),
+      new Set(['computeEmi', 'computeCommission', 'convertArea']),
     );
     expect(a.r.status.state).toBe('success');
   });
