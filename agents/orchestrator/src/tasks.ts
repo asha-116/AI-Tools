@@ -1,7 +1,7 @@
 // PROCEDURE steps 2 and 4: candidate tasks from the deterministic state, labels, ranking and
 // the Issue body. Pure functions.
 
-import { MAX_ISSUES, type Candidate, type TaskIssue } from '../schema.js';
+import { BUILDER_TYPES, MAX_ISSUES, type Candidate, type TaskIssue } from '../schema.js';
 import type { StaleData, WorkflowRun } from './state.js';
 
 export type TaskSource = 'state' | 'llm';
@@ -23,7 +23,11 @@ export function taskLabels(c: Candidate): string[] {
 }
 
 export function toTask(c: Candidate, source: TaskSource): Task {
-  return { ...c, source, labels: taskLabels(c) };
+  // The Builder only does calculator/template work; anything else would bounce back to the
+  // owner as "no worked examples", so it goes to the engineer instead.
+  const builderType = (BUILDER_TYPES as readonly string[]).includes(c.type);
+  const fixed = c.agent === 'builder' && !builderType ? { ...c, agent: 'engineer' as const } : c;
+  return { ...fixed, source, labels: taskLabels(fixed) };
 }
 
 /** Goal impact ÷ effort. */
@@ -59,7 +63,7 @@ export function stateTasks(state: { failing: WorkflowRun[]; staleData: StaleData
       toTask(
         {
           title: shortTitle(`Fix failing workflow: ${w.name}`),
-          agent: 'builder',
+          agent: 'engineer',
           type: 'infra',
           goal: 'Keep CI and scheduled jobs green so agents and deploys keep working.',
           acceptance: [
@@ -83,7 +87,7 @@ export function stateTasks(state: { failing: WorkflowRun[]; staleData: StaleData
       toTask(
         {
           title: shortTitle(`Re-verify ${d.path} (last verified ${d.last_verified})`),
-          agent: 'builder',
+          agent: 'engineer',
           type: 'data',
           goal: 'Rates are data with a source and a fresh last_verified date (AGENTS.md rule 6).',
           acceptance: [

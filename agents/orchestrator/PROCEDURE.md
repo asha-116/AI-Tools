@@ -22,7 +22,9 @@ Daily cron (06:00 IST = 00:30 UTC) and `workflow_dispatch`.
 2. Draft candidate tasks that advance the current goals (LLM, schema-validated).
 3. De-duplicate against open Issues (title similarity + labels). Drop duplicates.
 4. Rank by goal impact ÷ effort; keep ≤ 5. Each gets: agent label, `type:*`, goal, acceptance
-   criteria, inputs/sources, token budget.
+   criteria, inputs/sources, token budget. Only `agent:builder` (calculator/template work,
+   type `tool` or `product`) or `agent:engineer` (everything else, for a human or coding
+   session): the other agents run on their own schedules and never read Issues.
 5. Create Issues (skipped under `DRY_RUN`).
 6. Write `company/reports/daily/<YYYY-MM-DD>.md`: yesterday's merged PRs, new Issues, blockers,
    owner queue, token/Actions usage — open as a PR on `agent/orchestrator/<date>`.
@@ -35,7 +37,7 @@ Daily cron (06:00 IST = 00:30 UTC) and `workflow_dispatch`.
   "issues": [
     {
       "title": "string ≤ 80",
-      "agent": "builder|qa|…",
+      "agent": "builder|engineer",
       "type": "tool|product|content|data|infra|idea",
       "goal": "string",
       "acceptance": ["string"],

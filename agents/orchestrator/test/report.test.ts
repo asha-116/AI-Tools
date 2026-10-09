@@ -105,7 +105,7 @@ describe('renderReport', () => {
     expect(md).toContain('**dry run** (nothing was written to GitHub)');
     expect(md).toContain('- [#7](https://github.com/o/r/issues/7) feat: EMI / page');
     expect(md).toContain(
-      '- (dry run) Add Hindi FAQ to the EMI page — `agent:builder`, `type:content`, `priority:high`',
+      '- (dry run) Add Hindi FAQ to the EMI page — `agent:engineer`, `type:content`, `priority:high`',
     );
     expect(md).toContain('- [#42](https://x/42) Add Hindi FAQ');
     expect(md).toContain('- #43 Add Hindi FAQ');

@@ -7,7 +7,7 @@ import type { Candidate } from '../schema.js';
 export function candidate(over: Partial<Candidate> = {}): Candidate {
   return {
     title: 'Add Hindi FAQ to the EMI page',
-    agent: 'builder',
+    agent: 'engineer',
     type: 'content',
     goal: 'Collect 50 waitlist sign-ups',
     acceptance: ['FAQ renders in EN and HI'],

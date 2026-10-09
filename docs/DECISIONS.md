@@ -340,6 +340,11 @@ NOTHING`), so duplicates and both events for one payment are harmless. It stores
   free-tier keys, keep the App's permissions minimal, and review agent PRs before they get the
   `labeled` trigger.
 - **Status:** Accepted for dry-run (2026-10-06).
+- **Update 2026-10-08:** the first live Orchestrator run gave the Builder a non-calculator task
+  (a config script), so the Builder escalated it back to the owner ("no worked examples"), and
+  gave QA a task QA never reads. Orchestrator Issues now go only to `builder` (type `tool` or
+  `product`) or `engineer` (a human or coding session); other types are re-assigned in code,
+  and the prompt says which agents already run on their own schedule.
 
 ### ADR-031 — Support: templates only, every refund to the owner, no inbox yet
 
