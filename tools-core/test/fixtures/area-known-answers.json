@@ -1,0 +1,150 @@
+{
+  "$comment": "Known-answer cases for land-area unit conversion. Standard units follow exact definitions (international yard of 1959 = 0.9144 m; acre = 4,840 sq yd; hectare = 10,000 m²). Regional units use the values published by the cited sites, found via web search on 2026-10-09 (direct fetch blocked in the build environment); they stay draft until a person checks a state source. Every figure was recomputed independently.",
+  "accessed": "2026-10-09",
+  "cases": [
+    {
+      "name": "1 acre in square feet",
+      "value": 1,
+      "from": "acre",
+      "to": "sq_ft",
+      "expect": 43560,
+      "sources": [
+        "https://en.wikipedia.org/wiki/International_yard_and_pound",
+        "https://www.nist.gov/node/1582061"
+      ],
+      "quote": "1 acre = 4840 square yards … 43,560 square feet"
+    },
+    {
+      "name": "1 acre in square metres",
+      "value": 1,
+      "from": "acre",
+      "to": "sq_m",
+      "expect": 4046.8564224,
+      "sources": ["https://proofwiki.org/wiki/Definition:Acre/Conversion_Factors"],
+      "quote": "the international acre is exactly 4046.8564224 square metres"
+    },
+    {
+      "name": "1 hectare in acres",
+      "value": 1,
+      "from": "hectare",
+      "to": "acre",
+      "expect": 2.4710538147,
+      "sources": ["https://proofwiki.org/wiki/Definition:Acre/Conversion_Factors"],
+      "quote": "A hectare is a metric unit of area equal to 10,000 square meters"
+    },
+    {
+      "name": "1 gaj (square yard) in square feet",
+      "value": 1,
+      "from": "sq_yd",
+      "to": "sq_ft",
+      "expect": 9,
+      "sources": ["https://1acre.in/land-unit-converter/guntha-to-sqft"],
+      "quote": "One gaj equals 1 square yard, which is 9 square feet."
+    },
+    {
+      "name": "200 gaj plot in square metres",
+      "value": 200,
+      "from": "sq_yd",
+      "to": "sq_m",
+      "expect": 167.225472,
+      "sources": ["https://en.wikipedia.org/wiki/International_yard_and_pound"],
+      "quote": "The agreement defined the yard as exactly 0.9144 meters"
+    },
+    {
+      "name": "1 guntha in square feet",
+      "value": 1,
+      "from": "guntha",
+      "to": "sq_ft",
+      "expect": 1089,
+      "sources": [
+        "https://1acre.in/land-unit-converter/guntha-to-sqft",
+        "https://www.bajajfinserv.in/guntha-to-square-feet",
+        "https://www.tatacapital.com/calculator/guntha-to-square-feet.html"
+      ],
+      "quote": "The guntha is 1,089 sq ft … One acre equals … 40 gunthas"
+    },
+    {
+      "name": "1 acre in gunthas",
+      "value": 1,
+      "from": "acre",
+      "to": "guntha",
+      "expect": 40,
+      "sources": ["https://1acre.in/land-unit-converter/acre-to-guntha"],
+      "quote": "One acre equals 100 cents, 40 gunthas, or 8 kanals."
+    },
+    {
+      "name": "1 cent in square feet",
+      "value": 1,
+      "from": "cent",
+      "to": "sq_ft",
+      "expect": 435.6,
+      "sources": [
+        "https://1acre.in/land-unit-converter/cent-to-sqft",
+        "https://www.tatacapital.com/calculator/cent-to-ground.html"
+      ],
+      "quote": "A cent is 1/100 of an acre, or 435.6 square feet."
+    },
+    {
+      "name": "1 ground in square feet",
+      "value": 1,
+      "from": "ground",
+      "to": "sq_ft",
+      "expect": 2400,
+      "sources": [
+        "https://housing.com/calculators/ground-to-square-feet",
+        "https://www.tatacapital.com/calculator/ground-to-square-feet.html"
+      ],
+      "quote": "one ground is commonly taken as 2400 square foot"
+    },
+    {
+      "name": "1 ground in cents",
+      "value": 1,
+      "from": "ground",
+      "to": "cent",
+      "expect": 5.5096418733,
+      "sources": [
+        "https://community.verified.realestate/article/land-measurement-units-in-tamil-nadu-ground-cent-acre-hectare-kuzhi-ma-veli-and-official-record-conversions-explained/"
+      ],
+      "quote": "approx. 5.51 cents per ground"
+    },
+    {
+      "name": "1 marla in square feet",
+      "value": 1,
+      "from": "marla",
+      "to": "sq_ft",
+      "expect": 272.25,
+      "sources": [
+        "https://www.bajajfinserv.in/marla-to-square-feet",
+        "https://1acre.in/land-unit-converter/punjab"
+      ],
+      "quote": "1 Marla = 272.25 sq.ft."
+    },
+    {
+      "name": "1 kanal in marlas",
+      "value": 1,
+      "from": "kanal",
+      "to": "marla",
+      "expect": 20,
+      "sources": ["https://indialandconverter.in/punjab/ludhiana/convert-kanal-to-marla"],
+      "quote": "1 kanal = 20 marla"
+    },
+    {
+      "name": "1 kanal in square feet",
+      "value": 1,
+      "from": "kanal",
+      "to": "sq_ft",
+      "expect": 5445,
+      "sources": ["https://1acre.in/land-unit-converter/haryana"],
+      "quote": "a kanal at 5,445 square feet (505.86 square metres)"
+    },
+    {
+      "name": "1 acre in kanals",
+      "value": 1,
+      "from": "acre",
+      "to": "kanal",
+      "expect": 8,
+      "sources": ["https://1acre.in/land-unit-converter/acre-to-guntha"],
+      "quote": "One acre equals 100 cents, 40 gunthas, or 8 kanals."
+    }
+  ]
+}

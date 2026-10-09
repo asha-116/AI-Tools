@@ -1,0 +1,203 @@
+---
+import { strings, type Lang } from '../../i18n/strings';
+import { ALL_UNITS } from './data';
+import meta from './meta.json';
+import { DEFAULT_STATE, evaluate, formatArea, visibleUnits } from './logic';
+import { areaStrings } from './strings';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = areaStrings[lang];
+const common = strings[lang];
+const label = (u: (typeof ALL_UNITS)[number]) =>
+  (lang === 'hi' ? u.label_hi : u.label_en) + (u.verified ? '' : ` ${t.draftSuffix}`);
+// Server-render the default result (verified units only) so the page works without JavaScript.
+const live = visibleUnits(ALL_UNITS, false);
+const initial = evaluate(live, DEFAULT_STATE);
+const valueOf = (id: string) =>
+  initial.ok ? formatArea(initial.rows.find((r) => r.id === id)?.value ?? 0) : '—';
+const clientStrings = { share: t.share, shareCopied: t.shareCopied };
+---
+
+<article class="tool">
+  <p class="crumb"><a href={lang === 'en' ? '/' : '/hi/'}>← {t.backHome}</a></p>
+  <h1>{t.h1}</h1>
+  <p class="lead">{t.lead}</p>
+
+  <form id="area-form" class="card" data-strings={JSON.stringify(clientStrings)} novalidate>
+    <div class="field">
+      <label for="area-value">{t.valueLabel}</label>
+      <div class="row">
+        <input
+          id="area-value"
+          name="value"
+          inputmode="decimal"
+          autocomplete="off"
+          value={DEFAULT_STATE.value}
+          aria-describedby="area-value-error"
+        />
+        <select name="from" aria-label={t.unitLabel}>
+          {
+            ALL_UNITS.map((u) => (
+              <option
+                value={u.id}
+                selected={u.id === DEFAULT_STATE.from}
+                hidden={!u.verified}
+                disabled={!u.verified}
+                data-draft={u.verified ? undefined : '1'}
+              >
+                {label(u)}
+              </option>
+            ))
+          }
+        </select>
+      </div>
+      <p id="area-value-error" class="error" data-error="value" hidden>{t.errorValue}</p>
+    </div>
+  </form>
+
+  <section class="card results" aria-live="polite">
+    <h2>{t.resultsTitle}</h2>
+    <dl>
+      {
+        ALL_UNITS.map((u) => (
+          <div data-row={u.id} hidden={!u.verified} data-draft={u.verified ? undefined : '1'}>
+            <dt>{label(u)}</dt>
+            <dd data-out={u.id}>{u.verified ? valueOf(u.id) : '—'}</dd>
+          </div>
+        ))
+      }
+    </dl>
+    <p class="muted" data-draft-note hidden>{t.draftNote}</p>
+    <p class="muted">{t.comingSoon}</p>
+    <button type="button" class="button secondary" id="area-share">{t.share}</button>
+  </section>
+
+  <section class="card">
+    <h2>{t.formulaTitle}</h2>
+    <p class="formula"><code>{meta.formula}</code></p>
+    <p>{t.formulaWhere}</p>
+    <h2>{t.assumptionsTitle}</h2>
+    <ul>
+      {t.assumptions.map((a) => <li>{a}</li>)}
+    </ul>
+    <p class="disclaimer"><strong>{common.toolDisclaimer}</strong></p>
+  </section>
+</article>
+
+<script>
+  import { initArea } from './client';
+  initArea(document, window);
+</script>
+
+<style>
+  .tool {
+    max-width: 40rem;
+  }
+  .crumb {
+    margin: 16px 0 0;
+  }
+  h1 {
+    font-size: clamp(1.75rem, 6vw, 2.25rem);
+    line-height: 1.2;
+    margin: 8px 0;
+  }
+  h2 {
+    font-size: 1.1875rem;
+    margin: 0 0 8px;
+  }
+  .lead,
+  .muted {
+    color: var(--muted);
+  }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+    margin: 16px 0;
+  }
+  .card h2 + p,
+  .card ul {
+    margin-top: 0;
+  }
+  .field {
+    display: grid;
+    gap: 4px;
+  }
+  .row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 8px;
+  }
+  input,
+  select {
+    min-height: 48px;
+    padding: 10px 12px;
+    font: inherit;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--bg);
+    color: var(--fg);
+    width: 100%;
+  }
+  select {
+    min-width: 0;
+  }
+  input[aria-invalid='true'] {
+    border-color: var(--error);
+    border-width: 2px;
+  }
+  .error {
+    color: var(--error);
+    margin: 0;
+    font-size: 0.9375rem;
+  }
+  dl {
+    display: grid;
+    gap: 8px;
+    margin: 0 0 12px;
+  }
+  dl div {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    border-top: 1px solid var(--border);
+    padding-top: 8px;
+  }
+  dl div[hidden] {
+    display: none;
+  }
+  dt {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+  dd {
+    flex: 0 0 auto;
+    margin: 0;
+    font-weight: 600;
+    text-align: right;
+    white-space: nowrap;
+  }
+  .formula code {
+    font-size: 1.0625rem;
+    overflow-wrap: anywhere;
+  }
+  .button {
+    min-height: 48px;
+    padding: 12px 20px;
+    border: 2px solid var(--brand);
+    border-radius: var(--radius);
+    background: transparent;
+    color: var(--brand);
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .disclaimer {
+    margin-bottom: 0;
+  }
+</style>

@@ -71,6 +71,23 @@ function oracleCommission(i: CommIn): Record<string, number> {
 }
 
 /** An LLM that answers formula prompts with the oracle (optionally skewed) and claims prompts with `claims`. */
+/** Independent oracle: unit sizes in sq ft as the cited sources state them. */
+const AREA_SQ_FT: Record<string, number> = {
+  sq_ft: 1,
+  sq_yd: 9,
+  sq_m: 1 / 0.09290304,
+  acre: 43560,
+  hectare: 10000 / 0.09290304,
+  guntha: 1089,
+  cent: 435.6,
+  ground: 2400,
+  marla: 272.25,
+  kanal: 5445,
+};
+function oracleArea(i: { value: number; from: string; to: string }): Record<string, number> {
+  return { result: (i.value * (AREA_SQ_FT[i.from] ?? NaN)) / (AREA_SQ_FT[i.to] ?? NaN) };
+}
+
 function scriptedLlm(
   opts: { skew?: (id: string, call: number) => number; claims?: unknown; family?: string } = {},
 ): LlmClient & { requests: LlmRequest[] } {
@@ -91,7 +108,9 @@ function scriptedLlm(
           results: cases.map((c) => {
             const v = c.id.startsWith('emi')
               ? oracleEmi(c.input as Record<string, number>)
-              : oracleCommission(c.input as unknown as CommIn);
+              : c.id.startsWith('area')
+                ? oracleArea(c.input as { value: number; from: string; to: string })
+                : oracleCommission(c.input as unknown as CommIn);
             const skew = opts.skew?.(c.id, formulaCalls) ?? 0;
             return {
               id: c.id,
@@ -338,7 +357,7 @@ describe('verify — formulas (PROCEDURE step 2)', () => {
     const b = await run(files);
     expect(a.r.report.cases.map((c) => c.input)).toEqual(b.r.report.cases.map((c) => c.input));
     expect(new Set(a.r.report.cases.map((c) => c.formula))).toEqual(
-      new Set(['computeEmi', 'computeCommission']),
+      new Set(['computeEmi', 'computeCommission', 'convertArea']),
     );
     expect(a.r.status.state).toBe('success');
   });
@@ -486,6 +505,57 @@ describe('verify — claims and text (PROCEDURE step 3)', () => {
       'missing disclaimer: site/src/content/en/a.md',
     ]);
     expect(r.status.state).toBe('failure');
+  });
+
+  it('a claim with no source is "check by hand" when its file cites sources, else unsourced', async () => {
+    const noSource = (file: string) => ({
+      file,
+      claim: '1 cent = 435.6 sq ft',
+      source: '',
+      status: 'unsourced',
+      note: '',
+    });
+    const llm = scriptedLlm({
+      claims: {
+        claims: [noSource('data/x.json'), noSource('site/src/content/en/a.md')],
+        advice: [],
+        missing_disclaimer: [],
+      },
+    });
+    const github = gh({
+      'site/src/content/en/a.md': 'For estimation only — verify with a professional.',
+    });
+    const { r } = await run(
+      [
+        {
+          filename: 'data/x.json',
+          status: 'added',
+          patch: '+ "sources": [{ "url": "https://1acre.in/land-unit-converter/cent-to-sqft" }]',
+        },
+        { filename: 'site/src/content/en/a.md', status: 'added', patch: '+A cent is 435.6 sq ft' },
+      ],
+      { llm, github },
+    );
+    expect(r.report.claims.map((c) => c.status)).toEqual(['unchecked', 'unsourced']);
+    expect(r.report.claims[0]?.note).toContain('check this claim against them by hand');
+    expect(r.report.reasons).toEqual([
+      'unsourced claim (site/src/content/en/a.md): 1 cent = 435.6 sq ft',
+    ]);
+  });
+
+  it('ignores model disclaimer findings outside published content', async () => {
+    const llm = scriptedLlm({
+      claims: {
+        claims: [],
+        advice: [],
+        missing_disclaimer: [{ file: 'data/x.json' }],
+      },
+    });
+    const { r } = await run([{ filename: 'data/x.json', status: 'added', patch: '+ "a": 1' }], {
+      llm,
+    });
+    expect(r.report.reasons).toEqual([]);
+    expect(r.status.state).toBe('success');
   });
 
   it('accepts EN or HI disclaimers and passes clean text', async () => {

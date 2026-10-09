@@ -351,6 +351,16 @@ NOTHING`), so duplicates and both events for one payment are harmless. It stores
   invented `public/` and `tests/` paths. Now every Orchestrator Issue goes to `agent:engineer`,
   who quotes the examples and re-labels it `agent:builder`; the prompt gets a generated
   "what already exists" list (calculators, templates, real paths).
+- **Update 2026-10-09 (Verifier arithmetic):** on its first live formula run
+  (asha-116/AI-Tools#33) the Verifier failed correct EMI code: Gemini's own EMI arithmetic was
+  off by up to ₹4,600 (₹1 crore, 10.5%, 120 months: banks and our code say ₹1,34,935).
+  The verifier model now answers each field as an arithmetic expression that the Verifier
+  evaluates exactly (`agents/verifier/src/expr.ts`, no identifiers or code). The model still
+  derives the formula independently. Unsourced-claim noise was also cut: a claim with no source
+  in a file that cites sources is "check by hand", and repo-process statements are not claims. READMEs
+  are not claim-checked, and "missing disclaimer" applies only to `site/src/content/`. The
+  AI client now logs a provider's short error code (never its message) and retries Groq's
+  `json_validate_failed` once.
 
 ### ADR-031 — Support: templates only, every refund to the owner, no inbox yet
 
@@ -393,3 +403,16 @@ NOTHING`), so duplicates and both events for one payment are harmless. It stores
   to draft. That is intended: the alternative is the site showing stale rates as verified.
 - **Status:** Accepted (2026-10-09). Written in Node like the other repo checks, not the Python
   test the Issue suggested (the repo has no Python toolchain).
+
+### ADR-034 — Land area converter: standard units live, regional units draft
+
+- **Context:** asha-116/AI-Tools#26 asked for a land-unit converter. Standard units have exact
+  definitions; regional units (guntha, cent, ground, marla, kanal, bigha…) vary by state, and the
+  build environment could only find commercial converter sites, not state government sources.
+- **Decision:** unit sizes are data in `data/land-units/` (base unit m²). `standard.json`
+  (sq ft, gaj, sq m, acre, hectare) is `verified`, as these are definitions, not rates.
+  `regional.json` (guntha, cent, ground, marla, kanal) is `draft`, hidden on the live site and
+  visible on `#drafts=1` for owner review, like stamp duty. Bigha, biswa and katha are left out.
+  14 known-answer cases with cited sources; the formula is one line in `tools-core/src/area.ts`.
+- **Status:** Accepted (2026-10-09). Owner: verify `regional.json` against state sources and
+  have a person review the Hindi labels before regional units go live.

@@ -1,0 +1,62 @@
+{
+  "$comment": "Regional land units. Values are from commercial converter sites found via web search on 2026-10-09; no state government source has been checked yet, so the file stays draft and the site hides these units. Before setting status to verified, a person must check each unit against the state's revenue department or land records and name themselves in verified_by. Bigha, biswa and katha are left out on purpose: their size changes from state to state and even district to district.",
+  "dataset": "land-units",
+  "status": "draft",
+  "verified_by": "not verified",
+  "last_verified": "2026-10-09",
+  "sources": [
+    {
+      "url": "https://1acre.in/land-unit-converter/guntha-to-sqft",
+      "title": "1acre.in land unit converter"
+    },
+    {
+      "url": "https://www.bajajfinserv.in/marla-to-square-feet",
+      "title": "Bajaj Finserv: marla to square feet"
+    },
+    {
+      "url": "https://housing.com/calculators/ground-to-square-feet",
+      "title": "Housing.com: ground to square feet"
+    },
+    {
+      "url": "https://www.tatacapital.com/calculator/guntha-to-square-feet.html",
+      "title": "Tata Capital: guntha to square feet"
+    }
+  ],
+  "units": [
+    {
+      "id": "guntha",
+      "label_en": "Guntha (Maharashtra, Karnataka, Telangana, Gujarat)",
+      "label_hi": "गुंठा (महाराष्ट्र, कर्नाटक, तेलंगाना, गुजरात)",
+      "sq_ft": 1089,
+      "sq_m": 101.17141056
+    },
+    {
+      "id": "cent",
+      "label_en": "Cent (Kerala, Tamil Nadu, Andhra Pradesh, Karnataka)",
+      "label_hi": "सेंट (केरल, तमिलनाडु, आंध्र प्रदेश, कर्नाटक)",
+      "sq_ft": 435.6,
+      "sq_m": 40.468564224
+    },
+    {
+      "id": "ground",
+      "label_en": "Ground (Tamil Nadu)",
+      "label_hi": "ग्राउंड (तमिलनाडु)",
+      "sq_ft": 2400,
+      "sq_m": 222.967296
+    },
+    {
+      "id": "marla",
+      "label_en": "Marla (Punjab, Haryana)",
+      "label_hi": "मरला (पंजाब, हरियाणा)",
+      "sq_ft": 272.25,
+      "sq_m": 25.29285264
+    },
+    {
+      "id": "kanal",
+      "label_en": "Kanal (Punjab, Haryana)",
+      "label_hi": "कनाल (पंजाब, हरियाणा)",
+      "sq_ft": 5445,
+      "sq_m": 505.8570528
+    }
+  ]
+}

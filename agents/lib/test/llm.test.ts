@@ -221,6 +221,43 @@ describe('createLlm().chat', () => {
     expect((await llm.chat({ messages: msg })).provider).toBe('one');
   });
 
+  it('logs only the error code of a 400, and retries a failed JSON check once', async () => {
+    const bad = () =>
+      jsonResponse(
+        {
+          error: {
+            message: 'prompt text: hello',
+            type: 'invalid_request_error',
+            code: 'json_validate_failed',
+          },
+        },
+        400,
+      );
+    const f = fakeFetch((req) =>
+      req.url.includes('one.test') ? bad() : jsonResponse(completion('two')),
+    );
+    const log = memoryLogger('t');
+    const llm = createLlm({ env: ENV, providers: P, fetch: f, sleep: noSleep, logger: log });
+    expect((await llm.chat({ messages: msg })).provider).toBe('two');
+    expect(f.calls.filter((c) => c.url.includes('one.test'))).toHaveLength(2);
+    const first = log.lines.find((l) => l.event === 'llm.retry');
+    expect(first).toMatchObject({ provider: 'one', status: 400, code: 'json_validate_failed' });
+    expect(JSON.stringify(log.lines)).not.toContain('prompt text');
+    const fallback = log.lines.find((l) => l.event === 'llm.fallback');
+    expect(fallback?.['reason']).toBe('HTTP 400 json_validate_failed');
+  });
+
+  it('ignores error codes that are not short identifiers, and non-JSON error bodies', async () => {
+    const f = fakeFetch((req) =>
+      req.url.includes('one.test')
+        ? jsonResponse({ error: { code: 'has spaces and a prompt' } }, 400)
+        : new Response('<html>', { status: 422 }),
+    );
+    const llm = createLlm({ env: ENV, providers: P, fetch: f, sleep: noSleep });
+    const err = (await llm.chat({ messages: msg }).catch((e: unknown) => e)) as LlmUnavailable;
+    expect(err.attempts.map((a) => a.reason)).toEqual(['HTTP 400', 'HTTP 422']);
+  });
+
   it('does not retry a 401; moves straight to the next provider', async () => {
     const f = fakeFetch((req) =>
       req.url.includes('one.test') ? jsonResponse({}, 401) : jsonResponse(completion('ok')),

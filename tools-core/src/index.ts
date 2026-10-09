@@ -36,3 +36,4 @@ export {
   type LedgerPaymentStatus,
   type LedgerTotals,
 } from './templates.js';
+export { AREA_LIMITS, convertArea, convertToAll, type AreaUnit } from './area.js';

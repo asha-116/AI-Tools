@@ -44,6 +44,8 @@ const en = {
   emiCardSummary: 'Monthly instalment, total interest and total payment for any loan.',
   commissionCardTitle: 'Commission split calculator',
   commissionCardSummary: 'Brokerage, GST and each co-broker’s share — to the paisa.',
+  areaCardTitle: 'Land area converter',
+  areaCardSummary: 'Acres, gaj, sq ft, sq m and hectares — one area in every unit.',
   openTool: 'Open',
 };
 
@@ -90,6 +92,8 @@ const hi: Strings = {
   emiCardSummary: 'किसी भी लोन की मासिक किस्त, कुल ब्याज और कुल भुगतान।',
   commissionCardTitle: 'कमीशन बँटवारा कैलकुलेटर',
   commissionCardSummary: 'ब्रोकरेज, GST और हर को-ब्रोकर का हिस्सा — पैसे तक सटीक।',
+  areaCardTitle: 'ज़मीन का क्षेत्रफल कन्वर्टर',
+  areaCardSummary: 'एकड़, गज़, वर्ग फ़ुट, वर्ग मीटर और हेक्टेयर — एक क्षेत्रफल हर इकाई में।',
   openTool: 'खोलें',
 };
 

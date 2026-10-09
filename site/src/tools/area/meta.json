@@ -1,0 +1,8 @@
+{
+  "slug": "area",
+  "kind": "free",
+  "formula": "value in target unit = value × (size of source unit in m²) ÷ (size of target unit in m²)",
+  "knownAnswers": "tools-core/test/fixtures/area-known-answers.json",
+  "data": "data/land-units/standard.json, data/land-units/regional.json",
+  "lastReviewed": "2026-10-09"
+}

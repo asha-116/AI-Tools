@@ -192,6 +192,23 @@ function retryAfterMs(res: Response, maxDelayMs: number): number | undefined {
   return Number.isFinite(s) && s >= 0 ? Math.min(maxDelayMs, s * 1000) : undefined;
 }
 
+/**
+ * The provider's error code (e.g. Groq's `json_validate_failed`) for a 4xx other than 429, or
+ * undefined. Only a short [a-z0-9_.-] code is returned — never the message, which may echo the
+ * prompt. Every other body is drained unread.
+ */
+async function errorCode(res: Response): Promise<string | undefined> {
+  if (res.status < 400 || res.status >= 500 || res.status === 429) {
+    await res.body?.cancel().catch(() => undefined);
+    return undefined;
+  }
+  const body = (await res.json().catch(() => null)) as {
+    error?: { code?: unknown; type?: unknown };
+  } | null;
+  const raw = body?.error?.code ?? body?.error?.type;
+  return typeof raw === 'string' && /^[a-z0-9_.-]{1,60}$/i.test(raw) ? raw : undefined;
+}
+
 /** Rough token estimate for providers that omit `usage` (≈ 4 chars per token). */
 function estimateTokens(text: string): number {
   return Math.ceil(text.length / 4);
@@ -302,13 +319,19 @@ export function createLlm(options: LlmOptions): LlmClient {
           res: { text, provider: p.id, model, family: familyOf(model, p.family), usage },
         };
       }
-      last = { status: res.status, reason: `HTTP ${res.status}` };
-      // Drain the body without reading it into logs (it may echo the prompt).
-      await res.body?.cancel().catch(() => undefined);
-      const retryable = res.status === 429 || res.status >= 500;
+      // Only a short machine-readable error code is kept; the message may echo the prompt.
+      const code = await errorCode(res);
+      last = {
+        status: res.status,
+        reason: code ? `HTTP ${res.status} ${code}` : `HTTP ${res.status}`,
+      };
+      // A JSON-mode answer that failed the provider's own JSON check is random: try once more.
+      const badJson = code === 'json_validate_failed' && attempt === 0;
+      const retryable = res.status === 429 || res.status >= 500 || badJson;
       log?.warn(retryable ? 'llm.retry' : 'llm.provider_error', {
         provider: p.id,
         status: res.status,
+        ...(code ? { code } : {}),
         attempt,
       });
       if (!retryable) break;

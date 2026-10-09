@@ -5,9 +5,13 @@
 // Add an entry here when tools-core gains a function with a known-answer fixture. A changed
 // tools-core/src file without an entry fails the Verifier (it cannot be checked independently).
 
+import regionalUnits from '../../../data/land-units/regional.json' with { type: 'json' };
+import standardUnits from '../../../data/land-units/standard.json' with { type: 'json' };
 import {
   computeCommission,
   computeEmi,
+  convertArea,
+  type AreaUnit,
   type CommissionInput,
   type EmiInput,
 } from '../../../tools-core/src/index.js';
@@ -35,6 +39,17 @@ export interface FormulaEntry {
 
 /** Shared helpers: a change here re-checks every registered formula. */
 export const SHARED_SOURCES = ['tools-core/src/index.ts', 'tools-core/src/numbers.ts'];
+
+/** Unit sizes from data/land-units (our side only; the verifier model gets the description). */
+const AREA_UNITS: AreaUnit[] = [...standardUnits.units, ...regionalUnits.units].map((u) => ({
+  id: u.id,
+  sq_m: u.sq_m,
+}));
+const areaUnit = (id: unknown): AreaUnit => {
+  const u = AREA_UNITS.find((x) => x.id === id);
+  if (!u) throw new Error(`unknown area unit ${String(id)}`);
+  return u;
+};
 
 const partyCount = (input: Record<string, unknown>): number =>
   Array.isArray(input.parties) ? input.parties.length : 0;
@@ -99,6 +114,31 @@ export const FORMULAS: FormulaEntry[] = [
       r.parties.forEach((p, i) => (out[`party_${String(i + 1)}`] = p.amount));
       return out;
     },
+  },
+  {
+    id: 'area',
+    functionName: 'convertArea',
+    sourceFiles: [
+      'tools-core/src/area.ts',
+      'data/land-units/standard.json',
+      'data/land-units/regional.json',
+    ],
+    fixture: 'tools-core/test/fixtures/area-known-answers.json',
+    description: [
+      'Land-area unit conversion (source: https://en.wikipedia.org/wiki/International_yard_and_pound',
+      'and https://1acre.in/land-unit-converter/guntha-to-sqft).',
+      'Inputs: value, a non-negative area; from and to, unit ids.',
+      'Unit sizes: sq_ft = 1 square foot (1 foot = 0.3048 m exactly); sq_yd = 1 square yard',
+      '(gaj) = 9 sq ft; sq_m = 1 square metre; acre = 43,560 sq ft; hectare = 10,000 sq m;',
+      'guntha = 1,089 sq ft; cent = 435.6 sq ft; ground = 2,400 sq ft; marla = 272.25 sq ft;',
+      'kanal = 5,445 sq ft.',
+      'result = value × (size of from unit) ÷ (size of to unit). Do not round.',
+    ].join(' '),
+    toInput: (c) => ({ value: c.value, from: c.from, to: c.to }),
+    fields: () => ['result'],
+    run: (input) => ({
+      result: convertArea(input.value as number, areaUnit(input.from), areaUnit(input.to)),
+    }),
   },
 ];
 

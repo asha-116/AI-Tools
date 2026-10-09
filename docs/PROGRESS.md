@@ -14,6 +14,14 @@ templates "coming soon".
 
 ## Done
 
+- 2026-10-09 — Verifier fixes from its first live formula run: the model now writes each
+  answer as an arithmetic expression the Verifier evaluates exactly (Gemini's own EMI
+  arithmetic was wrong by up to ₹4,600); fewer false "unsourced" claims; the area converter is
+  registered for independent checks (ADR-030 update).
+- 2026-10-09 — **Land area converter** (asha-116/AI-Tools#26, ADR-034): `/tools/area/` and
+  `/hi/tools/area/` convert between sq ft, gaj, sq m, acre and hectare. Guntha, cent, ground,
+  marla and kanal are in as drafts (owner review link `#drafts=1`) until checked against state
+  sources.
 - 2026-10-09 — Orchestrator: every Issue now goes to `agent:engineer` (the Builder bounced
   asha-116/AI-Tools#26 and #28 for lack of quoted worked examples), and the prompt lists what
   already exists so it stops re-proposing done work (#27) or inventing paths (ADR-030 update).
