@@ -143,6 +143,7 @@ describe('repo reader', () => {
       'eligibility',
       'emi',
       'prepayment',
+      'rental-yield',
       'stamp-duty',
     ]);
     expect(repo.list('nope')).toEqual([]);

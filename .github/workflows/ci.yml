@@ -101,7 +101,8 @@ jobs:
   lighthouse:
     name: Lighthouse (mobile, every page ≥ 90)
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    # ~30 s per page (3 runs each): 24 pages took over 15 minutes. Raise again as pages grow.
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-node@v7

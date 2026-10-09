@@ -89,6 +89,21 @@ function oracleArea(i: { value: number; from: string; to: string }): Record<stri
   return { result: (i.value * (AREA_SQ_FT[i.from] ?? NaN)) / (AREA_SQ_FT[i.to] ?? NaN) };
 }
 
+/** Independent oracle for the rental-yield entry. */
+function oracleYield(i: Record<string, number>): Record<string, number> {
+  const inv = (i.propertyValue ?? 0) + (i.purchaseCosts ?? 0);
+  const rent = i.monthlyRent ?? 0;
+  const collected = rent * (12 - (i.vacancyMonths ?? 0));
+  const net = collected - (i.yearlyCosts ?? 0);
+  return {
+    annualRent: rent * 12,
+    collectedRent: collected,
+    netIncome: net,
+    grossYieldPercent: ((rent * 12) / inv) * 100,
+    netYieldPercent: (net / inv) * 100,
+  };
+}
+
 /** Independent oracle for the loading entry. */
 function oracleLoading(i: Record<string, number>): Record<string, number> {
   const c = i.carpet ?? 0;
@@ -154,13 +169,15 @@ function scriptedLlm(
               ? oracleEmi(c.input as Record<string, number>)
               : c.id.startsWith('area')
                 ? oracleArea(c.input as { value: number; from: string; to: string })
-                : c.id.startsWith('loading')
-                  ? oracleLoading(c.input as Record<string, number>)
-                  : c.id.startsWith('eligibility')
-                    ? oracleEligibility(c.input as Record<string, number>)
-                    : c.id.startsWith('prepayment')
-                      ? oraclePrepayment(c.input as Parameters<typeof oraclePrepayment>[0])
-                      : oracleCommission(c.input as unknown as CommIn);
+                : c.id.startsWith('rental-yield')
+                  ? oracleYield(c.input as Record<string, number>)
+                  : c.id.startsWith('loading')
+                    ? oracleLoading(c.input as Record<string, number>)
+                    : c.id.startsWith('eligibility')
+                      ? oracleEligibility(c.input as Record<string, number>)
+                      : c.id.startsWith('prepayment')
+                        ? oraclePrepayment(c.input as Parameters<typeof oraclePrepayment>[0])
+                        : oracleCommission(c.input as unknown as CommIn);
             const skew = opts.skew?.(c.id, formulaCalls) ?? 0;
             return {
               id: c.id,
@@ -413,6 +430,7 @@ describe('verify — formulas (PROCEDURE step 2)', () => {
         'computePrepayment',
         'computeEligibility',
         'computeLoading',
+        'computeRentalYield',
         'convertArea',
       ]),
     );

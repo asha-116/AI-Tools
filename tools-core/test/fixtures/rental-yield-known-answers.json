@@ -1,0 +1,47 @@
+{
+  "$comment": "Known answers for rental yield. Published worked examples found via web search on 2026-10-09 (direct fetch of the pages is blocked in the build environment). Gross yield = 12 months' rent ÷ property value; net yield = (rent actually collected − yearly costs) ÷ property value. Before income tax.",
+  "accessed": "2026-10-09",
+  "cases": [
+    {
+      "name": "₹60 lakh flat, ₹2.4 lakh rent a year: 4% gross",
+      "input": { "propertyValue": 6000000, "monthlyRent": 20000 },
+      "expect": { "grossYieldPercent": 4 },
+      "sources": ["https://www.brigadegroup.com/blog/residential/rental-yield-in-india"],
+      "quote": "a ₹60 lakh property with ₹2.4 lakh annual rent … 4%"
+    },
+    {
+      "name": "₹50 lakh flat, ₹3 lakh rent, ₹50,000 expenses: 5% net",
+      "input": { "propertyValue": 5000000, "monthlyRent": 25000, "yearlyCosts": 50000 },
+      "expect": { "netYieldPercent": 5 },
+      "sources": ["https://housing.com/news/rental-yield/"],
+      "quote": "if the annual rent is Rs 3 lakh, expenses amount to Rs 50,000, and the property value is Rs 50 lakh, the net rental yield would be 5%"
+    },
+    {
+      "name": "₹1 crore flat, ₹30,000 a month, ₹40,000 costs: 3.6% gross, 3.2% net",
+      "input": { "propertyValue": 10000000, "monthlyRent": 30000, "yearlyCosts": 40000 },
+      "expect": { "grossYieldPercent": 3.6, "netYieldPercent": 3.2 },
+      "sources": [
+        "https://www.nobroker.in/blog/buying-a-second-home-for-investment-in-india-guide/"
+      ],
+      "quote": "₹1 crore … rent ₹30,000 a month … gross yield 3.6% … net yield 3.2%"
+    },
+    {
+      "name": "Pune ₹60 lakh 2-BHK, ₹20,000 a month, half a month empty, ₹30,000 costs",
+      "input": {
+        "propertyValue": 6000000,
+        "monthlyRent": 20000,
+        "vacancyMonths": 0.5,
+        "yearlyCosts": 30000
+      },
+      "expect": {
+        "grossYieldPercent": 4,
+        "collectedRent": 230000,
+        "netIncome": 200000,
+        "netYieldPercent": 3.33
+      },
+      "tolerance": { "percent": 0.005 },
+      "sources": ["https://fermor.in/calculators/rental-yield-calculator"],
+      "quote": "₹60 lakh 2-BHK at ₹20,000 a month, with 0.5 months annual vacancy and Rs 30,000 annual society maintenance & property tax … net yield of 3.33%"
+    }
+  ]
+}

@@ -462,3 +462,16 @@ NOTHING`), so duplicates and both events for one payment are harmless. It stores
   ft). The page asks for sq ft only (sq m shown alongside); other units are in the area
   converter. "RERA" added to the QA list of English terms allowed in Hindi.
 - **Status:** Accepted (2026-10-09). Hindi text needs a human review before it is promoted.
+
+### ADR-038 — Rental yield calculator: numbers only, before tax
+
+- **Context:** third "useful tool" (owner, 2026-10-09). Agents and landlords compare rent to
+  price; sources disagree on what goes into "net" and on city benchmarks, and anything that says
+  a yield is "good" would be investment advice (AGENTS.md rule 9).
+- **Decision:** `tools-core/src/rentalYield.ts`: gross yield = 12 months' rent ÷ money put in;
+  net yield = (rent × (12 − empty months) − yearly costs) ÷ money put in, where money put in =
+  property value + optional purchase costs (stamp duty, registration, interiors). Also the
+  yearly net income and years of rent to equal the money put in. Before income tax and loan
+  interest; no benchmarks, no verdicts. Four published cases (Brigade 4% gross, Housing.com 5%
+  net, NoBroker 3.6%/3.2%, Fermor Pune 3.33% net with half a month empty).
+- **Status:** Accepted (2026-10-09). Hindi text needs a human review before it is promoted.

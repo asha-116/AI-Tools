@@ -14,6 +14,7 @@ import {
   computeEmi,
   computeLoading,
   computePrepayment,
+  computeRentalYield,
   convertArea,
   type AreaUnit,
   type CommissionInput,
@@ -21,6 +22,7 @@ import {
   type EmiInput,
   type LoadingInput,
   type PrepaymentInput,
+  type RentalYieldInput,
 } from '../../../tools-core/src/index.js';
 
 export interface FormulaCase {
@@ -215,6 +217,40 @@ export const FORMULAS: FormulaEntry[] = [
       if (r.ratePerSuperBuiltUp !== undefined) out.ratePerSuperBuiltUp = r.ratePerSuperBuiltUp;
       if (r.ratePerCarpet !== undefined) out.ratePerCarpet = r.ratePerCarpet;
       return out;
+    },
+  },
+  {
+    id: 'rental-yield',
+    functionName: 'computeRentalYield',
+    sourceFiles: ['tools-core/src/rentalYield.ts'],
+    fixture: 'tools-core/test/fixtures/rental-yield-known-answers.json',
+    description: [
+      'Gross and net rental yield on a property, before income tax',
+      '(source: https://housing.com/news/rental-yield/).',
+      'Inputs: propertyValue; monthlyRent; optional purchaseCosts, yearlyCosts and',
+      'vacancyMonths (each 0 when missing).',
+      'investment = propertyValue + purchaseCosts. annualRent = monthlyRent × 12.',
+      'collectedRent = monthlyRent × (12 − vacancyMonths). netIncome = collectedRent − yearlyCosts.',
+      'grossYieldPercent = annualRent / investment × 100.',
+      'netYieldPercent = netIncome / investment × 100. Do not round any output.',
+    ].join(' '),
+    toInput: (c) => (c.input ?? {}) as Record<string, unknown>,
+    fields: () => [
+      'annualRent',
+      'collectedRent',
+      'netIncome',
+      'grossYieldPercent',
+      'netYieldPercent',
+    ],
+    run: (input) => {
+      const r = computeRentalYield(input as unknown as RentalYieldInput);
+      return {
+        annualRent: r.annualRent,
+        collectedRent: r.collectedRent,
+        netIncome: r.netIncome,
+        grossYieldPercent: r.grossYieldPercent,
+        netYieldPercent: r.netYieldPercent,
+      };
     },
   },
   {

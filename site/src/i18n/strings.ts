@@ -52,6 +52,8 @@ const en = {
   eligibilityCardSummary: 'The largest loan and EMI a buyer can get on their income.',
   carpetCardTitle: 'Carpet area and real price per sq ft',
   carpetCardSummary: 'Loading %, common area and what each usable sq ft really costs.',
+  yieldCardTitle: 'Rental yield calculator',
+  yieldCardSummary: 'Gross and net rental yield and the yearly income from a property.',
   openTool: 'Open',
 };
 
@@ -106,6 +108,8 @@ const hi: Strings = {
   eligibilityCardSummary: 'खरीदार को उसकी आय पर मिलने वाला सबसे बड़ा लोन और EMI।',
   carpetCardTitle: 'कारपेट एरिया और प्रति वर्ग फ़ुट असली कीमत',
   carpetCardSummary: 'लोडिंग %, कॉमन एरिया और इस्तेमाल लायक हर वर्ग फ़ुट की असली कीमत।',
+  yieldCardTitle: 'रेंटल यील्ड कैलकुलेटर',
+  yieldCardSummary: 'प्रॉपर्टी की ग्रॉस और नेट रेंटल यील्ड और सालाना आय।',
   openTool: 'खोलें',
 };
 

@@ -1,0 +1,239 @@
+---
+import { strings, type Lang } from '../../i18n/strings';
+import meta from './meta.json';
+import {
+  DEFAULT_STATE,
+  evaluate,
+  formatInr,
+  formatPercent,
+  formatYears,
+  type YieldField,
+} from './logic';
+import { yieldStrings } from './strings';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = yieldStrings[lang];
+const common = strings[lang];
+// Server-render the default result so the page is useful before (or without) JavaScript.
+const initial = evaluate(DEFAULT_STATE);
+const r = initial.ok ? initial.result : null;
+const clientStrings = { share: t.share, shareCopied: t.shareCopied };
+
+type Field = { name: YieldField; label: string; error: string; mode: string };
+const propertyFields: Field[] = [
+  { name: 'propertyValue', label: t.valueLabel, error: t.errorValue, mode: 'numeric' },
+  { name: 'purchaseCosts', label: t.purchaseLabel, error: t.errorPurchase, mode: 'numeric' },
+];
+const rentFields: Field[] = [
+  { name: 'monthlyRent', label: t.rentLabel, error: t.errorRent, mode: 'numeric' },
+  { name: 'vacancyMonths', label: t.vacancyLabel, error: t.errorVacancy, mode: 'decimal' },
+  { name: 'yearlyCosts', label: t.costsLabel, error: t.errorCosts, mode: 'numeric' },
+];
+const rows: Array<[string, string, string]> = r
+  ? [
+      [t.rowInvestment, 'investment', formatInr(r.investment)],
+      [t.rowAnnualRent, 'annual', formatInr(r.annualRent)],
+      [t.rowCollected, 'collected', formatInr(r.collectedRent)],
+      [t.rowNetIncome, 'income', formatInr(r.netIncome)],
+      [t.rowYears, 'years', formatYears(r.yearsOfRent)],
+    ]
+  : [];
+---
+
+<article class="tool">
+  <p class="crumb"><a href={lang === 'en' ? '/' : '/hi/'}>← {t.backHome}</a></p>
+  <h1>{t.h1}</h1>
+  <p class="lead">{t.lead}</p>
+
+  <form id="yield-form" class="card" data-strings={JSON.stringify(clientStrings)} novalidate>
+    {
+      [
+        [t.propertyLegend, propertyFields],
+        [t.rentLegend, rentFields],
+      ].map(([legend, fields]) => (
+        <fieldset>
+          <legend>{legend as string}</legend>
+          {(fields as Field[]).map((f) => (
+            <div class="field">
+              <label for={`yield-${f.name}`}>{f.label}</label>
+              <input
+                id={`yield-${f.name}`}
+                name={f.name}
+                inputmode={f.mode as 'numeric' | 'decimal'}
+                autocomplete="off"
+                value={DEFAULT_STATE[f.name]}
+                aria-describedby={`yield-${f.name}-error`}
+              />
+              <p id={`yield-${f.name}-error`} class="error" data-error={f.name} hidden>
+                {f.error}
+              </p>
+            </div>
+          ))}
+        </fieldset>
+      ))
+    }
+  </form>
+
+  <section class="card results" aria-live="polite">
+    <p class="result-main">
+      <span>{t.resultNet}</span>
+      <strong data-out="net">{r ? formatPercent(r.netYieldPercent) : '—'}</strong>
+    </p>
+    <p class="result-sub">
+      <span>{t.resultGross}</span>
+      <strong data-out="gross">{r ? formatPercent(r.grossYieldPercent) : '—'}</strong>
+    </p>
+    <dl>
+      {
+        rows.map(([label, key, value]) => (
+          <div>
+            <dt>{label}</dt>
+            <dd data-out={key}>{value}</dd>
+          </div>
+        ))
+      }
+    </dl>
+    <button type="button" class="button secondary" id="yield-share">{t.share}</button>
+  </section>
+
+  <section class="card">
+    <h2>{t.formulaTitle}</h2>
+    <p class="formula"><code>{meta.formula}</code></p>
+    <p>{t.formulaWhere}</p>
+    <h2>{t.assumptionsTitle}</h2>
+    <ul>
+      {t.assumptions.map((a) => <li>{a}</li>)}
+    </ul>
+    <p class="disclaimer"><strong>{common.toolDisclaimer}</strong></p>
+  </section>
+</article>
+
+<script>
+  import { initRentalYield } from './client';
+  initRentalYield(document, window);
+</script>
+
+<style>
+  .tool {
+    max-width: 40rem;
+  }
+  .crumb {
+    margin: 16px 0 0;
+  }
+  h1 {
+    font-size: clamp(1.75rem, 6vw, 2.25rem);
+    line-height: 1.2;
+    margin: 8px 0;
+  }
+  h2 {
+    font-size: 1.1875rem;
+    margin: 0 0 8px;
+  }
+  .lead {
+    color: var(--muted);
+  }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+    margin: 16px 0;
+  }
+  .card h2 + p,
+  .card ul {
+    margin-top: 0;
+  }
+  fieldset {
+    border: 0;
+    margin: 0 0 8px;
+    padding: 0;
+    min-width: 0;
+  }
+  legend {
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+  .field {
+    display: grid;
+    gap: 4px;
+    margin-bottom: 12px;
+  }
+  input {
+    min-height: 48px;
+    padding: 10px 12px;
+    font: inherit;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--bg);
+    color: var(--fg);
+    width: 100%;
+    min-width: 0;
+  }
+  input[aria-invalid='true'] {
+    border-color: var(--error);
+    border-width: 2px;
+  }
+  .error {
+    color: var(--error);
+    margin: 0;
+    font-size: 0.9375rem;
+  }
+  .result-main,
+  .result-sub {
+    display: flex;
+    flex-direction: column;
+    margin: 0 0 12px;
+  }
+  .result-main strong {
+    font-size: clamp(2rem, 9vw, 2.75rem);
+    line-height: 1.1;
+    color: var(--brand);
+  }
+  .result-sub strong {
+    font-size: 1.375rem;
+  }
+  dl {
+    display: grid;
+    gap: 6px;
+    margin: 0 0 12px;
+  }
+  dl div {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 4px 12px;
+    border-top: 1px solid var(--border);
+    padding-top: 6px;
+  }
+  dt {
+    flex: 1 1 9rem;
+  }
+  dd {
+    margin: 0 0 0 auto;
+    font-weight: 600;
+    text-align: right;
+    white-space: nowrap;
+  }
+  .formula code {
+    font-size: 1.0625rem;
+    overflow-wrap: anywhere;
+  }
+  .button {
+    min-height: 48px;
+    padding: 12px 20px;
+    border: 2px solid var(--brand);
+    border-radius: var(--radius);
+    background: transparent;
+    color: var(--brand);
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .disclaimer {
+    margin-bottom: 0;
+  }
+</style>
