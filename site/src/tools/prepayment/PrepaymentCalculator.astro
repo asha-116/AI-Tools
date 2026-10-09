@@ -1,0 +1,266 @@
+---
+import { strings, type Lang } from '../../i18n/strings';
+import meta from './meta.json';
+import { DEFAULT_STATE, evaluate, formatDuration, formatInr, type PrepayField } from './logic';
+import { prepayStrings } from './strings';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = prepayStrings[lang];
+const common = strings[lang];
+const dur = {
+  year: t.durationYear,
+  years: t.durationYears,
+  month: t.durationMonth,
+  months: t.durationMonths,
+  zero: t.durationZero,
+};
+// Server-render the default result so the page is useful before (or without) JavaScript.
+const initial = evaluate(DEFAULT_STATE);
+const r = initial.ok ? initial.result : null;
+const clientStrings = { share: t.share, shareCopied: t.shareCopied, ...dur };
+
+const loanFields: Array<{ name: PrepayField; label: string; error: string; mode: string }> = [
+  { name: 'principal', label: t.principalLabel, error: t.errorPrincipal, mode: 'numeric' },
+  { name: 'rate', label: t.rateLabel, error: t.errorRate, mode: 'decimal' },
+  { name: 'years', label: t.yearsLabel, error: t.errorYears, mode: 'decimal' },
+];
+const prepayFields: Array<{ name: PrepayField; label: string; error: string; mode: string }> = [
+  { name: 'lump', label: t.lumpLabel, error: t.errorLump, mode: 'numeric' },
+  { name: 'lumpYear', label: t.lumpYearLabel, error: t.errorLumpYear, mode: 'numeric' },
+  { name: 'monthly', label: t.monthlyLabel, error: t.errorMonthly, mode: 'numeric' },
+  { name: 'yearly', label: t.yearlyLabel, error: t.errorYearly, mode: 'numeric' },
+];
+---
+
+<article class="tool">
+  <p class="crumb"><a href={lang === 'en' ? '/' : '/hi/'}>← {t.backHome}</a></p>
+  <h1>{t.h1}</h1>
+  <p class="lead">{t.lead}</p>
+
+  <form id="prepay-form" class="card" data-strings={JSON.stringify(clientStrings)} novalidate>
+    {
+      [
+        [t.loanLegend, loanFields],
+        [t.prepayLegend, prepayFields],
+      ].map(([legend, fields]) => (
+        <fieldset>
+          <legend>{legend as string}</legend>
+          {(fields as typeof loanFields).map((f) => (
+            <div class="field">
+              <label for={`prepay-${f.name}`}>{f.label}</label>
+              <input
+                id={`prepay-${f.name}`}
+                name={f.name}
+                inputmode={f.mode as 'numeric' | 'decimal'}
+                autocomplete="off"
+                value={DEFAULT_STATE[f.name]}
+                aria-describedby={`prepay-${f.name}-error`}
+              />
+              <p id={`prepay-${f.name}-error`} class="error" data-error={f.name} hidden>
+                {f.error}
+              </p>
+            </div>
+          ))}
+        </fieldset>
+      ))
+    }
+  </form>
+
+  <section class="card results" aria-live="polite">
+    <p class="result-main">
+      <span>{t.resultSaved}</span>
+      <strong data-out="saved">{r ? formatInr(r.interestSaved) : '—'}</strong>
+    </p>
+    <p class="result-sub">
+      <span>{t.resultTimeSaved}</span>
+      <strong data-out="time-saved">{r ? formatDuration(r.monthsSaved, dur) : '—'}</strong>
+    </p>
+    <p class="result-sub">
+      <span>{t.resultEmi}</span>
+      <strong data-out="emi">{r ? formatInr(r.emi) : '—'}</strong>
+    </p>
+    <div class="compare">
+      <section>
+        <h2>{t.columnWithout}</h2>
+        <dl>
+          <div>
+            <dt>{t.rowTenure}</dt>
+            <dd data-out="months-base">{r ? formatDuration(r.baseline.months, dur) : '—'}</dd>
+          </div>
+          <div>
+            <dt>{t.rowInterest}</dt>
+            <dd data-out="interest-base">{r ? formatInr(r.baseline.totalInterest) : '—'}</dd>
+          </div>
+        </dl>
+      </section>
+      <section>
+        <h2>{t.columnWith}</h2>
+        <dl>
+          <div>
+            <dt>{t.rowTenure}</dt>
+            <dd data-out="months-with">
+              {r ? formatDuration(r.withPrepayment.months, dur) : '—'}
+            </dd>
+          </div>
+          <div>
+            <dt>{t.rowInterest}</dt>
+            <dd data-out="interest-with">
+              {r ? formatInr(r.withPrepayment.totalInterest) : '—'}
+            </dd>
+          </div>
+          <div>
+            <dt>{t.rowPrepaid}</dt>
+            <dd data-out="prepaid">{r ? formatInr(r.withPrepayment.totalPrepaid) : '—'}</dd>
+          </div>
+        </dl>
+      </section>
+    </div>
+    <button type="button" class="button secondary" id="prepay-share">{t.share}</button>
+  </section>
+
+  <section class="card">
+    <h2>{t.formulaTitle}</h2>
+    <p class="formula"><code>{meta.formula}</code></p>
+    <p>{t.formulaWhere}</p>
+    <h2>{t.assumptionsTitle}</h2>
+    <ul>
+      {t.assumptions.map((a) => <li>{a}</li>)}
+    </ul>
+    <p class="disclaimer"><strong>{common.toolDisclaimer}</strong></p>
+  </section>
+</article>
+
+<script>
+  import { initPrepayment } from './client';
+  initPrepayment(document, window);
+</script>
+
+<style>
+  .tool {
+    max-width: 40rem;
+  }
+  .crumb {
+    margin: 16px 0 0;
+  }
+  h1 {
+    font-size: clamp(1.75rem, 6vw, 2.25rem);
+    line-height: 1.2;
+    margin: 8px 0;
+  }
+  h2 {
+    font-size: 1.1875rem;
+    margin: 0 0 8px;
+  }
+  .lead {
+    color: var(--muted);
+  }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+    margin: 16px 0;
+  }
+  .card h2 + p,
+  .card ul {
+    margin-top: 0;
+  }
+  fieldset {
+    border: 0;
+    margin: 0 0 8px;
+    padding: 0;
+    min-width: 0;
+  }
+  legend {
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+  .field {
+    display: grid;
+    gap: 4px;
+    margin-bottom: 12px;
+  }
+  input {
+    min-height: 48px;
+    padding: 10px 12px;
+    font: inherit;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--bg);
+    color: var(--fg);
+    width: 100%;
+    min-width: 0;
+  }
+  input[aria-invalid='true'] {
+    border-color: var(--error);
+    border-width: 2px;
+  }
+  .error {
+    color: var(--error);
+    margin: 0;
+    font-size: 0.9375rem;
+  }
+  .result-main,
+  .result-sub {
+    display: flex;
+    flex-direction: column;
+    margin: 0 0 12px;
+  }
+  .result-main strong {
+    font-size: clamp(2rem, 9vw, 2.75rem);
+    line-height: 1.1;
+    color: var(--brand);
+  }
+  .result-sub strong {
+    font-size: 1.375rem;
+  }
+  .compare {
+    display: grid;
+    gap: 12px;
+    margin: 0 0 12px;
+  }
+  .compare h2 {
+    font-size: 1rem;
+    margin: 0 0 4px;
+  }
+  dl {
+    display: grid;
+    gap: 6px;
+    margin: 0;
+  }
+  dl div {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    border-top: 1px solid var(--border);
+    padding-top: 6px;
+  }
+  dd {
+    margin: 0;
+    font-weight: 600;
+    text-align: right;
+    white-space: nowrap;
+  }
+  .formula code {
+    font-size: 1.0625rem;
+    overflow-wrap: anywhere;
+  }
+  .button {
+    min-height: 48px;
+    padding: 12px 20px;
+    border: 2px solid var(--brand);
+    border-radius: var(--radius);
+    background: transparent;
+    color: var(--brand);
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .disclaimer {
+    margin-bottom: 0;
+  }
+</style>

@@ -2,12 +2,15 @@
 //
 // Language models pick the right formula far more reliably than they do long arithmetic such as
 // (1 + r)^360, so the model answers each field with an expression and we evaluate it exactly.
-// Grammar: numbers, + - * / ^ (right-associative), parentheses, unary +/-, and round(x[, digits]).
+// Grammar: numbers, + - * / ^ (right-associative), parentheses, unary +/-, round(x[, digits]),
+// ln(x) and ceil(x).
 // Nothing else is accepted: no identifiers, no property access, no code.
 
 const MAX_LENGTH = 2000;
 
-type Token = { kind: 'num'; value: number } | { kind: 'op'; value: string } | { kind: 'round' };
+type Fn = 'round' | 'ln' | 'ceil';
+type Token =
+  { kind: 'num'; value: number } | { kind: 'op'; value: string } | { kind: 'fn'; name: Fn };
 
 function tokenize(src: string): Token[] {
   const text = src
@@ -30,9 +33,10 @@ function tokenize(src: string): Token[] {
       i += num[0].length;
       continue;
     }
-    if (text.startsWith('round', i)) {
-      out.push({ kind: 'round' });
-      i += 5;
+    const fn = /^(round|ln|ceil)\b/.exec(text.slice(i));
+    if (fn) {
+      out.push({ kind: 'fn', name: fn[1] as Fn });
+      i += fn[0].length;
       continue;
     }
     if ('+-*/^(),'.includes(ch)) {
@@ -67,10 +71,19 @@ export function evaluate(expression: string): number {
       pos++;
       return t.value;
     }
-    if (t.kind === 'round') {
+    if (t.kind === 'fn') {
       pos++;
       expect('(');
       const x = sum();
+      if (t.name === 'ln') {
+        expect(')');
+        if (!(x > 0)) throw new Error('ln needs a positive number');
+        return Math.log(x);
+      }
+      if (t.name === 'ceil') {
+        expect(')');
+        return Math.ceil(x);
+      }
       let digits = 0;
       if (isOp(',')) {
         pos++;
@@ -88,7 +101,7 @@ export function evaluate(expression: string): number {
       expect(')');
       return x;
     }
-    throw new Error(`unexpected "${t.kind === 'op' ? t.value : 'round'}"`);
+    throw new Error(`unexpected "${t.value}"`);
   };
   const unary = (): number => {
     if (isOp('-')) {

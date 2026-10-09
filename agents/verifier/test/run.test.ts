@@ -88,6 +88,24 @@ function oracleArea(i: { value: number; from: string; to: string }): Record<stri
   return { result: (i.value * (AREA_SQ_FT[i.from] ?? NaN)) / (AREA_SQ_FT[i.to] ?? NaN) };
 }
 
+/** Independent oracle for the prepayment entry (closed forms). */
+function oraclePrepayment(i: {
+  principal: number;
+  annualRatePercent: number;
+  tenureMonths: number;
+  lumpSums?: { month: number; amount: number }[];
+}): Record<string, number> {
+  const r = i.annualRatePercent / 1200;
+  const n = i.tenureMonths;
+  const emi = (i.principal * r * (1 + r) ** n) / ((1 + r) ** n - 1);
+  const left = i.principal - (i.lumpSums?.[0]?.amount ?? 0);
+  return {
+    emi,
+    baselineInterest: emi * n - i.principal,
+    months: Math.ceil(-Math.log(1 - (r * left) / emi) / Math.log(1 + r)),
+  };
+}
+
 function scriptedLlm(
   opts: { skew?: (id: string, call: number) => number; claims?: unknown; family?: string } = {},
 ): LlmClient & { requests: LlmRequest[] } {
@@ -110,7 +128,9 @@ function scriptedLlm(
               ? oracleEmi(c.input as Record<string, number>)
               : c.id.startsWith('area')
                 ? oracleArea(c.input as { value: number; from: string; to: string })
-                : oracleCommission(c.input as unknown as CommIn);
+                : c.id.startsWith('prepayment')
+                  ? oraclePrepayment(c.input as Parameters<typeof oraclePrepayment>[0])
+                  : oracleCommission(c.input as unknown as CommIn);
             const skew = opts.skew?.(c.id, formulaCalls) ?? 0;
             return {
               id: c.id,
@@ -357,7 +377,7 @@ describe('verify — formulas (PROCEDURE step 2)', () => {
     const b = await run(files);
     expect(a.r.report.cases.map((c) => c.input)).toEqual(b.r.report.cases.map((c) => c.input));
     expect(new Set(a.r.report.cases.map((c) => c.formula))).toEqual(
-      new Set(['computeEmi', 'computeCommission', 'convertArea']),
+      new Set(['computeEmi', 'computeCommission', 'computePrepayment', 'convertArea']),
     );
     expect(a.r.status.state).toBe('success');
   });

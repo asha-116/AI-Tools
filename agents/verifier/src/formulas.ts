@@ -10,10 +10,12 @@ import standardUnits from '../../../data/land-units/standard.json' with { type: 
 import {
   computeCommission,
   computeEmi,
+  computePrepayment,
   convertArea,
   type AreaUnit,
   type CommissionInput,
   type EmiInput,
+  type PrepaymentInput,
 } from '../../../tools-core/src/index.js';
 
 export interface FormulaCase {
@@ -50,6 +52,14 @@ const areaUnit = (id: unknown): AreaUnit => {
   if (!u) throw new Error(`unknown area unit ${String(id)}`);
   return u;
 };
+
+/** True when the only prepayment is one lump sum before the first EMI (closed form exists). */
+const upfrontOnly = (i: Record<string, unknown>): boolean =>
+  !i.monthlyExtra &&
+  !i.yearlyExtra &&
+  Array.isArray(i.lumpSums) &&
+  i.lumpSums.length === 1 &&
+  (i.lumpSums[0] as { month?: unknown }).month === 0;
 
 const partyCount = (input: Record<string, unknown>): number =>
   Array.isArray(input.parties) ? input.parties.length : 0;
@@ -113,6 +123,33 @@ export const FORMULAS: FormulaEntry[] = [
       };
       r.parties.forEach((p, i) => (out[`party_${String(i + 1)}`] = p.amount));
       return out;
+    },
+  },
+  {
+    id: 'prepayment',
+    functionName: 'computePrepayment',
+    sourceFiles: ['tools-core/src/prepayment.ts'],
+    fixture: 'tools-core/test/fixtures/prepayment-known-answers.json',
+    description: [
+      'Home-loan prepayment that keeps the EMI and shortens the tenure, on a reducing balance',
+      '(source: https://en.wikipedia.org/wiki/Mortgage_calculator).',
+      'Inputs: principal P; annualRatePercent; tenureMonths n; optional lumpSums',
+      '[{month, amount}] (month 0 = paid before the first EMI), monthlyExtra, yearlyExtra.',
+      'r = annualRatePercent / 1200. emi = P × r × (1 + r)^n / ((1 + r)^n − 1).',
+      'baselineInterest = emi × n − P.',
+      'When the only prepayment is one lump sum L at month 0, the loan is repaid in',
+      'months = ceil(−ln(1 − r × (P − L) / emi) / ln(1 + r)) payments of at most emi.',
+      'Do not round emi or baselineInterest.',
+    ].join(' '),
+    toInput: (c) => (c.input ?? {}) as Record<string, unknown>,
+    fields: (input) => ['emi', 'baselineInterest', ...(upfrontOnly(input) ? ['months'] : [])],
+    run: (input) => {
+      const r = computePrepayment(input as unknown as PrepaymentInput);
+      return {
+        emi: r.emi,
+        baselineInterest: r.baseline.totalInterest,
+        months: r.withPrepayment.months,
+      };
     },
   },
   {

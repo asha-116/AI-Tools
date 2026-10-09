@@ -136,7 +136,13 @@ describe('repo reader', () => {
     expect(repo.read('nope.txt')).toBeNull();
     expect(readText(repo, 'nope.txt')).toBe('');
     expect(repo.read('AGENTS.md')).toContain('AGENTS.md');
-    expect(repo.list('site/src/tools')).toEqual(['area', 'commission', 'emi', 'stamp-duty']);
+    expect(repo.list('site/src/tools')).toEqual([
+      'area',
+      'commission',
+      'emi',
+      'prepayment',
+      'stamp-duty',
+    ]);
     expect(repo.list('nope')).toEqual([]);
     expect(pageExists(repo, '/tools/emi/')).toBe(true);
     expect(pageExists(repo, '/hi/tools/emi')).toBe(true);

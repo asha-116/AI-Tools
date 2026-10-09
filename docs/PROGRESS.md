@@ -14,6 +14,9 @@ templates "coming soon".
 
 ## Done
 
+- 2026-10-09 — **Home loan prepayment calculator** (asha-116/AI-Tools#28, ADR-035):
+  `/tools/prepayment/` and `/hi/tools/prepayment/` — one-time, monthly or yearly extra payments;
+  shows interest saved and how much sooner the loan ends (EMI unchanged).
 - 2026-10-09 — Verifier fixes from its first live formula run: the model now writes each
   answer as an arithmetic expression the Verifier evaluates exactly (Gemini's own EMI
   arithmetic was wrong by up to ₹4,600); fewer false "unsourced" claims; the area converter is

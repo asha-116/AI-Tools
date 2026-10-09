@@ -1,0 +1,11 @@
+---
+import Base from '../../../../layouts/Base.astro';
+import PrepaymentCalculator from '../../../../tools/prepayment/PrepaymentCalculator.astro';
+import { prepayStrings } from '../../../../tools/prepayment/strings';
+
+const t = prepayStrings.hi;
+---
+
+<Base lang="hi" title={t.metaTitle} description={t.metaDescription} path="/tools/prepayment/">
+  <PrepaymentCalculator lang="hi" />
+</Base>

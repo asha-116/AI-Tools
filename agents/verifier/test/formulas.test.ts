@@ -53,6 +53,7 @@ describe('selectEntries', () => {
     expect(selectEntries(['tools-core/src/numbers.ts']).entries.map((e) => e.id)).toEqual([
       'emi',
       'commission',
+      'prepayment',
       'area',
     ]);
   });
@@ -208,5 +209,19 @@ describe('area entry', () => {
     expect(runOurs(e, { value: 1, from: 'acre', to: 'bigha' })).toEqual({
       error: 'unknown area unit bigha',
     });
+  });
+});
+
+describe('prepayment entry', () => {
+  it('asks for months only where a closed form exists, and our run matches the fixture', () => {
+    const e = entry('prepayment');
+    const cases = loadCases(e, read);
+    expect(cases.map((c) => e.fields(c.input))).toEqual([
+      ['emi', 'baselineInterest'],
+      ['emi', 'baselineInterest', 'months'],
+      ['emi', 'baselineInterest'],
+    ]);
+    const ours = runOurs(e, cases[1]?.input ?? {});
+    expect('values' in ours && ours.values.months).toBe(195);
   });
 });
