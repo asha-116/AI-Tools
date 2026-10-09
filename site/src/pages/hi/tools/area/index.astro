@@ -1,0 +1,11 @@
+---
+import Base from '../../../../layouts/Base.astro';
+import AreaConverter from '../../../../tools/area/AreaConverter.astro';
+import { areaStrings } from '../../../../tools/area/strings';
+
+const t = areaStrings.hi;
+---
+
+<Base lang="hi" title={t.metaTitle} description={t.metaDescription} path="/tools/area/">
+  <AreaConverter lang="hi" />
+</Base>

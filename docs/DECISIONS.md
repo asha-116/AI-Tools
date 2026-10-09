@@ -393,3 +393,16 @@ NOTHING`), so duplicates and both events for one payment are harmless. It stores
   to draft. That is intended: the alternative is the site showing stale rates as verified.
 - **Status:** Accepted (2026-10-09). Written in Node like the other repo checks, not the Python
   test the Issue suggested (the repo has no Python toolchain).
+
+### ADR-034 — Land area converter: standard units live, regional units draft
+
+- **Context:** asha-116/AI-Tools#26 asked for a land-unit converter. Standard units have exact
+  definitions; regional units (guntha, cent, ground, marla, kanal, bigha…) vary by state, and the
+  build environment could only find commercial converter sites, not state government sources.
+- **Decision:** unit sizes are data in `data/land-units/` (base unit m²). `standard.json`
+  (sq ft, gaj, sq m, acre, hectare) is `verified`, as these are definitions, not rates.
+  `regional.json` (guntha, cent, ground, marla, kanal) is `draft`, hidden on the live site and
+  visible on `#drafts=1` for owner review, like stamp duty. Bigha, biswa and katha are left out.
+  14 known-answer cases with cited sources; the formula is one line in `tools-core/src/area.ts`.
+- **Status:** Accepted (2026-10-09). Owner: verify `regional.json` against state sources and
+  have a person review the Hindi labels before regional units go live.
