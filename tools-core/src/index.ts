@@ -59,3 +59,9 @@ export {
   type LoadingInput,
   type LoadingResult,
 } from './loading.js';
+export {
+  computeRentalYield,
+  RENTAL_YIELD_LIMITS,
+  type RentalYieldInput,
+  type RentalYieldResult,
+} from './rentalYield.js';

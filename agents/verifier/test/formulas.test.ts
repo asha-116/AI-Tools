@@ -56,6 +56,7 @@ describe('selectEntries', () => {
       'prepayment',
       'eligibility',
       'loading',
+      'rental-yield',
       'area',
     ]);
   });
@@ -248,5 +249,16 @@ describe('loading entry', () => {
     expect('values' in ours && Math.round(ours.values.ratePerCarpet ?? 0)).toBe(17143);
     const plain = runOurs(e, cases[0]?.input ?? {});
     expect('values' in plain && Object.keys(plain.values)).toHaveLength(3);
+  });
+});
+
+describe('rental-yield entry', () => {
+  it('our run matches the published Pune case (3.33% net)', () => {
+    const e = entry('rental-yield');
+    const cases = loadCases(e, read);
+    expect(cases).toHaveLength(4);
+    const ours = runOurs(e, cases[3]?.input ?? {});
+    expect('values' in ours && ours.values.netIncome).toBe(200000);
+    expect('values' in ours && Math.round((ours.values.netYieldPercent ?? 0) * 100)).toBe(333);
   });
 });

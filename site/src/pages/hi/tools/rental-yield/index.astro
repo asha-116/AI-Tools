@@ -1,0 +1,11 @@
+---
+import Base from '../../../../layouts/Base.astro';
+import RentalYieldCalculator from '../../../../tools/rental-yield/RentalYieldCalculator.astro';
+import { yieldStrings } from '../../../../tools/rental-yield/strings';
+
+const t = yieldStrings.hi;
+---
+
+<Base lang="hi" title={t.metaTitle} description={t.metaDescription} path="/tools/rental-yield/">
+  <RentalYieldCalculator lang="hi" />
+</Base>

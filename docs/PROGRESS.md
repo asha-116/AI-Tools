@@ -14,6 +14,10 @@ templates "coming soon".
 
 ## Done
 
+- 2026-10-09 — **Rental yield calculator** (ADR-038): `/tools/rental-yield/` and
+  `/hi/tools/rental-yield/` — gross and net yield, collected rent, net income and years of rent;
+  before tax, numbers only. Carpet area tool merged (asha-116/AI-Tools#39). Owner chose GitHub's
+  built-in auto-merge over a merge agent (no agent merges; the owner enables auto-merge per PR).
 - 2026-10-09 — **Carpet area and real price per sq ft** (ADR-037): `/tools/carpet-area/` and
   `/hi/tools/carpet-area/` — super built-up vs RERA carpet area, loading % both ways, common
   area, and the price per sq ft of carpet. Next in the queue: rental yield.

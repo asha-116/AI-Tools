@@ -1,0 +1,7 @@
+{
+  "slug": "rental-yield",
+  "kind": "free",
+  "formula": "Net yield = (rent × (12 − empty months) − yearly costs) ÷ (property value + purchase costs) × 100",
+  "knownAnswers": "tools-core/test/fixtures/rental-yield-known-answers.json",
+  "lastReviewed": "2026-10-09"
+}
