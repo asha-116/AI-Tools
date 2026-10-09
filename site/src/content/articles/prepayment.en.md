@@ -1,45 +1,47 @@
 ---
-title: "Home loan prepayment calculator"
-description: "Calculate how a one‑time prepayment reduces loan tenure and interest while keeping your EMI unchanged."
-slug: "prepayment"
+title: 'Home loan prepayment calculator – saved interest'
+description: 'Calculate how a one‑time prepayment changes your EMI schedule, reduces months and saves interest using the loan amount, rate and tenure you enter.'
+slug: 'prepayment'
 lang: en
-tool_path: "/tools/prepayment/"
-last_verified: "2026-10-09"
-generated: "2026-10-09"
-generated_by: "agent:seo-listing"
-producer_family: "gpt"
-status: "draft"
+tool_path: '/tools/prepayment/'
+last_verified: '2026-10-09'
+generated: '2026-10-09'
+generated_by: 'agent:seo-listing'
+producer_family: 'gpt'
+status: 'draft'
 ---
 
-# Home loan prepayment calculator
+# Home loan prepayment calculator – saved interest
 
-This calculator helps busy agents and their buyers see the impact of a one‑time or regular extra payment on a home loan while keeping the EMI unchanged. Enter the loan amount ₹25,00,000, annual rate 9%, original tenure 20 years and the current EMI ₹22,493. Then type the extra amount you plan to prepay ₹2,00,000. The result shows how many months the loan will finish earlier 45 months and the total interest saved ₹8,14,455. You can also compare the new total tenure 195 months with the original schedule. This quick view lets you advise clients on whether a prepayment makes sense for their cash flow.
+This calculator helps agents and buyers see the impact of a one‑time or regular prepayment on a home loan. By entering ₹25,00,000, 9%, 20 years and the extra amount, you instantly get the new loan length and the interest you will save.
+It is useful when a client has cash on hand and wants to know how fast the loan can be cleared without changing the monthly EMI.
+The results are computed locally on the device, so no data leaves the phone.
 
 ## How to use the calculator
 
-1. Open the Home loan prepayment calculator on your phone.
-2. Enter the loan amount ₹25,00,000, interest rate 9%, original tenure 20 years and the current EMI ₹22,493.
-3. Type the extra amount you want to pay now or each year in the prepayment field ₹2,00,000.
-4. Press **Calculate**.
-5. The screen shows the reduced months 45 months, new total months 195 months and the interest saved ₹8,14,455.
+1. Enter the loan amount (₹25,00,000), annual interest rate (9%) and original tenure (20 years).
+2. Fill in the prepayment amount – either a one‑time sum (₹2,00,000) or a monthly extra.
+3. The calculator shows the unchanged EMI (₹22,493), the reduced months (195 months), how many months are saved (45 months) and the total interest saved (₹8,14,455).
+4. Review the numbers and discuss with the client. If there are any prepayment charges, add them manually.
+5. Export or share the result as a PDF for the client’s records.
 
 [Open the calculator: Home loan prepayment calculator](/tools/prepayment/)
 
 ## Worked example
 
-| Input | Value |
-| --- | ---: |
-| Loan amount | ₹25,00,000 |
-| Interest rate (per year) | 9% |
-| Tenure | 20 years |
-| One-time prepayment now | ₹2,00,000 |
+| Input                    |      Value |
+| ------------------------ | ---------: |
+| Loan amount              | ₹25,00,000 |
+| Interest rate (per year) |         9% |
+| Tenure                   |   20 years |
+| One-time prepayment now  |  ₹2,00,000 |
 
-| Result | Value |
-| --- | ---: |
-| EMI (unchanged) | ₹22,493 |
-| Interest saved | ₹8,14,455 |
-| Loan ends sooner by | 45 months |
-| New tenure | 195 months |
+| Result              |      Value |
+| ------------------- | ---------: |
+| EMI (unchanged)     |    ₹22,493 |
+| Interest saved      |  ₹8,14,455 |
+| Loan ends sooner by |  45 months |
+| New tenure          | 195 months |
 
 _Example inputs from a published worked example; results computed by the same code the calculator uses._
 
@@ -48,10 +50,10 @@ _Example inputs from a published worked example; results computed by the same co
 - Each month: interest = balance × r; balance = balance − (EMI − interest) − prepayment
 - r = yearly rate ÷ 12 ÷ 100. The EMI stays the same; every rupee you prepay goes straight to the principal, so the loan ends sooner.
 
-The monthly interest is computed as **interest = balance × r** where **r = yearly rate ÷ 12 ÷ 100**.
-Each month the balance is reduced by the part of EMI that goes to principal: **balance = balance − (EMI − interest) − prepayment**.
-The EMI value stays constant, so any extra amount entered as **prepayment** is applied directly to the principal.
-The process repeats month after month until the balance reaches zero, giving the shortened tenure and total interest saved.
+The monthly interest is calculated as: interest = current balance × r, where r = yearly rate ÷ 12 ÷ 100.
+Each month the balance is reduced by the part of EMI that goes to principal (EMI – interest) and by any prepayment amount.
+The EMI itself does not change; only the principal shrinks faster, so the number of payments drops.
+The total interest saved is the sum of original interest minus the interest computed with the reduced balance each month.
 
 ### Assumptions
 
@@ -62,29 +64,34 @@ The process repeats month after month until the balance reaches zero, giving the
 
 ## When it helps
 
-Use this tool when a client has extra cash and wants to know how fast the loan can be cleared without changing the monthly EMI. It’s handy for buyers planning a bonus, inheritance, or selling a property and receiving proceeds. The calculator also helps agents compare different prepayment amounts for the same loan. It does not include prepayment penalties, processing fees, or tax effects; check those separately with the lender or a CA. The interest rate is assumed constant, so floating‑rate loans need a separate estimate.
+Use this tool when a buyer:
+
+- Receives a windfall (sale of another property, inheritance) and wants to know the payoff benefit.
+- Considers increasing monthly payments to finish the loan early.
+- Wants to compare different prepayment sizes before talking to the lender.
+  The calculator does not cover variable‑rate changes, tax effects, or lender‑specific prepayment penalties. For those, ask the lender or a CA.
 
 ## Frequently asked questions
 
 ### What happens to my EMI after I make a prepayment?
 
-The EMI stays the same; the extra amount reduces the principal, so the loan finishes earlier.
+The EMI remains unchanged; the prepayment amount is applied directly to the principal, which shortens the loan term.
 
-### How is the interest saved calculated?
+### How does the calculator show interest saved?
 
-The tool applies the monthly interest formula, subtracts interest from the EMI, adds the prepayment directly to the principal, and sums the reduced interest over the shortened term.
+It recomputes monthly interest on the reduced balance and totals the difference from the original schedule, giving ₹8,14,455.
 
-### Does the calculator consider prepayment charges or tax?
+### Are prepayment fees included in the result?
 
-No, it only shows the effect on tenure and interest; ask your lender or CA about any fees or tax implications.
+No. Any charges from the lender are not part of the calculation – ask your lender for those details.
 
-### Can I use the calculator for a yearly extra payment?
+### Can I enter a monthly extra payment instead of a one‑time amount?
 
-Yes, you can enter a one‑time prepayment now or a recurring extra after each 12th EMI; the result shows the new total months.
+Yes. The tool treats a regular extra payment the same way, reducing principal each month and lowering the total tenure.
 
-### Is the interest rate assumed to stay constant?
+### Does the tool assume the interest rate stays the same?
 
-The calculation assumes the yearly rate 9% remains unchanged for the whole loan.
+Yes. The rate you enter is used for the whole loan period.
 
 ## Related tools
 
@@ -97,5 +104,10 @@ The calculation assumes the yearly rate 9% remains unchanged for the whole loan.
 - [Rental yield calculator](/tools/rental-yield/)
 - [Rent vs buy calculator](/tools/rent-vs-buy/)
 - [All tools](/)
+
+## Sources
+
+- <https://homefirstindia.com/blog/article/reduce-emi-or-reduce-tenure-for-home-loan-prepayment/>
+- <https://stableinvestor.com/2022/08/one-extra-emi-prepay-home-loan.html>
 
 > For estimation only — verify with a professional. Rates and rules vary by state and change over time; last verified on 2026-10-09. This is not legal, tax or financial advice.
