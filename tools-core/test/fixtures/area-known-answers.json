@@ -145,6 +145,27 @@
       "expect": 8,
       "sources": ["https://1acre.in/land-unit-converter/acre-to-guntha"],
       "quote": "One acre equals 100 cents, 40 gunthas, or 8 kanals."
+    },
+    {
+      "name": "1 hectare in ares",
+      "value": 1,
+      "from": "hectare",
+      "to": "are",
+      "expect": 100,
+      "sources": ["https://en.wikipedia.org/wiki/Hectare"],
+      "quote": "The hectare … is equal to 100 ares … 10,000 square metres"
+    },
+    {
+      "name": "1 guntha in ares (Maharashtra 7/12 records area in hectare-are)",
+      "value": 1,
+      "from": "guntha",
+      "to": "are",
+      "expect": 1.0117141056,
+      "sources": [
+        "https://1acre.in/land-unit-converter/maharashtra",
+        "https://bhulekh.mahabhumi.gov.in"
+      ],
+      "quote": "1 Guntha = 1,089 sq.ft (101.17 sq.m)"
     }
   ]
 }

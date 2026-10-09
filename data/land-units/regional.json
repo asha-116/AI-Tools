@@ -1,5 +1,5 @@
 {
-  "$comment": "Regional land units. Values are from commercial converter sites found via web search on 2026-10-09; no state government source has been checked yet, so the file stays draft and the site hides these units. Before setting status to verified, a person must check each unit against the state's revenue department or land records and name themselves in verified_by. Bigha, biswa and katha are left out on purpose: their size changes from state to state and even district to district.",
+  "$comment": "Regional land units (guntha moved to guntha.json for Maharashtra and Karnataka). Values are from commercial converter sites found via web search on 2026-10-09; no state government source has been checked yet, so the file stays draft and the site hides these units. Before setting status to verified, a person must check each unit against the state's revenue department or land records and name themselves in verified_by. Bigha, biswa and katha are left out on purpose: their size changes from state to state and even district to district.",
   "dataset": "land-units",
   "status": "draft",
   "verified_by": "not verified",
@@ -23,13 +23,6 @@
     }
   ],
   "units": [
-    {
-      "id": "guntha",
-      "label_en": "Guntha (Maharashtra, Karnataka, Telangana, Gujarat)",
-      "label_hi": "गुंठा (महाराष्ट्र, कर्नाटक, तेलंगाना, गुजरात)",
-      "sq_ft": 1089,
-      "sq_m": 101.17141056
-    },
     {
       "id": "cent",
       "label_en": "Cent (Kerala, Tamil Nadu, Andhra Pradesh, Karnataka)",

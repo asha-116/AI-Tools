@@ -11,8 +11,9 @@ const read = (name: string) =>
     readFileSync(new URL(`../../data/land-units/${name}.json`, import.meta.url), 'utf8'),
   ) as UnitsFile;
 const standard = read('standard');
+const guntha = read('guntha');
 const regional = read('regional');
-const units = [...standard.units, ...regional.units];
+const units = [...standard.units, ...guntha.units, ...regional.units];
 const unit = (id: string): AreaUnit => {
   const u = units.find((x) => x.id === id);
   if (!u) throw new Error(`unknown unit ${id}`);
@@ -45,6 +46,7 @@ describe('area known answers (cited sources)', () => {
 describe('land-unit data files', () => {
   it('standard units are verified, regional ones stay draft until a person checks them', () => {
     expect(standard.status).toBe('verified');
+    expect(guntha.status).toBe('draft');
     expect(regional.status).toBe('draft');
   });
   it('ids are unique and every unit has EN + HI labels', () => {
@@ -56,7 +58,7 @@ describe('land-unit data files', () => {
     }
   });
   it('regional sq_m values match their sq_ft definitions (1 sq ft = 0.09290304 m²)', () => {
-    for (const u of regional.units) {
+    for (const u of [...guntha.units, ...regional.units]) {
       expect(u.sq_ft, u.id).toBeDefined();
       expect(Math.abs(u.sq_m - (u.sq_ft ?? 0) * 0.09290304)).toBeLessThan(1e-9);
     }
@@ -79,10 +81,18 @@ describe('convertArea', () => {
   });
 });
 
+describe('are (Maharashtra 7/12 records hectare-are)', () => {
+  it('1 hectare = 100 are, and 1 guntha ≈ 1.0117 are', () => {
+    expect(convertArea(1, unit('hectare'), unit('are'))).toBeCloseTo(100, 12);
+    expect(convertArea(1, unit('guntha'), unit('are'))).toBeCloseTo(1.0117141056, 9);
+    expect(convertArea(40, unit('guntha'), unit('acre'))).toBeCloseTo(1, 12);
+  });
+});
+
 describe('convertToAll', () => {
   it('gives the value in every unit, in the order given', () => {
     const r = convertToAll(1, unit('acre'), standard.units);
-    expect(r.map((x) => x.id)).toEqual(['sq_ft', 'sq_yd', 'sq_m', 'acre', 'hectare']);
+    expect(r.map((x) => x.id)).toEqual(['sq_ft', 'sq_yd', 'sq_m', 'are', 'acre', 'hectare']);
     expect(r[0]?.value).toBeCloseTo(43560, 6);
     expect(r[1]?.value).toBeCloseTo(4840, 6);
   });
