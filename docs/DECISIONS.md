@@ -517,3 +517,22 @@ NOTHING`), so duplicates and both events for one payment are harmless. It stores
   adapter), and the SEO/Listing and Social workflows now run for any merged PR that changes a
   tool, label or not. Existing tools get their first articles and drafts via **Run workflow**
   (one slug at a time).
+
+### ADR-041 — Agent PRs must pass CI as they are opened
+
+- **Context:** the first live SEO/Listing and Social runs (asha-116/AI-Tools#44–#54, 2026-10-09)
+  all failed CI: (1) generated Markdown/JSON was not in Prettier style; (2) the offline link
+  check cannot resolve site routes such as `/tools/emi/` in articles; (3) the Verifier failed
+  every article on a "missing disclaimer" that was there (the model only saw added lines, and
+  the deterministic check also demanded it in `.seo.json`), on "unsourced" worked-example
+  numbers that the calculator computes from a cited known answer, and on "advice" that only
+  pointed readers to their bank.
+- **Decision:** `agents/lib` formats every file with the repo's Prettier before an agent commits
+  (`src/format.ts`); the link checks skip `site/src/content/articles/` (the SEO agent already
+  checks each internal link against `site/src/pages`); articles end with a **Sources** list —
+  the published URLs behind the tool's known answers; the Verifier checks the disclaimer only
+  in code and only on `.md` pages, and its prompt says a calculator's own formula, worked
+  example and stated assumptions are not outside claims, and that pointing to a bank, CA or
+  lawyer is not advice. Other factual claims in articles (e.g. "FOIR is often 40–60%") are
+  "unchecked" for the owner to confirm against the listed sources.
+- **Status:** Accepted (2026-10-09). The ten failing agent PRs are closed and the agents re-run.

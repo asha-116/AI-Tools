@@ -14,6 +14,11 @@ templates "coming soon".
 
 ## Done
 
+- 2026-10-09 — **Agent PRs fixed** (ADR-041): the first live SEO/Social runs (#44–#54) all failed
+  CI (formatting, offline link check, three Verifier false alarms). Agents now commit
+  Prettier-formatted files, articles carry a Sources list, the link check skips generated
+  articles, and the Verifier's disclaimer/advice checks no longer misfire. Next: a page that
+  shows the articles on the site (they are not rendered yet).
 - 2026-10-09 — **Growth, step 2** (ADR-040): the SEO/Listing and Social agents now know all nine
   tools (worked examples computed by the real calculators) and run for every merged PR that
   changes a tool, without a label. Sitemap merged (asha-116/AI-Tools#42).

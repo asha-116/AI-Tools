@@ -75,3 +75,4 @@ export {
   type RunStatus,
 } from './run.js';
 export { chatJson, parseJsonLoose, validateWithRetry } from './schema.js';
+export { formatFiles, prettierFormatter, type Formatter } from './format.js';

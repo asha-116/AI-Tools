@@ -93,9 +93,14 @@ jobs:
       - uses: actions/checkout@v7
       # Offline mode checks only repo-internal links, so CI never flakes on third-party sites.
       # External link checks run in the weekly QA heartbeat (Phase 4).
+      # Generated articles link to site routes (/tools/emi/), which are not repo files; the
+      # SEO/Listing agent checks every such link against site/src/pages before it opens a PR.
       - uses: lycheeverse/lychee-action@v2
         with:
-          args: --offline --no-progress --include-fragments './**/*.md'
+          args: >-
+            --offline --no-progress --include-fragments
+            --exclude-path site/src/content/articles
+            './**/*.md'
           fail: true
 
   lighthouse:
