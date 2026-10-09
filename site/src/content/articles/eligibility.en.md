@@ -1,6 +1,6 @@
 ---
-title: 'Home Loan Eligibility Calculator'
-description: 'Calculate the maximum home loan amount a buyer can get based on income, FOIR, rate and tenure.'
+title: 'Home loan eligibility calculator'
+description: 'Calculate the maximum home loan a buyer can get based on income, FOIR and interest rate.'
 slug: 'eligibility'
 lang: en
 tool_path: '/tools/eligibility/'
@@ -11,13 +11,17 @@ producer_family: 'gpt'
 status: 'draft'
 ---
 
-# Home Loan Eligibility Calculator
+# Home loan eligibility calculator
 
-The Home Loan Eligibility Calculator helps agents quickly estimate the highest loan amount a buyer can obtain. It uses the buyer’s monthly take‑home income, the bank’s FOIR limit, the interest rate and the loan tenure. By entering these four inputs, the tool shows the EMI the buyer can afford and the corresponding loan size. This is useful during property tours, initial consultations or when preparing a loan summary for the buyer. The result is shown as an EMI of ₹50,000 and a loan amount of ₹57,61,542. No personal data is stored.
+Agents often need to tell buyers how much loan they can realistically get. This calculator shows the maximum home loan based on the buyer’s monthly take‑home ₹1,00,000, the bank’s FOIR limit 50%, any existing EMIs, the loan interest rate 8.5% and the desired tenure 20 years. It returns the highest EMI the borrower can afford (₹50,000) and the loan amount that matches that EMI (₹57,61,542). Use it during initial discussions to set clear expectations before property shortlisting.
 
 ## How to use the calculator
 
-1. Open the calculator on your phone. 2. Enter the buyer’s monthly take‑home income (e.g., ₹1,00,000). 3. Select the bank’s FOIR percentage (e.g., 50%). 4. Input the current annual interest rate (e.g., 8.5%). 5. Choose the loan tenure (e.g., 20 years). 6. Tap Calculate. The screen will display the maximum EMI and the loan amount.
+1. Enter the buyer’s monthly take‑home ₹1,00,000 in the first field.
+2. Select the bank’s FOIR limit 50% or type the value given by the bank.
+3. Add the total of all existing EMIs.
+4. Choose the loan interest rate 8.5% and the tenure 20 years.
+5. Click Calculate. The screen will show the maximum affordable EMI (₹50,000) and the corresponding loan amount (₹57,61,542).
 
 [Open the calculator: Home loan eligibility calculator](/tools/eligibility/)
 
@@ -42,7 +46,7 @@ _Example inputs from a published worked example; results computed by the same co
 - Loan = (income × FOIR% − existing EMIs) × (1 − (1 + r)^−n) ÷ r
 - r = yearly rate ÷ 12 ÷ 100, n = months. The bracket is the EMI you can still take on; the loan is the amount whose EMI equals it.
 
-The formula converts the affordable EMI into a loan amount. Loan = (income × FOIR − existing EMIs) × (1 − (1 + r)^−n) ÷ r. _income_ is the monthly take‑home. _FOIR_ is the bank’s allowed share of income for EMI. _existing EMIs_ are other loan repayments (enter 0 if none). _r_ is the monthly interest rate, derived from the annual rate 8.5% divided by 12 and 100. _n_ is the total number of months, tenure 20 years multiplied by 12. The term (1 − (1 + r)^−n) ÷ r converts the EMI into the present value of the loan.
+The loan amount is computed from the EMI that fits the borrower’s budget. First, the allowable EMI is ( ₹1,00,000 × 50% ) minus existing EMIs. This amount is the EMI the borrower can still take. The loan formula converts that EMI into a principal: Loan = EMI × (1 − (1 + r)^‑n) ÷ r, where r is the monthly rate (yearly rate 8.5% divided by 12 and 100) and n is the total months ( 20 years × 12 ).
 
 ### Assumptions
 
@@ -53,25 +57,25 @@ The formula converts the affordable EMI into a loan amount. Loan = (income × FO
 
 ## When it helps
 
-Use this calculator when a buyer asks how much loan they can get, when you need a quick eligibility check before showing properties, or when preparing a loan summary for a client meeting. It is also handy for comparing different interest rates or tenures. The tool does not consider credit score, property‑price caps, stamp duty, registration fees or other bank‑specific criteria. For those details, ask the bank or the buyer’s financial advisor.
+Use the tool when a buyer asks for loan eligibility during property visits, when you prepare a loan summary for a client, or when comparing affordability across different interest rates. It does not replace the bank’s formal sanction, which also checks credit score, age, job stability and property‑value caps. The calculator does not include stamp duty, registration fees or other closing costs.
 
 ## Frequently asked questions
 
-### What does FOIR mean and why does it matter?
+### How is the eligible loan amount calculated?
 
-FOIR is the Fixed Obligation to Income Ratio. It tells the bank what share of the buyer’s take‑home income can go to loan EMIs. A higher FOIR allows a larger EMI.
+The tool uses the borrower’s monthly take‑home ₹1,00,000, the bank’s FOIR limit 50%, existing EMIs and the loan interest 8.5% over the chosen 20 years to compute the maximum EMI (₹50,000) and the corresponding loan amount (₹57,61,542).
 
-### Should I enter existing EMIs in the calculator?
+### What does FOIR mean?
 
-Yes. Include any other loan repayments the buyer is already paying. If there are none, enter zero. This reduces the EMI the buyer can still take.
+FOIR is the fraction of take‑home income that banks allow for EMI repayment; it varies by bank and borrower profile.
 
-### Can I change the interest rate to see its impact?
+### Can I include other debts in the calculation?
 
-Absolutely. Adjust the rate field to the current market rate or the rate offered by a specific bank and recalculate. The loan amount will change accordingly.
+Enter the total of all existing EMIs; the tool subtracts them from the allowable EMI before computing the loan.
 
-### Why might the bank offer less than the calculator shows?
+### Does the calculator consider property price?
 
-Banks also look at credit score, property price caps, age, job stability and other criteria. The calculator shows the theoretical maximum based on income and FOIR only.
+It shows the loan you can afford; the buyer must still provide the difference between property price and the loan as down payment.
 
 ## Related tools
 
