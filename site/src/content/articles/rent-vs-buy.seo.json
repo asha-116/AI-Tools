@@ -2,49 +2,49 @@
   "slug": "rent-vs-buy",
   "meta": {
     "en": {
-      "title": "Rent vs Buy Calculator – Compare Costs Over Years",
-      "description": "See how buying versus renting compares after [[years]] using your assumptions on EMI, rent increase, appreciation and investment return."
+      "title": "Rent vs Buy Calculator – Compare monthly costs",
+      "description": "See how buying or renting a property compares over [[years]] using your own assumptions on EMI, rent increase and investment return."
     },
     "hi": {
-      "title": "किराया या खरीदें कैलकुलेटर – लागत तुलना",
-      "description": "[[years]] में खरीद बनाम किराया की तुलना देखें, EMI, किराया बढ़ोतरी, प्रॉपर्टी मूल्य वृद्धि और बचत रिटर्न को ध्यान में रखकर।"
+      "title": "किराया या खरीदें कैलकुलेटर – मासिक लागत तुलना",
+      "description": "[[years]] के दौरान खरीद बनाम किराया की तुलना देखें, अपने EMI, किराया बढ़ोतरी और निवेश रिटर्न के अनुमान के साथ।"
     }
   },
   "faq": {
     "en": [
       {
-        "q": "What inputs are required?",
-        "a": "Enter the property value [[value]], down payment [[down]], loan rate [[rate]], current rent [[rent]], annual rent increase [[rent_increase]], expected property appreciation [[appreciation]], expected return on savings [[return]] and the comparison period [[years]]."
+        "q": "What does this calculator compare?",
+        "a": "It shows how much the buyer and the renter have after [[years]] by accounting for EMI, rent, maintenance and the money saved each month."
       },
       {
-        "q": "Are taxes or loan tax benefits included?",
-        "a": "No. The calculator shows numbers before tax. For tax effects, ask your CA."
+        "q": "Which inputs are needed?",
+        "a": "Enter the property value [[value]], down payment [[down]], loan rate [[rate]], rent [[rent]], rent increase [[rent_increase]], property appreciation [[appreciation]] and investment return [[return]]."
       },
       {
-        "q": "Can I adjust the assumptions later?",
-        "a": "Yes. Change any input and recalculate to see the new outcome."
+        "q": "Are taxes or selling costs included?",
+        "a": "No. Home‑loan tax benefits and selling costs are not part of the calculation; ask your CA for tax impact."
       },
       {
-        "q": "What does the ‘Buyer has at the end’ figure mean?",
-        "a": "It is the projected property value after [[years]] minus the remaining loan balance plus any cash you have saved."
+        "q": "Can I change assumptions like rent rise or investment return?",
+        "a": "Yes, adjust [[rent_increase]] and [[return]] to see how different scenarios affect the result."
       }
     ],
     "hi": [
       {
-        "q": "कैलकुलेटर को कौन‑सी जानकारी चाहिए?",
-        "a": "प्रॉपर्टी की कीमत [[value]], डाउन पेमेंट [[down]], लोन दर [[rate]], मौजूदा किराया [[rent]], सालाना किराया बढ़ोतरी [[rent_increase]], प्रॉपर्टी मूल्य वृद्धि [[appreciation]], बचत पर रिटर्न [[return]] और तुलना की अवधि [[years]] भरें।"
+        "q": "यह कैलकुलेटर क्या तुलना करता है?",
+        "a": "यह दिखाता है कि [[years]] के बाद खरीदार और किरायेदार के पास कितना पैसा रहेगा, EMI, किराया, रख‑रखाव और बचत को ध्यान में रखते हुए।"
       },
       {
-        "q": "क्या इसमें टैक्स या होम‑लोन टैक्स लाभ शामिल हैं?",
-        "a": "नहीं। यह सभी आंकड़े टैक्स से पहले दिखाता है। टैक्स के लिए अपने CA से पूछें।"
+        "q": "कौन‑से इनपुट चाहिए?",
+        "a": "प्रॉपर्टी की कीमत [[value]], डाउन पेमेंट [[down]], लोन दर [[rate]], किराया [[rent]], किराया बढ़ोतरी [[rent_increase]], प्रॉपर्टी की कीमत बदलाव [[appreciation]] और निवेश रिटर्न [[return]] डालें।"
       },
       {
-        "q": "इनपुट बदलने के बाद फिर से चलाया जा सकता है?",
-        "a": "हां। कोई भी मान बदलें और फिर से कैलकुलेट करें, परिणाम तुरंत अपडेट हो जाएगा।"
+        "q": "क्या इसमें टैक्स या बिक्री लागत शामिल है?",
+        "a": "नहीं। होम‑लोन टैक्स लाभ और बिक्री लागत गणना में नहीं ली गई हैं; टैक्स के लिए अपने CA से पूछें।"
       },
       {
-        "q": "‘अंत में खरीदार के पास’ का मतलब क्या है?",
-        "a": "यह प्रोजेक्टेड प्रॉपर्टी वैल्यू में से बचा लोन घटाकर, बची हुई नकद जोड़ने पर मिलने वाला कुल है।"
+        "q": "क्या किराया बढ़ोतरी या निवेश रिटर्न बदल सकते हैं?",
+        "a": "हां, [[rent_increase]] और [[return]] को बदलकर अलग‑अलग परिदृश्य देख सकते हैं।"
       }
     ]
   },
@@ -53,8 +53,8 @@
       {
         "@context": "https://schema.org",
         "@type": "WebApplication",
-        "name": "Rent vs Buy Calculator – Compare Costs Over Years",
-        "description": "See how buying versus renting compares after [[years]] using your assumptions on EMI, rent increase, appreciation and investment return.",
+        "name": "Rent vs Buy Calculator – Compare monthly costs",
+        "description": "See how buying or renting a property compares over [[years]] using your own assumptions on EMI, rent increase and investment return.",
         "url": "https://tools.changelense.in/tools/rent-vs-buy/",
         "inLanguage": "en-IN",
         "applicationCategory": "FinanceApplication",
@@ -68,34 +68,34 @@
         "mainEntity": [
           {
             "@type": "Question",
-            "name": "What inputs are required?",
+            "name": "What does this calculator compare?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "Enter the property value [[value]], down payment [[down]], loan rate [[rate]], current rent [[rent]], annual rent increase [[rent_increase]], expected property appreciation [[appreciation]], expected return on savings [[return]] and the comparison period [[years]]."
+              "text": "It shows how much the buyer and the renter have after [[years]] by accounting for EMI, rent, maintenance and the money saved each month."
             }
           },
           {
             "@type": "Question",
-            "name": "Are taxes or loan tax benefits included?",
+            "name": "Which inputs are needed?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "No. The calculator shows numbers before tax. For tax effects, ask your CA."
+              "text": "Enter the property value [[value]], down payment [[down]], loan rate [[rate]], rent [[rent]], rent increase [[rent_increase]], property appreciation [[appreciation]] and investment return [[return]]."
             }
           },
           {
             "@type": "Question",
-            "name": "Can I adjust the assumptions later?",
+            "name": "Are taxes or selling costs included?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "Yes. Change any input and recalculate to see the new outcome."
+              "text": "No. Home‑loan tax benefits and selling costs are not part of the calculation; ask your CA for tax impact."
             }
           },
           {
             "@type": "Question",
-            "name": "What does the ‘Buyer has at the end’ figure mean?",
+            "name": "Can I change assumptions like rent rise or investment return?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "It is the projected property value after [[years]] minus the remaining loan balance plus any cash you have saved."
+              "text": "Yes, adjust [[rent_increase]] and [[return]] to see how different scenarios affect the result."
             }
           }
         ]
@@ -105,8 +105,8 @@
       {
         "@context": "https://schema.org",
         "@type": "WebApplication",
-        "name": "किराया या खरीदें कैलकुलेटर – लागत तुलना",
-        "description": "[[years]] में खरीद बनाम किराया की तुलना देखें, EMI, किराया बढ़ोतरी, प्रॉपर्टी मूल्य वृद्धि और बचत रिटर्न को ध्यान में रखकर।",
+        "name": "किराया या खरीदें कैलकुलेटर – मासिक लागत तुलना",
+        "description": "[[years]] के दौरान खरीद बनाम किराया की तुलना देखें, अपने EMI, किराया बढ़ोतरी और निवेश रिटर्न के अनुमान के साथ।",
         "url": "https://tools.changelense.in/hi/tools/rent-vs-buy/",
         "inLanguage": "hi-IN",
         "applicationCategory": "FinanceApplication",
@@ -120,34 +120,34 @@
         "mainEntity": [
           {
             "@type": "Question",
-            "name": "कैलकुलेटर को कौन‑सी जानकारी चाहिए?",
+            "name": "यह कैलकुलेटर क्या तुलना करता है?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "प्रॉपर्टी की कीमत [[value]], डाउन पेमेंट [[down]], लोन दर [[rate]], मौजूदा किराया [[rent]], सालाना किराया बढ़ोतरी [[rent_increase]], प्रॉपर्टी मूल्य वृद्धि [[appreciation]], बचत पर रिटर्न [[return]] और तुलना की अवधि [[years]] भरें।"
+              "text": "यह दिखाता है कि [[years]] के बाद खरीदार और किरायेदार के पास कितना पैसा रहेगा, EMI, किराया, रख‑रखाव और बचत को ध्यान में रखते हुए।"
             }
           },
           {
             "@type": "Question",
-            "name": "क्या इसमें टैक्स या होम‑लोन टैक्स लाभ शामिल हैं?",
+            "name": "कौन‑से इनपुट चाहिए?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "नहीं। यह सभी आंकड़े टैक्स से पहले दिखाता है। टैक्स के लिए अपने CA से पूछें।"
+              "text": "प्रॉपर्टी की कीमत [[value]], डाउन पेमेंट [[down]], लोन दर [[rate]], किराया [[rent]], किराया बढ़ोतरी [[rent_increase]], प्रॉपर्टी की कीमत बदलाव [[appreciation]] और निवेश रिटर्न [[return]] डालें।"
             }
           },
           {
             "@type": "Question",
-            "name": "इनपुट बदलने के बाद फिर से चलाया जा सकता है?",
+            "name": "क्या इसमें टैक्स या बिक्री लागत शामिल है?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "हां। कोई भी मान बदलें और फिर से कैलकुलेट करें, परिणाम तुरंत अपडेट हो जाएगा।"
+              "text": "नहीं। होम‑लोन टैक्स लाभ और बिक्री लागत गणना में नहीं ली गई हैं; टैक्स के लिए अपने CA से पूछें।"
             }
           },
           {
             "@type": "Question",
-            "name": "‘अंत में खरीदार के पास’ का मतलब क्या है?",
+            "name": "क्या किराया बढ़ोतरी या निवेश रिटर्न बदल सकते हैं?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "यह प्रोजेक्टेड प्रॉपर्टी वैल्यू में से बचा लोन घटाकर, बची हुई नकद जोड़ने पर मिलने वाला कुल है।"
+              "text": "हां, [[rent_increase]] और [[return]] को बदलकर अलग‑अलग परिदृश्य देख सकते हैं।"
             }
           }
         ]
