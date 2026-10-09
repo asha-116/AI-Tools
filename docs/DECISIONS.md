@@ -511,4 +511,9 @@ NOTHING`), so duplicates and both events for one payment are harmless. It stores
   adapters for the new tools and triggers on tool paths instead of labels, so every merged tool
   gets help articles and post drafts. Paid ads stay out unless the owner adds a budget.
 - **Status:** Accepted (2026-10-09). Owner: verify in Search Console and submit the sitemap
-  (`docs/SETUP.md` §5.5a).
+  (`docs/SETUP.md` §5.5a). Step 2 done the same day: worked-example adapters for area,
+  prepayment, eligibility, carpet area, rental yield and rent vs buy (inputs from each tool's
+  published known answer, outputs computed by tools-core; a test fails if a tool page has no
+  adapter), and the SEO/Listing and Social workflows now run for any merged PR that changes a
+  tool, label or not. Existing tools get their first articles and drafts via **Run workflow**
+  (one slug at a time).

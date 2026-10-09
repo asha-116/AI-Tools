@@ -1,4 +1,4 @@
-import { mkdirSync, mkdtempSync, writeFileSync } from 'node:fs';
+import { mkdirSync, mkdtempSync, readdirSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
@@ -130,5 +130,61 @@ describe('placeholders', () => {
     expect(allowed).toContain(100);
     expect(allowed).toContain(10.5);
     expect(allowed).toContain(13_493);
+  });
+});
+
+describe('worked examples for the newer tools match their published answers', () => {
+  it('Area: 1 acre = 43,560 sq ft = 4,840 gaj', () => {
+    const e = example('area');
+    expect(out(e, 'sq_ft')?.display.en).toBe('43,560 sq ft');
+    expect(out(e, 'gaj')?.display.hi).toBe('4,840 गज़');
+    expect(out(e, 'hectare')?.value).toBeCloseTo(0.4046856, 6);
+    expect(findTool('area')?.moneyTopic).toBe(false);
+  });
+
+  it('Prepayment: ₹25 lakh at 9%, ₹2 lakh upfront → 195 months (published)', () => {
+    const e = example('prepayment');
+    expect(out(e, 'months_new')?.value).toBe(195);
+    expect(out(e, 'months_saved')?.display.en).toBe('45 months');
+    expect(out(e, 'emi')?.display.en).toBe('₹22,493');
+  });
+
+  it('Eligibility: ₹1 lakh, 50%, 8.5%, 20 years → ₹57,61,542 (published, exact)', () => {
+    expect(out(example('eligibility'), 'loan')?.display.en).toBe('₹57,61,542');
+  });
+
+  it('Carpet area: ₹1.80 crore, 1,500 / 1,050 sq ft → ₹17,143 per carpet sq ft (published)', () => {
+    const e = example('carpet-area');
+    expect(out(e, 'rate_carpet')?.display.en).toBe('₹17,143');
+    expect(out(e, 'rate_sba')?.display.en).toBe('₹12,000');
+    expect(out(e, 'loading')?.display.en).toBe('42.86%');
+  });
+
+  it('Rental yield: Pune example → 4% gross, 3.33% net (published)', () => {
+    const e = example('rental-yield');
+    expect(out(e, 'gross')?.display.en).toBe('4%');
+    expect(out(e, 'net')?.display.en).toBe('3.33%');
+    expect(out(e, 'income')?.display.en).toBe('₹2,00,000');
+  });
+
+  it('Rent vs buy: EMI ₹52,069 on ₹60 lakh at 8.5% for 20 years (published ≈ ₹52,000)', () => {
+    const e = example('rent-vs-buy');
+    expect(out(e, 'emi')?.display.en).toBe('₹52,069');
+    expect(out(e, 'buyer')?.value).toBeGreaterThan(0);
+    expect(out(e, 'renter')?.value).toBeGreaterThan(0);
+  });
+
+  it('every tool page on the site has an adapter, and every adapter has text and a formula', () => {
+    expect(TOOLS.map((t) => t.slug).sort()).toEqual(
+      readdirSync(join(ROOT, 'site/src/tools')).sort(),
+    );
+    for (const t of TOOLS) {
+      for (const lang of ['en', 'hi'] as const) {
+        expect(t.text[lang].h1.length, `${t.slug} ${lang}`).toBeGreaterThan(0);
+        expect(t.text[lang].formula.length, `${t.slug} ${lang}`).toBeGreaterThan(0);
+      }
+      expect(t.path('hi')).toBe(`/hi/tools/${t.slug}/`);
+      expect(t.lastVerified(ROOT)).toMatch(/^\d{4}-\d{2}-\d{2}$|not verified/);
+    }
   });
 });

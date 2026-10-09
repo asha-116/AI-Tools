@@ -4,7 +4,7 @@ Drafts short, helpful posts. **Never posts.** The owner publishes approved draft
 
 ## Trigger
 
-A tool PR is merged, and weekly (Thursday 04:13 UTC) for one evergreen tip. `workflow_dispatch`
+A merged PR changes a tool (`site/src/tools/<slug>/`; no label needed), and weekly (Thursday 04:13 UTC) for one evergreen tip. `workflow_dispatch`
 (`.github/workflows/agent-social.yml`; `--slug <slug>` for a tool, none for the weekly tip — the
 tool with the fewest past drafts that has a publishable worked example).
 

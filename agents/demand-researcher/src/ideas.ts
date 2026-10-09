@@ -43,11 +43,13 @@ export function buildSeeds(names: { en: string; hi: string }[], max = 24): Seed[
       out.push({ q: c, lang });
     }
   };
+  // Broad profession seeds first: they find new ideas, and must not be crowded out as the
+  // number of tools grows. Tool and waitlist names fill the rest.
+  for (const p of PROFESSION) for (const s of SUFFIX[p.lang]) add(`${p.q} ${s}`, p.lang);
   for (const n of names) {
     add(n.en, 'en');
     add(n.hi, 'hi');
   }
-  for (const p of PROFESSION) for (const s of SUFFIX[p.lang]) add(`${p.q} ${s}`, p.lang);
   return out.slice(0, max);
 }
 
