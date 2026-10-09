@@ -46,6 +46,8 @@ const en = {
   commissionCardSummary: 'Brokerage, GST and each co-broker’s share — to the paisa.',
   areaCardTitle: 'Land area converter',
   areaCardSummary: 'Acres, gaj, sq ft, sq m and hectares — one area in every unit.',
+  prepaymentCardTitle: 'Home loan prepayment calculator',
+  prepaymentCardSummary: 'How much interest and how many years a prepayment saves.',
   openTool: 'Open',
 };
 
@@ -94,6 +96,8 @@ const hi: Strings = {
   commissionCardSummary: 'ब्रोकरेज, GST और हर को-ब्रोकर का हिस्सा — पैसे तक सटीक।',
   areaCardTitle: 'ज़मीन का क्षेत्रफल कन्वर्टर',
   areaCardSummary: 'एकड़, गज़, वर्ग फ़ुट, वर्ग मीटर और हेक्टेयर — एक क्षेत्रफल हर इकाई में।',
+  prepaymentCardTitle: 'होम लोन प्रीपेमेंट कैलकुलेटर',
+  prepaymentCardSummary: 'प्रीपेमेंट से कितना ब्याज और कितने साल बचते हैं।',
   openTool: 'खोलें',
 };
 

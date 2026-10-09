@@ -37,3 +37,11 @@ export {
   type LedgerTotals,
 } from './templates.js';
 export { AREA_LIMITS, convertArea, convertToAll, type AreaUnit } from './area.js';
+export {
+  computePrepayment,
+  PREPAYMENT_LIMITS,
+  type LumpSum,
+  type PrepaymentInput,
+  type PrepaymentResult,
+  type RepaymentSummary,
+} from './prepayment.js';

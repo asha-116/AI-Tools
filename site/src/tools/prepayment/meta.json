@@ -1,0 +1,7 @@
+{
+  "slug": "prepayment",
+  "kind": "free",
+  "formula": "Each month: interest = balance × r; balance = balance − (EMI − interest) − prepayment",
+  "knownAnswers": "tools-core/test/fixtures/prepayment-known-answers.json",
+  "lastReviewed": "2026-10-09"
+}

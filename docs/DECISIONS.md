@@ -416,3 +416,17 @@ NOTHING`), so duplicates and both events for one payment are harmless. It stores
   14 known-answer cases with cited sources; the formula is one line in `tools-core/src/area.ts`.
 - **Status:** Accepted (2026-10-09). Owner: verify `regional.json` against state sources and
   have a person review the Hindi labels before regional units go live.
+
+### ADR-035 — Home-loan prepayment calculator: keep the EMI, shorten the tenure
+
+- **Context:** asha-116/AI-Tools#28 asked for an EMI calculator with prepayments that shows
+  interest saved and tenure reduction. Published worked examples give rounded figures only.
+- **Decision:** `tools-core/src/prepayment.ts` simulates the loan month by month (reducing
+  balance; EMI unchanged; prepayments go to principal after that month's EMI; month 0 = before
+  the first EMI). One-time, monthly and yearly prepayments. Tests check it to the paisa against
+  the closed-form remaining-balance and number-of-payments formulas, and against published
+  examples with stated tolerances (₹25 lakh at 9% with ₹2 lakh upfront: 195 months, ₹20.84
+  lakh interest — matches). "Reduce EMI instead" and prepayment charges are out of scope (v1).
+- The Verifier recomputes the EMI and baseline interest for every case, and the shortened
+  tenure where a closed form exists; its expression evaluator gained `ln` and `ceil`.
+- **Status:** Accepted (2026-10-09). Hindi text needs a human review before it is promoted.

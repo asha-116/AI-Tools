@@ -1,0 +1,44 @@
+{
+  "$comment": "Known answers for home-loan prepayment (keep the EMI, shorten the tenure). Published worked examples found via web search on 2026-10-09 (direct fetch blocked in the build environment) give rounded figures, so each case has a tolerance. Exact behaviour is also checked in tools-core/test/prepayment.test.ts against the closed-form amortisation formulas (remaining balance and number of payments) from https://en.wikipedia.org/wiki/Mortgage_calculator.",
+  "accessed": "2026-10-09",
+  "cases": [
+    {
+      "name": "₹25 lakh, 9%, 20 years, no prepayment",
+      "input": { "principal": 2500000, "annualRatePercent": 9, "tenureMonths": 240 },
+      "expect": { "emi": 22493, "months": 240, "totalInterest": 2898000 },
+      "tolerance": { "emi": 1, "months": 0, "totalInterestPercent": 0.1 },
+      "sources": [
+        "https://homefirstindia.com/blog/article/reduce-emi-or-reduce-tenure-for-home-loan-prepayment/"
+      ],
+      "quote": "Total Interest Payable Over 20 Years: Approximately ₹28.98 lakh … EMI of approximately ₹22,493"
+    },
+    {
+      "name": "₹25 lakh, 9%, 20 years, ₹2 lakh prepaid at the start, EMI kept",
+      "input": {
+        "principal": 2500000,
+        "annualRatePercent": 9,
+        "tenureMonths": 240,
+        "lumpSums": [{ "month": 0, "amount": 200000 }]
+      },
+      "expect": { "months": 195, "totalInterest": 2084000 },
+      "tolerance": { "months": 1, "totalInterestPercent": 0.5 },
+      "sources": [
+        "https://homefirstindia.com/blog/article/reduce-emi-or-reduce-tenure-for-home-loan-prepayment/"
+      ],
+      "quote": "your outstanding loan reduces to ₹23 lakh … new tenure about 195 months … total interest of about ₹20.84 lakh"
+    },
+    {
+      "name": "₹50 lakh, 7.5%, 20 years, one extra EMI (₹40,280) every year",
+      "input": {
+        "principal": 5000000,
+        "annualRatePercent": 7.5,
+        "tenureMonths": 240,
+        "yearlyExtra": 40280
+      },
+      "expect": { "emi": 40280, "months": 204, "totalInterest": 3815000 },
+      "tolerance": { "emi": 1, "months": 12, "totalInterestPercent": 2 },
+      "sources": ["https://stableinvestor.com/2022/08/one-extra-emi-prepay-home-loan.html"],
+      "quote": "paying one extra EMI of Rs 40,280 every year, you clear your home loan in 16-17 years, paying interest of Rs 38.15 lakh only"
+    }
+  ]
+}

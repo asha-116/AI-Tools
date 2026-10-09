@@ -19,7 +19,7 @@ Formula description (from the cited source):
 
 Compute these output fields for every case: the field names are listed per case.
 For each field, write an arithmetic expression as a JSON string, built from the numbers in the
-case input and only these: + - * / ^ ( ) and round(x, digits). No variable names, units,
+case input and only these: + - * / ^ ( ), round(x, digits), ln(x) and ceil(x). No variable names, units,
 currency symbols or text. Example for a 2-year EMI on 100000 at 12%:
 "100000 * (12/12/100) * (1 + 12/12/100)^24 / ((1 + 12/12/100)^24 - 1)".
 {{note}}
