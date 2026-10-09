@@ -110,3 +110,29 @@ export function latestUsageReport(repoRoot: string): string | null {
     .pop();
   return f ? `company/reports/usage/${f}` : null;
 }
+
+/** Sub-folder names of `dir` (relative to the repo), sorted; [] when it does not exist. */
+function subdirs(repoRoot: string, dir: string): string[] {
+  const full = join(repoRoot, dir);
+  if (!existsSync(full)) return [];
+  return readdirSync(full, { withFileTypes: true })
+    .filter((e) => e.isDirectory())
+    .map((e) => e.name)
+    .sort();
+}
+
+/**
+ * What the site already has and where things live, so the model plans real work on real paths
+ * (it invented `public/` and `tests/` folders and re-proposed existing features before).
+ */
+export function repoOverview(repoRoot: string): string {
+  const list = (xs: string[]) => xs.join(', ') || '(none)';
+  return [
+    `- Calculators (EN + HI pages): ${list(subdirs(repoRoot, 'site/src/tools'))}`,
+    `- Paid templates (shown as "upcoming"): ${list(subdirs(repoRoot, 'products'))}`,
+    '- Landing page with the waitlist form, in English and Hindi (`site/src/pages/hi/` mirrors `site/src/pages/`)',
+    '- Paths: formulas `tools-core/src/` with tests in `tools-core/test/`; calculator pages ' +
+      '`site/src/tools/<slug>/`; UI strings `site/src/i18n/`; rates `data/<dataset>/`; ' +
+      'templates `products/<id>/`; agents `agents/<name>/`; docs `docs/`',
+  ].join('\n');
+}

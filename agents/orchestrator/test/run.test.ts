@@ -171,7 +171,8 @@ describe('orchestrate', () => {
 
     // LLM prompt: goals and state in, PII out.
     const sent = s.llm.requests[0]?.messages ?? [];
-    expect(sent[0]?.content).toContain('builder, engineer');
+    expect(sent[0]?.content).toContain('Set agent to engineer');
+    expect(sent[1]?.content).toContain('What already exists');
     expect(sent[1]?.content).toContain('Collect 50 waitlist sign-ups');
     expect(sent[1]?.content).toContain('Failing workflows: Deploy');
     expect(sent[1]?.content).toContain('- quiet day');

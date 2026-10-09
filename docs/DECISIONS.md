@@ -345,6 +345,12 @@ NOTHING`), so duplicates and both events for one payment are harmless. It stores
   gave QA a task QA never reads. Orchestrator Issues now go only to `builder` (type `tool` or
   `product`) or `engineer` (a human or coding session); other types are re-assigned in code,
   and the prompt says which agents already run on their own schedule.
+- **Update 2026-10-09:** the next run gave the Builder two real calculator Issues with source
+  URLs, and the Builder bounced both: it needs worked examples **quoted in the Issue**, and the
+  Orchestrator cannot fetch pages. It also re-proposed the existing Hindi waitlist form and
+  invented `public/` and `tests/` paths. Now every Orchestrator Issue goes to `agent:engineer`,
+  who quotes the examples and re-labels it `agent:builder`; the prompt gets a generated
+  "what already exists" list (calculators, templates, real paths).
 
 ### ADR-031 — Support: templates only, every refund to the owner, no inbox yet
 

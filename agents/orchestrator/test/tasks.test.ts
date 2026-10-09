@@ -38,12 +38,9 @@ describe('schemas', () => {
 });
 
 describe('assignee', () => {
-  it('keeps calculator/template work with the Builder and sends the rest to the engineer', () => {
-    expect(toTask(candidate({ agent: 'builder', type: 'tool' }), 'llm').agent).toBe('builder');
-    expect(toTask(candidate({ agent: 'builder', type: 'product' }), 'llm').agent).toBe('builder');
-    const infra = toTask(candidate({ agent: 'builder', type: 'infra' }), 'llm');
-    expect(infra.agent).toBe('engineer');
-    expect(infra.labels[0]).toBe('agent:engineer');
+  it('sends every task to the engineer, including state-derived ones', () => {
+    expect(() => CandidateSchema.parse({ ...candidate(), agent: 'builder' })).toThrow();
+    expect(toTask(candidate({ type: 'tool' }), 'llm').labels[0]).toBe('agent:engineer');
     expect(
       stateTasks({
         failing: [],

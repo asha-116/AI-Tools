@@ -14,6 +14,9 @@ templates "coming soon".
 
 ## Done
 
+- 2026-10-09 — Orchestrator: every Issue now goes to `agent:engineer` (the Builder bounced
+  asha-116/AI-Tools#26 and #28 for lack of quoted worked examples), and the prompt lists what
+  already exists so it stops re-proposing done work (#27) or inventing paths (ADR-030 update).
 - 2026-10-09 — Rate freshness check in CI (asha-116/AI-Tools#21, ADR-033): verified rate files
   older than 180 days fail CI, drafts warn, everything warns 30 days ahead.
 - 2026-10-08 — **Agents are live** (`AGENTS_LIVE=true`). First live Orchestrator run opened

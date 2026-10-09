@@ -1,7 +1,7 @@
 // PROCEDURE steps 2 and 4: candidate tasks from the deterministic state, labels, ranking and
 // the Issue body. Pure functions.
 
-import { BUILDER_TYPES, MAX_ISSUES, type Candidate, type TaskIssue } from '../schema.js';
+import { MAX_ISSUES, type Candidate, type TaskIssue } from '../schema.js';
 import type { StaleData, WorkflowRun } from './state.js';
 
 export type TaskSource = 'state' | 'llm';
@@ -23,11 +23,7 @@ export function taskLabels(c: Candidate): string[] {
 }
 
 export function toTask(c: Candidate, source: TaskSource): Task {
-  // The Builder only does calculator/template work; anything else would bounce back to the
-  // owner as "no worked examples", so it goes to the engineer instead.
-  const builderType = (BUILDER_TYPES as readonly string[]).includes(c.type);
-  const fixed = c.agent === 'builder' && !builderType ? { ...c, agent: 'engineer' as const } : c;
-  return { ...fixed, source, labels: taskLabels(fixed) };
+  return { ...c, source, labels: taskLabels(c) };
 }
 
 /** Goal impact ÷ effort. */

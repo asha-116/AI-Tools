@@ -7,6 +7,7 @@ import {
   readLatestMemory,
   readRecentReports,
   readTokenUsage,
+  repoOverview,
 } from '../src/inputs.js';
 import { tempRepo } from './helpers.js';
 
@@ -97,5 +98,21 @@ describe('readTokenUsage / latestUsageReport', () => {
     ).toBe('company/reports/usage/2026-09.md');
     expect(latestUsageReport(tempRepo({ 'company/reports/usage/x.txt': '' }))).toBeNull();
     expect(latestUsageReport(tempRepo({}))).toBeNull();
+  });
+});
+
+describe('repoOverview', () => {
+  it('lists the calculators and templates that exist, and the real paths', () => {
+    const root = tempRepo({
+      'site/src/tools/emi/meta.json': '{}',
+      'site/src/tools/commission/meta.json': '{}',
+      'products/lead-tracker/spec.json': '{}',
+      'products/catalog.json': '{}',
+    });
+    const o = repoOverview(root);
+    expect(o).toContain('Calculators (EN + HI pages): commission, emi');
+    expect(o).toContain('Paid templates (shown as "upcoming"): lead-tracker');
+    expect(o).toContain('tools-core/test/');
+    expect(repoOverview(tempRepo({}))).toContain('Calculators (EN + HI pages): (none)');
   });
 });

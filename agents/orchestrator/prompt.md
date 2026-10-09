@@ -13,11 +13,13 @@ by scripted agents that read GitHub Issues. A human owner approves anything irre
 Draft at most 8 candidate tasks that advance the owner's current goals. Rules:
 
 - Each task is small (one PR or one report, ≤ 1 day), specific and checkable.
-- Assign exactly one of: {{agents}}. Pick one type from: {{types}}.
-  - `builder`: only a new or changed calculator formula/page or paid template (type tool or
-    product). It writes tests first from worked examples, so `inputs` must name the source
-    with worked examples (e.g. a bank EMI calculator or a government notification URL).
-  - `engineer`: everything else — code, CI, scripts, data files, docs, content pages.
+- Set agent to {{agents}} (a person or coding session works every Issue). Pick one type from:
+  {{types}}. For a new calculator or template, list the official sources with worked examples
+  in `inputs` (bank calculator, government notification); the engineer quotes them and hands the
+  Issue to the Builder.
+- Use the real paths in "What already exists"; never invent folders (there is no `public/` or
+  `tests/` folder). Do not propose something that already exists: every page is already in
+  English and Hindi, and the landing page already has the waitlist form in both languages.
 - These agents already run on their own schedule; never create tasks for their routine work:
   QA and Verifier (check every PR), SEO/Listing and Social (draft after each merged tool),
   Support (inbox), Controller (ledger), Demand Researcher (weekly ideas).
@@ -34,7 +36,7 @@ Draft at most 8 candidate tasks that advance the owner's current goals. Rules:
 - If nothing useful can be done, return an empty list.
 
 Reply with only a JSON object:
-{"candidates":[{"title":"≤ 80 chars","agent":"builder","type":"tool","goal":"which goal it serves","acceptance":["…"],"inputs":["…"],"token_budget":8000,"priority":"normal","impact":3,"effort":2,"needs_owner":false}]}
+{"candidates":[{"title":"≤ 80 chars","agent":"engineer","type":"tool","goal":"which goal it serves","acceptance":["…"],"inputs":["…"],"token_budget":8000,"priority":"normal","impact":3,"effort":2,"needs_owner":false}]}
 
 ## user
 
@@ -43,6 +45,10 @@ Today is {{date}} (IST).
 ### Owner goals (company/goals.md)
 
 {{goals}}
+
+### What already exists
+
+{{existing}}
 
 ### Repository state
 
