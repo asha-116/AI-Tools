@@ -374,3 +374,16 @@ NOTHING`), so duplicates and both events for one payment are harmless. It stores
     (tested). News, politics, regulation and competitor topics go to the owner.
 - **Open:** wiring `site/src/content/articles/` into pages (no content collection yet).
 - **Status:** Accepted for dry-run (2026-10-06).
+
+### ADR-033 — Rate freshness is enforced in CI
+
+- **Context:** rate files carried a `last_verified` date, but nothing failed when it got old;
+  the Orchestrator only opened a re-verify Issue (asha-116/AI-Tools#21).
+- **Decision:** `scripts/check-data-freshness.mjs` runs inside `npm run check:structure` on
+  every PR and push. Malformed or future dates fail. A file the site serves as
+  `"status": "verified"` fails once its oldest `last_verified` is more than 180 days old; drafts
+  only warn. Everything warns 30 days before the limit (GitHub annotations in CI).
+- **Trade-off:** when a verified file expires, every PR goes red until it is re-verified or set
+  to draft. That is intended: the alternative is the site showing stale rates as verified.
+- **Status:** Accepted (2026-10-09). Written in Node like the other repo checks, not the Python
+  test the Issue suggested (the repo has no Python toolchain).
