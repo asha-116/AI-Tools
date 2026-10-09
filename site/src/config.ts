@@ -9,4 +9,6 @@ export const config = {
   /** Origin of the download Worker; the page only shows links that point there. */
   downloadBaseUrl: import.meta.env.PUBLIC_DOWNLOAD_BASE_URL ?? '',
   beaconToken: import.meta.env.PUBLIC_CF_BEACON_TOKEN ?? '',
+  /** Google Search Console "HTML tag" code (content="…" only). Empty = no tag. */
+  googleSiteVerification: import.meta.env.PUBLIC_GOOGLE_SITE_VERIFICATION ?? '',
 };

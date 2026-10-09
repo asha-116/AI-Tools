@@ -39,6 +39,11 @@ const canonical = new URL(hrefFor(lang), Astro.site);
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     <meta property="og:locale" content={lang === 'en' ? 'en_IN' : 'hi_IN'} />
+    {
+      config.googleSiteVerification && (
+        <meta name="google-site-verification" content={config.googleSiteVerification} />
+      )
+    }
   </head>
   <body>
     <header class="site-header">

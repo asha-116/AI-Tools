@@ -15,6 +15,7 @@ identity or legal authority — agents cannot do them. Tick them as you go.
 - [ ] Decide business registration and **GST** obligations with a Chartered Accountant
       (agents must not give tax advice)
 - [ ] Answer "Questions for owner" in `docs/PROGRESS.md`
+- [ ] Verify the site in Google Search Console and submit the sitemap (§5.5a, free)
 
 ## 1. Local development
 
@@ -157,6 +158,23 @@ LLM prompt. Delete a person on request with
 3. Wait for **Active** (minutes), then set `SITE_URL` / `SITE_ORIGINS` (5.2) and run **Deploy**.
 
 ⚠️ `toolshop.pages.dev` belongs to **someone else** (a gambling site). Never link to it.
+
+### 5.5a Get found on Google (owner, ~15 min, free)
+
+The site publishes `https://tools.changelense.in/sitemap.xml` (every indexable page, EN + HI) and
+a `robots.txt` that points to it. Tell Google about it once:
+
+1. Open <https://search.google.com/search-console>, sign in, **Add property** →
+   **URL prefix** → `https://tools.changelense.in/`. (Not "Domain": that needs a DNS record on
+   `changelense.in`, which this repo never touches — ADR-021.)
+2. Choose **HTML tag**. Copy only the `content="…"` value.
+3. GitHub → Settings → Secrets and variables → Actions → **Variables** → New:
+   `GOOGLE_SITE_VERIFICATION` = that value. Run **Deploy**, then click **Verify** in Search Console.
+4. Search Console → **Sitemaps** → add `sitemap.xml` → Submit. Repeat for Bing Webmaster Tools
+   (it can import from Search Console) if you like.
+
+Pages usually start appearing in search within a few days to weeks. Search Console then shows
+which searches bring people in — useful input for the Demand Researcher and SEO agents.
 
 ### 5.5 Local development
 

@@ -14,6 +14,11 @@ templates "coming soon".
 
 ## Done
 
+- 2026-10-09 — **Growth, step 1** (owner: "an advertisement agent that brings traffic",
+  ADR-040): `sitemap.xml` + `robots.txt` pointing to it, optional Search Console tag, owner
+  steps in `docs/SETUP.md` §5.5a. Rent vs buy merged (asha-116/AI-Tools#41). Found: the SEO and
+  Social agents have never run for the six new tools (label-gated triggers, missing adapters) —
+  fixing that is the next PR.
 - 2026-10-09 — **Rent vs buy calculator** (owner's pick, ADR-039): `/tools/rent-vs-buy/` and
   `/hi/tools/rent-vs-buy/` — what a buyer and a renter each have after the same years when both
   spend the same each month; numbers only, before tax. Rental yield merged
