@@ -41,6 +41,7 @@ import {
   readLatestMemory,
   readRecentReports,
   readTokenUsage,
+  repoOverview,
 } from './inputs.js';
 import { renderReport, type LlmStatus } from './report.js';
 import {
@@ -111,6 +112,8 @@ function readRepoFile(root: string, path: string): string | null {
 export interface DraftInput {
   date: string;
   goals: string;
+  /** What already exists in the repo (repoOverview). */
+  existing?: string;
   state: string;
   openIssues: readonly IssueSummary[];
   reports: { date: string; text: string }[];
@@ -125,6 +128,7 @@ export function promptVars(d: DraftInput): Record<string, string> {
   return {
     date: d.date,
     goals: safe(clip(d.goals.trim(), 4000)),
+    existing: safe(d.existing ?? '(unknown)'),
     state: safe(d.state),
     open_issues: safe(issues.join('\n') || '(none)'),
     reports: safe(
@@ -265,6 +269,7 @@ export async function orchestrate(
       const draft = await draftTasks(ctx, {
         date,
         goals,
+        existing: repoOverview(root),
         state: stateSummary({
           merged,
           staleCount: stale?.length ?? null,
