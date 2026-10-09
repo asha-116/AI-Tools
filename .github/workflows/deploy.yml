@@ -178,6 +178,7 @@ jobs:
       PUBLIC_CLAIM_URL: ${{ vars.CLAIM_URL }}
       PUBLIC_DOWNLOAD_BASE_URL: ${{ vars.DOWNLOAD_BASE_URL }}
       PUBLIC_CF_BEACON_TOKEN: ${{ vars.CF_BEACON_TOKEN }}
+      PUBLIC_GOOGLE_SITE_VERIFICATION: ${{ vars.GOOGLE_SITE_VERIFICATION }}
     steps:
       - name: Check configuration
         id: cfg

@@ -494,3 +494,21 @@ NOTHING`), so duplicates and both events for one payment are harmless. It stores
   the geometric series and the equal-spending bookkeeping against closed forms. The Verifier
   recomputes EMI, loan left, rent paid and property value.
 - **Status:** Accepted (2026-10-09). Hindi text needs a human review before it is promoted.
+
+### ADR-040 — Growth: inbound only, starting with a sitemap and Search Console
+
+- **Context:** owner asked for an "advertisement agent" that brings visitors (2026-10-09). The
+  rules allow inbound growth only: no paid ads without a `docs/COSTS.md` entry and approval
+  (rule 4), no spam or cold outreach (rule 8), and no publishing posts without
+  `approved-by-owner` (rule 3). Two growth agents already exist — SEO/Listing (help articles,
+  meta, JSON-LD) and Social (post drafts the owner publishes) — but neither has run for the six
+  tools added on 2026-10-09: they trigger only on PRs labelled `type:tool`, and only three tools
+  have worked-example adapters. The site also had no sitemap.
+- **Decision:** grow through search first. (1) This PR: `sitemap.xml` (every indexable page,
+  EN + HI, with hreflang alternates; noindex pages left out) and a generated `robots.txt` that
+  points to it; an optional `GOOGLE_SITE_VERIFICATION` variable adds Search Console's HTML tag
+  (URL-prefix property, so no DNS change on `changelense.in` — ADR-021). (2) Next PR: SEO/Social
+  adapters for the new tools and triggers on tool paths instead of labels, so every merged tool
+  gets help articles and post drafts. Paid ads stay out unless the owner adds a budget.
+- **Status:** Accepted (2026-10-09). Owner: verify in Search Console and submit the sitemap
+  (`docs/SETUP.md` §5.5a).
