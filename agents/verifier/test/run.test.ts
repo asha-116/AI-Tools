@@ -564,6 +564,42 @@ describe('verify — claims and text (PROCEDURE step 3)', () => {
     ]);
   });
 
+  it("finds a file's sources in lines the PR did not change", async () => {
+    const llm = scriptedLlm({
+      claims: {
+        claims: [
+          {
+            file: 'data/x.json',
+            claim: '1 are = 100 m²',
+            source: '',
+            status: 'unsourced',
+            note: '',
+          },
+          {
+            file: 'data/x.json',
+            claim: '1 acre = 4046.8564224 m²',
+            source: 'https://proofwiki.org/wiki/Acre',
+            status: 'unchecked',
+            note: '',
+          },
+        ],
+        advice: [],
+        missing_disclaimer: [],
+      },
+    });
+    const github = gh({
+      'data/x.json': '{ "sources": [{ "url": "https://proofwiki.org/wiki/Acre" }], "are": 100 }',
+    });
+    const { r } = await run(
+      [{ filename: 'data/x.json', status: 'modified', patch: '+ "are": 100' }],
+      { llm, github },
+    );
+    expect(llm.requests[0]?.messages[1]?.content).toContain('- https://proofwiki.org/wiki/Acre');
+    expect(r.report.claims.map((c) => c.status)).toEqual(['unchecked', 'unchecked']);
+    expect(r.report.reasons).toEqual([]);
+    expect(r.status.state).toBe('success');
+  });
+
   it('ignores model disclaimer findings outside published content', async () => {
     const llm = scriptedLlm({
       claims: {

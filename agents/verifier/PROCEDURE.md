@@ -23,7 +23,8 @@ PR diff; the producer's model family (from PR metadata / agent log); cited sourc
    Compare to our function's output within tolerance (₹1 or 0.01%).
 3. **Claims/text:** list every factual claim (rates, laws, numbers); check each against the
    cited source text; flag unsupported claims, advice-like language and missing disclaimers.
-   A claim with no source, in a file that cites its own sources (e.g. a data file), is
+   Each changed file is read in full at the PR head for the URLs it cites (a data file's
+   `sources` may sit in unchanged lines). A claim with no source, in a file that cites sources, is
    "unchecked" (check by hand) rather than unsourced; a URL the model invents stays unsourced.
    Statements about this project's own code, tests or CI are not claims; README files are not
    claim-checked. The disclaimer check applies to published content (`site/src/content/`) only.

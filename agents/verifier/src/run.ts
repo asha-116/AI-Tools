@@ -231,6 +231,8 @@ async function checkClaims(
   sources: string[],
   exclude: string[],
   families: Set<string>,
+  /** URLs each file cites anywhere in its content at the PR head. */
+  fileUrls: ReadonlyMap<string, readonly string[]> = new Map(),
 ): Promise<{ claims: Claim[]; reasons: string[] }> {
   let budget = MAX_TEXT_CHARS;
   const parts: string[] = [];
@@ -266,9 +268,11 @@ async function checkClaims(
   );
   families.add(response.family);
   const known = new Set(sources);
-  /** Files whose own added lines cite at least one URL (e.g. a data file's `sources`). */
+  /** Files that cite at least one URL anywhere in their content (e.g. a data file's `sources`). */
   const citing = new Set(
-    files.filter((f) => extractUrls(f.patch ?? '').length > 0).map((f) => f.filename),
+    files
+      .filter((f) => (fileUrls.get(f.filename) ?? extractUrls(f.patch ?? '')).length > 0)
+      .map((f) => f.filename),
   );
   const reasons: string[] = [];
   const claims: Claim[] = data.claims.map((c) => {
@@ -475,7 +479,19 @@ export async function verify(
         }
       }
       if (claimFiles.length) {
-        const sources = extractUrls(pr.body, ...files.map((f) => f.patch ?? ''));
+        // A file's sources may sit in lines this PR did not change (e.g. a data file's
+        // `sources` list), so read each changed file in full at the PR head for its URLs.
+        const fileUrls = new Map<string, string[]>();
+        for (const f of claimFiles) {
+          const full = (await ctx.github.getFile(f.filename, pr.headSha)) ?? '';
+          fileUrls.set(f.filename, extractUrls(full, f.patch ?? ''));
+        }
+        const sources = [
+          ...new Set([
+            ...extractUrls(pr.body, ...files.map((f) => f.patch ?? '')),
+            ...[...fileUrls.values()].flat(),
+          ]),
+        ];
         const { claims, reasons } = await checkClaims(
           ctx,
           prompts,
@@ -483,6 +499,7 @@ export async function verify(
           sources,
           exclude,
           families,
+          fileUrls,
         );
         report.claims = claims;
         report.reasons.push(...reasons);
