@@ -135,7 +135,16 @@ interface ResolvedProvider extends Provider {
   key: string | undefined;
 }
 
-/** Providers with a key (and base URL) set, in order, minus excluded families. */
+/**
+ * The first configured model (`model`, then `models`) outside the excluded families. One key
+ * often serves several families — Groq runs gpt-oss and Llama — so the Verifier can still use
+ * that provider when the producer's family is excluded (ADR-043).
+ */
+export function modelOutside(p: Provider, excluded: ReadonlySet<string>): string | undefined {
+  return [p.model, ...(p.models ?? [])].find((m) => !excluded.has(familyOf(m, p.family)));
+}
+
+/** Providers with a key (and base URL) set, in order, minus those with only excluded families. */
 export function availableProviders(
   providers: Provider[],
   env: Env,
@@ -148,7 +157,7 @@ export function availableProviders(
   );
   const out: ResolvedProvider[] = [];
   for (const p of providers) {
-    if (excluded.has(p.family.toLowerCase())) continue;
+    if (!modelOutside(p, excluded)) continue;
     const key = p.keyEnv ? env[p.keyEnv] : undefined;
     if (p.keyEnv && !key) continue;
     const base = p.baseUrl ?? (p.baseUrlEnv ? env[p.baseUrlEnv] : undefined);
@@ -357,11 +366,17 @@ export function createLlm(options: LlmOptions): LlmClient {
         ).map((f) => f.toLowerCase()),
       );
       for (const p of candidates) {
-        let model = resolvedModel.get(p.id);
-        if (model === null) continue; // discovery already found nothing usable this run
+        const cached = resolvedModel.get(p.id);
+        if (cached === null) continue; // discovery already found nothing usable this run
         if (down.has(p.id)) continue;
-        model ??= p.model;
-        if (excluded.has(familyOf(model, p.family))) continue;
+        let model = cached ?? p.model;
+        // The usual model is the producer's family: use another one from the same provider.
+        const other = excluded.has(familyOf(model, p.family));
+        if (other) {
+          const alt = modelOutside(p, excluded);
+          if (!alt) continue;
+          model = alt;
+        }
         let r = await callProvider(p, model, req);
         if (!r.ok && r.status === 404 && !resolvedModel.has(p.id)) {
           // The model was renamed or retired: look up what the provider serves now, once.
@@ -371,7 +386,7 @@ export function createLlm(options: LlmOptions): LlmClient {
             model = found;
             r = await callProvider(p, model, req);
           }
-        } else if (r.ok) {
+        } else if (r.ok && !other) {
           resolvedModel.set(p.id, model);
         }
         if (r.ok) {

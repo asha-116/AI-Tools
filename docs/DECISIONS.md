@@ -550,3 +550,17 @@ NOTHING`), so duplicates and both events for one payment are harmless. It stores
   (AGENTS.md rule 3); the Verifier has already checked it. The front-matter `status` field is
   not used for publishing.
 - **Status:** Accepted (2026-10-09).
+
+### ADR-043 — Verifier may use another model family from the producer's provider
+
+- **Context:** the Verifier must use a model family different from the producer's (AGENTS.md §3).
+  The agents mostly write with Groq's `openai/gpt-oss-120b` (family `gpt`), and the LLM client
+  dropped every provider whose configured family was excluded — so with the two free keys
+  (Gemini + Groq) only Gemini could verify. When Gemini's free quota ran out
+  (asha-116/AI-Tools#56, HTTP 429 on every re-run) no article could be verified, although Groq
+  also serves `llama-3.3-70b-versatile` on the same key.
+- **Decision:** a provider is skipped only when none of its configured models (`model`, then
+  `models`) is outside the excluded families; when its usual model is excluded, the request uses
+  the first configured model that is not. The family recorded is still inferred from the model
+  that actually answered (`familyOf`), so a gpt-oss answer can never verify gpt-oss output.
+- **Status:** Accepted (2026-10-09). No new provider, key or cost.
