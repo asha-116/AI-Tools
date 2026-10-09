@@ -139,6 +139,7 @@ describe('repo reader', () => {
     expect(repo.list('site/src/tools')).toEqual([
       'area',
       'commission',
+      'eligibility',
       'emi',
       'prepayment',
       'stamp-duty',

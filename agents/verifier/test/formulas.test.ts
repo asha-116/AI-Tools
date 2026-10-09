@@ -54,6 +54,7 @@ describe('selectEntries', () => {
       'emi',
       'commission',
       'prepayment',
+      'eligibility',
       'area',
     ]);
   });
@@ -223,5 +224,16 @@ describe('prepayment entry', () => {
     ]);
     const ours = runOurs(e, cases[1]?.input ?? {});
     expect('values' in ours && ours.values.months).toBe(195);
+  });
+});
+
+describe('eligibility entry', () => {
+  it('sends inputs only and our run matches the exact published case', () => {
+    const e = entry('eligibility');
+    const cases = loadCases(e, read);
+    expect(cases).toHaveLength(4);
+    expect(e.fields(cases[0]?.input ?? {})).toEqual(['maxTotalEmi', 'availableEmi', 'maxLoan']);
+    const ours = runOurs(e, cases[0]?.input ?? {});
+    expect('values' in ours && Math.round(ours.values.maxLoan ?? 0)).toBe(5761542);
   });
 });

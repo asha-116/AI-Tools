@@ -48,6 +48,8 @@ const en = {
   areaCardSummary: 'Acres, gaj, sq ft, sq m and hectares — one area in every unit.',
   prepaymentCardTitle: 'Home loan prepayment calculator',
   prepaymentCardSummary: 'How much interest and how many years a prepayment saves.',
+  eligibilityCardTitle: 'Home loan eligibility calculator',
+  eligibilityCardSummary: 'The largest loan and EMI a buyer can get on their income.',
   openTool: 'Open',
 };
 
@@ -98,6 +100,8 @@ const hi: Strings = {
   areaCardSummary: 'एकड़, गज़, वर्ग फ़ुट, वर्ग मीटर और हेक्टेयर — एक क्षेत्रफल हर इकाई में।',
   prepaymentCardTitle: 'होम लोन प्रीपेमेंट कैलकुलेटर',
   prepaymentCardSummary: 'प्रीपेमेंट से कितना ब्याज और कितने साल बचते हैं।',
+  eligibilityCardTitle: 'होम लोन पात्रता कैलकुलेटर',
+  eligibilityCardSummary: 'खरीदार को उसकी आय पर मिलने वाला सबसे बड़ा लोन और EMI।',
   openTool: 'खोलें',
 };
 

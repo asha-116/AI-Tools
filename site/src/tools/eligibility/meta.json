@@ -1,0 +1,7 @@
+{
+  "slug": "eligibility",
+  "kind": "free",
+  "formula": "Loan = (income × FOIR% − existing EMIs) × (1 − (1 + r)^−n) ÷ r",
+  "knownAnswers": "tools-core/test/fixtures/eligibility-known-answers.json",
+  "lastReviewed": "2026-10-09"
+}

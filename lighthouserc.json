@@ -13,6 +13,8 @@
         "http://localhost/hi/tools/area/",
         "http://localhost/tools/prepayment/",
         "http://localhost/hi/tools/prepayment/",
+        "http://localhost/tools/eligibility/",
+        "http://localhost/hi/tools/eligibility/",
         "http://localhost/tools/stamp-duty/",
         "http://localhost/hi/tools/stamp-duty/",
         "http://localhost/get-download/",
