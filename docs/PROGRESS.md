@@ -14,6 +14,8 @@ templates "coming soon".
 
 ## Done
 
+- 2026-10-09 — Rate freshness check in CI (asha-116/AI-Tools#21, ADR-033): verified rate files
+  older than 180 days fail CI, drafts warn, everything warns 30 days ahead.
 - 2026-10-08 — **Agents are live** (`AGENTS_LIVE=true`). First live Orchestrator run opened
   asha-116/AI-Tools#19–#21 and the daily-report PR asha-116/AI-Tools#22; CI ran on it (the App
   token works). The Builder bounced #20 (a config script, not a calculator) back as #23, and #21

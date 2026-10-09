@@ -19,7 +19,7 @@
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
-    "check:structure": "node scripts/check-structure.mjs",
+    "check:structure": "node scripts/check-structure.mjs && node scripts/check-data-freshness.mjs",
     "build:templates": "node scripts/build-templates.mjs",
     "qa:bilingual": "vitest run agents/qa/test/bilingual.test.ts",
     "qa:pages": "vitest run agents/qa/test/pages.dist.test.ts",
