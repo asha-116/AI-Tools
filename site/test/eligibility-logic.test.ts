@@ -30,9 +30,9 @@ describe('eligibility page logic', () => {
   });
 
   it('shows own money needed only when a property price is entered', () => {
-    const v = evaluate(state({ price: '80,00,000' }));
+    const v = evaluate(state({ propertyPrice: '80,00,000' }));
     expect(v.ok && formatInr(v.result.downPayment ?? -1)).toBe('₹22,38,458');
-    const zero = evaluate(state({ price: '0' }));
+    const zero = evaluate(state({ propertyPrice: '0' }));
     expect(zero.ok && zero.result.downPayment).toBeUndefined();
   });
 
@@ -44,7 +44,7 @@ describe('eligibility page logic', () => {
       foir: '0',
       rate: '60',
       years: '0',
-      price: '-5',
+      propertyPrice: '-5',
     });
     expect(v.ok ? [] : v.errors).toEqual([
       'income',
@@ -53,14 +53,14 @@ describe('eligibility page logic', () => {
       'foir',
       'rate',
       'years',
-      'price',
+      'propertyPrice',
     ]);
     const big = evaluate(state({ income: '1000000000', coIncome: '1' }));
     expect(big.ok ? [] : big.errors).toEqual(['coIncome']);
   });
 
   it('round-trips state through the URL hash and ignores junk', () => {
-    const s = state({ income: '75,000', coIncome: '25000', price: '9000000' });
+    const s = state({ income: '75,000', coIncome: '25000', propertyPrice: '9000000' });
     const back = fromHash(toHash(s));
     expect(back).toEqual({ ...s, income: '75000' });
     expect(toHash(state({ existing: 'x' }))).toContain('e=0');

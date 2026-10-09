@@ -20,7 +20,7 @@ const FIELDS: EligibilityField[] = [
   'foir',
   'rate',
   'years',
-  'price',
+  'propertyPrice',
 ];
 
 /** Wires the eligibility form: live results, inline errors, shareable hash link. No network calls. */

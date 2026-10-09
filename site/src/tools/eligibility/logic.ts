@@ -15,7 +15,7 @@ export interface EligibilityFormState {
   foir: string;
   rate: string;
   years: string;
-  price: string;
+  propertyPrice: string;
 }
 
 export type EligibilityField = keyof EligibilityFormState;
@@ -30,7 +30,7 @@ export const DEFAULT_STATE: EligibilityFormState = {
   foir: '50',
   rate: '8.5',
   years: '20',
-  price: '',
+  propertyPrice: '',
 };
 
 /** Empty means 0 for the optional amounts. */
@@ -45,8 +45,8 @@ export function evaluate(state: EligibilityFormState): EligibilityView {
   const foir = parseAmount(state.foir);
   const rate = parseAmount(state.rate);
   const months = Math.round(parseAmount(state.years) * 12);
-  const hasPrice = state.price.trim() !== '';
-  const price = optional(state.price);
+  const hasPrice = state.propertyPrice.trim() !== '';
+  const propertyPrice = optional(state.propertyPrice);
 
   if (!(income > 0 && income <= ELIGIBILITY_LIMITS.maxAmount)) errors.push('income');
   if (!okAmount(coIncome)) errors.push('coIncome');
@@ -54,7 +54,7 @@ export function evaluate(state: EligibilityFormState): EligibilityView {
   if (!(foir > 0 && foir <= ELIGIBILITY_LIMITS.maxFoirPercent)) errors.push('foir');
   if (!(rate >= 0 && rate <= EMI_LIMITS.maxAnnualRatePercent)) errors.push('rate');
   if (!(months >= 1 && months <= EMI_LIMITS.maxTenureMonths)) errors.push('years');
-  if (!okAmount(price)) errors.push('price');
+  if (!okAmount(propertyPrice)) errors.push('propertyPrice');
   if (!errors.includes('income') && !okAmount(income + coIncome)) errors.push('coIncome');
   if (errors.length > 0) return { ok: false, errors };
 
@@ -66,7 +66,7 @@ export function evaluate(state: EligibilityFormState): EligibilityView {
       foirPercent: foir,
       annualRatePercent: rate,
       tenureMonths: months,
-      ...(hasPrice && price > 0 ? { propertyPrice: price } : {}),
+      ...(hasPrice && propertyPrice > 0 ? { propertyPrice } : {}),
     }),
   };
 }
@@ -83,7 +83,7 @@ const KEYS: Array<[EligibilityField, string]> = [
   ['foir', 'f'],
   ['rate', 'r'],
   ['years', 'y'],
-  ['price', 'p'],
+  ['propertyPrice', 'p'],
 ];
 
 /** State lives in the URL hash only (never sent to a server). Empty fields are left out. */
