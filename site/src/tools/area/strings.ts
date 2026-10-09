@@ -13,7 +13,7 @@ const en = {
   draftNote:
     'Owner review: regional units marked “being verified” are hidden on the live site until someone checks them against a state source.',
   comingSoon:
-    'Regional units (guntha, cent, ground, marla, kanal) are coming soon, once checked against state sources. Bigha, biswa and katha change from district to district, so check them with your local revenue office.',
+    'More regional units (cent, ground, marla, kanal) are coming soon, once checked against state sources. Bigha, biswa and katha change from district to district, so check them with your local revenue office.',
   share: 'Copy link to this result',
   shareCopied: 'Link copied',
   formulaTitle: 'How it is calculated',
@@ -45,7 +45,7 @@ const hi: AreaStrings = {
   draftNote:
     'मालिक की समीक्षा: “जाँच जारी” वाली क्षेत्रीय इकाइयाँ लाइव साइट पर तब तक छिपी रहती हैं जब तक कोई उन्हें राज्य के स्रोत से न जाँच ले।',
   comingSoon:
-    'क्षेत्रीय इकाइयाँ (गुंठा, सेंट, ग्राउंड, मरला, कनाल) राज्य के स्रोतों से जाँच के बाद जल्द आएँगी। बीघा, बिस्वा और कट्ठा ज़िले-ज़िले में बदलते हैं, इसलिए इन्हें अपने स्थानीय राजस्व कार्यालय से जाँचें।',
+    'और क्षेत्रीय इकाइयाँ (सेंट, ग्राउंड, मरला, कनाल) राज्य के स्रोतों से जाँच के बाद जल्द आएँगी। बीघा, बिस्वा और कट्ठा ज़िले-ज़िले में बदलते हैं, इसलिए इन्हें अपने स्थानीय राजस्व कार्यालय से जाँचें।',
   share: 'इस नतीजे का लिंक कॉपी करें',
   shareCopied: 'लिंक कॉपी हो गया',
   formulaTitle: 'गणना कैसे होती है',

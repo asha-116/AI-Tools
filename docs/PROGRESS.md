@@ -14,6 +14,8 @@ templates "coming soon".
 
 ## Done
 
+- 2026-10-09 — **Guntha live** for Maharashtra and Karnataka: owner verified 1 guntha = 1/40 acre
+  (1,089 sq ft) against Karnataka RTC and Maharashtra 7/12; `guntha.json` is now `verified`.
 - 2026-10-09 — Land units, Maharashtra + Karnataka first (owner's choice): the converter now
   shows ares (Maharashtra 7/12 records area in hectare-are); guntha moved to
   `data/land-units/guntha.json` with a verification checklist — it goes live once the owner
