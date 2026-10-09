@@ -143,6 +143,7 @@ describe('repo reader', () => {
       'eligibility',
       'emi',
       'prepayment',
+      'rent-vs-buy',
       'rental-yield',
       'stamp-duty',
     ]);

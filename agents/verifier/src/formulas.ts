@@ -15,6 +15,7 @@ import {
   computeLoading,
   computePrepayment,
   computeRentalYield,
+  computeRentVsBuy,
   convertArea,
   type AreaUnit,
   type CommissionInput,
@@ -23,6 +24,7 @@ import {
   type LoadingInput,
   type PrepaymentInput,
   type RentalYieldInput,
+  type RentVsBuyInput,
 } from '../../../tools-core/src/index.js';
 
 export interface FormulaCase {
@@ -250,6 +252,35 @@ export const FORMULAS: FormulaEntry[] = [
         netIncome: r.netIncome,
         grossYieldPercent: r.grossYieldPercent,
         netYieldPercent: r.netYieldPercent,
+      };
+    },
+  },
+  {
+    id: 'rent-vs-buy',
+    functionName: 'computeRentVsBuy',
+    sourceFiles: ['tools-core/src/rentVsBuy.ts'],
+    fixture: 'tools-core/test/fixtures/rent-vs-buy-known-answers.json',
+    description: [
+      'Parts of a rent vs buy comparison that have closed forms',
+      '(sources: https://en.wikipedia.org/wiki/Mortgage_calculator,',
+      'https://en.wikipedia.org/wiki/Compound_interest, https://en.wikipedia.org/wiki/Geometric_series).',
+      'Inputs: propertyValue; downPayment; annualRatePercent; tenureMonths n; monthlyRent R;',
+      'optional rentIncreasePercent i and appreciationPercent g (0 when missing); years H.',
+      'Loan P = propertyValue − downPayment. r = annualRatePercent / 1200.',
+      'emi = P × r × (1 + r)^n / ((1 + r)^n − 1) (0 when P = 0).',
+      'k = 12 × H. When k < n: loanLeft = P × (1 + r)^k − emi × ((1 + r)^k − 1) / r; else 0.',
+      'rentPaid = 12 × R × ((1 + i/100)^H − 1) / (i/100); when i = 0, 12 × R × H.',
+      'propertyEnd = propertyValue × (1 + g/100)^H. Do not round any output.',
+    ].join(' '),
+    toInput: (c) => (c.input ?? {}) as Record<string, unknown>,
+    fields: () => ['emi', 'loanLeft', 'rentPaid', 'propertyEnd'],
+    run: (input) => {
+      const r = computeRentVsBuy(input as unknown as RentVsBuyInput);
+      return {
+        emi: r.emi,
+        loanLeft: r.loanLeft,
+        rentPaid: r.rentPaid,
+        propertyEnd: r.propertyEnd,
       };
     },
   },

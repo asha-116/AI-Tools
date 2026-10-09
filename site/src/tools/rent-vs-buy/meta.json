@@ -1,0 +1,7 @@
+{
+  "slug": "rent-vs-buy",
+  "kind": "free",
+  "formula": "Buy = property value at the end − loan left + money saved; Rent = money invested (down payment, costs and each month's saving)",
+  "knownAnswers": "tools-core/test/fixtures/rent-vs-buy-known-answers.json",
+  "lastReviewed": "2026-10-09"
+}

@@ -89,6 +89,25 @@ function oracleArea(i: { value: number; from: string; to: string }): Record<stri
   return { result: (i.value * (AREA_SQ_FT[i.from] ?? NaN)) / (AREA_SQ_FT[i.to] ?? NaN) };
 }
 
+/** Independent oracle for the rent-vs-buy entry (closed forms). */
+function oracleRvb(i: Record<string, number>): Record<string, number> {
+  const P = (i.propertyValue ?? 0) - (i.downPayment ?? 0);
+  const r = (i.annualRatePercent ?? 0) / 1200;
+  const n = i.tenureMonths ?? 0;
+  const H = i.years ?? 0;
+  const emi = P > 0 ? (P * r * (1 + r) ** n) / ((1 + r) ** n - 1) : 0;
+  const k = 12 * H;
+  const loanLeft = k < n ? P * (1 + r) ** k - (emi * ((1 + r) ** k - 1)) / r : 0;
+  const inc = (i.rentIncreasePercent ?? 0) / 100;
+  const R = i.monthlyRent ?? 0;
+  return {
+    emi,
+    loanLeft,
+    rentPaid: inc === 0 ? 12 * R * H : (12 * R * ((1 + inc) ** H - 1)) / inc,
+    propertyEnd: (i.propertyValue ?? 0) * (1 + (i.appreciationPercent ?? 0) / 100) ** H,
+  };
+}
+
 /** Independent oracle for the rental-yield entry. */
 function oracleYield(i: Record<string, number>): Record<string, number> {
   const inv = (i.propertyValue ?? 0) + (i.purchaseCosts ?? 0);
@@ -169,15 +188,17 @@ function scriptedLlm(
               ? oracleEmi(c.input as Record<string, number>)
               : c.id.startsWith('area')
                 ? oracleArea(c.input as { value: number; from: string; to: string })
-                : c.id.startsWith('rental-yield')
-                  ? oracleYield(c.input as Record<string, number>)
-                  : c.id.startsWith('loading')
-                    ? oracleLoading(c.input as Record<string, number>)
-                    : c.id.startsWith('eligibility')
-                      ? oracleEligibility(c.input as Record<string, number>)
-                      : c.id.startsWith('prepayment')
-                        ? oraclePrepayment(c.input as Parameters<typeof oraclePrepayment>[0])
-                        : oracleCommission(c.input as unknown as CommIn);
+                : c.id.startsWith('rent-vs-buy')
+                  ? oracleRvb(c.input as Record<string, number>)
+                  : c.id.startsWith('rental-yield')
+                    ? oracleYield(c.input as Record<string, number>)
+                    : c.id.startsWith('loading')
+                      ? oracleLoading(c.input as Record<string, number>)
+                      : c.id.startsWith('eligibility')
+                        ? oracleEligibility(c.input as Record<string, number>)
+                        : c.id.startsWith('prepayment')
+                          ? oraclePrepayment(c.input as Parameters<typeof oraclePrepayment>[0])
+                          : oracleCommission(c.input as unknown as CommIn);
             const skew = opts.skew?.(c.id, formulaCalls) ?? 0;
             return {
               id: c.id,
@@ -431,6 +452,7 @@ describe('verify — formulas (PROCEDURE step 2)', () => {
         'computeEligibility',
         'computeLoading',
         'computeRentalYield',
+        'computeRentVsBuy',
         'convertArea',
       ]),
     );

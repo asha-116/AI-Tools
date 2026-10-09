@@ -1,0 +1,271 @@
+---
+import { strings, type Lang } from '../../i18n/strings';
+import meta from './meta.json';
+import { DEFAULT_STATE, evaluate, formatInr, formatSignedInr, type RvbField } from './logic';
+import { rvbStrings } from './strings';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = rvbStrings[lang];
+const common = strings[lang];
+// Server-render the default result so the page is useful before (or without) JavaScript.
+const initial = evaluate(DEFAULT_STATE);
+const r = initial.ok ? initial.result : null;
+const clientStrings = { share: t.share, shareCopied: t.shareCopied };
+const money = (v: number | undefined) => (v === undefined ? '—' : formatSignedInr(v, formatInr));
+
+type Field = { name: RvbField; label: string; error: string; mode: string };
+const groups: Array<[string, Field[]]> = [
+  [
+    t.buyLegend,
+    [
+      { name: 'propertyValue', label: t.valueLabel, error: t.errorValue, mode: 'numeric' },
+      { name: 'downPayment', label: t.downLabel, error: t.errorDown, mode: 'numeric' },
+      { name: 'purchaseCosts', label: t.purchaseLabel, error: t.errorPurchase, mode: 'numeric' },
+      { name: 'rate', label: t.rateLabel, error: t.errorRate, mode: 'decimal' },
+      { name: 'loanYears', label: t.loanYearsLabel, error: t.errorLoanYears, mode: 'decimal' },
+      { name: 'ownerCosts', label: t.ownerLabel, error: t.errorOwner, mode: 'numeric' },
+      {
+        name: 'appreciation',
+        label: t.appreciationLabel,
+        error: t.errorAppreciation,
+        mode: 'text',
+      },
+    ],
+  ],
+  [
+    t.rentLegend,
+    [
+      { name: 'rent', label: t.rentLabel, error: t.errorRent, mode: 'numeric' },
+      { name: 'rentIncrease', label: t.rentIncreaseLabel, error: t.errorPercent, mode: 'decimal' },
+      { name: 'investReturn', label: t.investLabel, error: t.errorPercent, mode: 'decimal' },
+    ],
+  ],
+  [t.compareLegend, [{ name: 'years', label: t.yearsLabel, error: t.errorYears, mode: 'numeric' }]],
+];
+---
+
+<article class="tool">
+  <p class="crumb"><a href={lang === 'en' ? '/' : '/hi/'}>← {t.backHome}</a></p>
+  <h1>{t.h1}</h1>
+  <p class="lead">{t.lead}</p>
+
+  <form id="rvb-form" class="card" data-strings={JSON.stringify(clientStrings)} novalidate>
+    {
+      groups.map(([legend, fields]) => (
+        <fieldset>
+          <legend>{legend}</legend>
+          {fields.map((f) => (
+            <div class="field">
+              <label for={`rvb-${f.name}`}>{f.label}</label>
+              <input
+                id={`rvb-${f.name}`}
+                name={f.name}
+                inputmode={f.mode as 'numeric' | 'decimal' | 'text'}
+                autocomplete="off"
+                value={DEFAULT_STATE[f.name]}
+                aria-describedby={`rvb-${f.name}-error`}
+              />
+              <p id={`rvb-${f.name}-error`} class="error" data-error={f.name} hidden>
+                {f.error}
+              </p>
+            </div>
+          ))}
+        </fieldset>
+      ))
+    }
+  </form>
+
+  <section class="card results" aria-live="polite">
+    <p class="result-main">
+      <span>{t.resultDifference}</span>
+      <strong data-out="difference">{money(r?.difference)}</strong>
+    </p>
+    <p class="note">{t.resultNote}</p>
+    <div class="compare">
+      <h2>{t.colBuy}</h2>
+      <dl>
+        <div>
+          <dt>{t.rowWealth}</dt>
+          <dd data-out="buyer">{money(r?.buyerWealth)}</dd>
+        </div>
+        <div>
+          <dt>{t.rowProperty}</dt>
+          <dd data-out="property">{money(r?.propertyEnd)}</dd>
+        </div>
+        <div>
+          <dt>{t.rowLoanLeft}</dt>
+          <dd data-out="loan-left">{money(r?.loanLeft)}</dd>
+        </div>
+        <div>
+          <dt>{t.rowEmi}</dt>
+          <dd data-out="emi">{money(r?.emi)}</dd>
+        </div>
+        <div>
+          <dt>{t.rowCashOut}</dt>
+          <dd data-out="cash-out">{money(r?.buyerCashOut)}</dd>
+        </div>
+      </dl>
+      <h2>{t.colRent}</h2>
+      <dl>
+        <div>
+          <dt>{t.rowWealth}</dt>
+          <dd data-out="renter">{money(r?.renterWealth)}</dd>
+        </div>
+        <div>
+          <dt>{t.rowRentPaid}</dt>
+          <dd data-out="rent-paid">{money(r?.rentPaid)}</dd>
+        </div>
+      </dl>
+    </div>
+    <button type="button" class="button secondary" id="rvb-share">{t.share}</button>
+  </section>
+
+  <section class="card">
+    <h2>{t.formulaTitle}</h2>
+    <p class="formula"><code>{meta.formula}</code></p>
+    <p>{t.formulaWhere}</p>
+    <h2>{t.assumptionsTitle}</h2>
+    <ul>
+      {t.assumptions.map((a) => <li>{a}</li>)}
+    </ul>
+    <p class="disclaimer"><strong>{common.toolDisclaimer}</strong></p>
+  </section>
+</article>
+
+<script>
+  import { initRentVsBuy } from './client';
+  initRentVsBuy(document, window);
+</script>
+
+<style>
+  .tool {
+    max-width: 40rem;
+  }
+  .crumb {
+    margin: 16px 0 0;
+  }
+  h1 {
+    font-size: clamp(1.75rem, 6vw, 2.25rem);
+    line-height: 1.2;
+    margin: 8px 0;
+  }
+  h2 {
+    font-size: 1.1875rem;
+    margin: 0 0 8px;
+  }
+  .lead {
+    color: var(--muted);
+  }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+    margin: 16px 0;
+  }
+  .card h2 + p,
+  .card ul {
+    margin-top: 0;
+  }
+  fieldset {
+    border: 0;
+    margin: 0 0 8px;
+    padding: 0;
+    min-width: 0;
+  }
+  legend {
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+  .field {
+    display: grid;
+    gap: 4px;
+    margin-bottom: 12px;
+  }
+  input {
+    min-height: 48px;
+    padding: 10px 12px;
+    font: inherit;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--bg);
+    color: var(--fg);
+    width: 100%;
+    min-width: 0;
+  }
+  input[aria-invalid='true'] {
+    border-color: var(--error);
+    border-width: 2px;
+  }
+  .error {
+    color: var(--error);
+    margin: 0;
+    font-size: 0.9375rem;
+  }
+  .result-main,
+  .result-sub {
+    display: flex;
+    flex-direction: column;
+    margin: 0 0 12px;
+  }
+  .result-main strong {
+    font-size: clamp(2rem, 9vw, 2.75rem);
+    line-height: 1.1;
+    color: var(--brand);
+  }
+  .result-sub strong {
+    font-size: 1.375rem;
+  }
+  dl {
+    display: grid;
+    gap: 6px;
+    margin: 0 0 12px;
+  }
+  dl div {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 4px 12px;
+    border-top: 1px solid var(--border);
+    padding-top: 6px;
+  }
+  dt {
+    flex: 1 1 9rem;
+  }
+  dd {
+    margin: 0 0 0 auto;
+    font-weight: 600;
+    text-align: right;
+    white-space: nowrap;
+  }
+  .note {
+    color: var(--muted);
+    margin: 0 0 12px;
+  }
+  .compare h2 {
+    font-size: 1rem;
+    margin: 12px 0 4px;
+  }
+  .formula code {
+    font-size: 1.0625rem;
+    overflow-wrap: anywhere;
+  }
+  .button {
+    min-height: 48px;
+    padding: 12px 20px;
+    border: 2px solid var(--brand);
+    border-radius: var(--radius);
+    background: transparent;
+    color: var(--brand);
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .disclaimer {
+    margin-bottom: 0;
+  }
+</style>
