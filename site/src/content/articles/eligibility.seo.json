@@ -2,41 +2,49 @@
   "slug": "eligibility",
   "meta": {
     "en": {
-      "title": "Home Loan Eligibility Calculator for Buyers",
-      "description": "Calculate the maximum home loan your buyer can get based on their monthly income, FOIR, and interest rate."
+      "title": "Home Loan Eligibility Calculator",
+      "description": "Calculate the maximum home loan amount a buyer can get based on income, FOIR, rate and tenure."
     },
     "hi": {
-      "title": "होम लोन पात्रता कैलकुलेटर - खरीदार के लिए लोन सीमा",
-      "description": "खरीदार की मासिक आय और बैंक नियमों के आधार पर अधिकतम होम लोन राशि की गणना करें।"
+      "title": "होम लोन पात्रता कैलकुलेटर",
+      "description": "आय, FOIR, ब्याज दर और अवधि के आधार पर खरीदार के लिए अधिकतम लोन राशि निकालें।"
     }
   },
   "faq": {
     "en": [
       {
-        "q": "What is FOIR in home loans?",
-        "a": "FOIR stands for Fixed Obligation to Income Ratio. It is the percentage of monthly take-home income that banks allow a borrower to spend on all EMIs combined."
+        "q": "What does FOIR mean and why does it matter?",
+        "a": "FOIR is the Fixed Obligation to Income Ratio. It tells the bank what share of the buyer’s take‑home income can go to loan EMIs. A higher FOIR allows a larger EMI."
       },
       {
-        "q": "Can a buyer get a loan for the entire property cost?",
-        "a": "No. Banks only fund a specific percentage of the property value. The buyer must arrange the remaining amount, including stamp duty and registration fees, from their own savings."
+        "q": "Should I enter existing EMIs in the calculator?",
+        "a": "Yes. Include any other loan repayments the buyer is already paying. If there are none, enter zero. This reduces the EMI the buyer can still take."
       },
       {
-        "q": "Does an existing loan affect eligibility?",
-        "a": "Yes. Any active EMIs reduce the monthly repayment capacity, which lowers the maximum home loan amount the bank will approve."
+        "q": "Can I change the interest rate to see its impact?",
+        "a": "Absolutely. Adjust the rate field to the current market rate or the rate offered by a specific bank and recalculate. The loan amount will change accordingly."
+      },
+      {
+        "q": "Why might the bank offer less than the calculator shows?",
+        "a": "Banks also look at credit score, property price caps, age, job stability and other criteria. The calculator shows the theoretical maximum based on income and FOIR only."
       }
     ],
     "hi": [
       {
-        "q": "होम लोन में FOIR क्या होता है?",
-        "a": "FOIR का मतलब फिक्स्ड ऑब्लिगेशन टू इनकम रेशियो है। यह आपकी मासिक टेक-होम आय का वह प्रतिशत है जिसे बैंक सभी EMI चुकाने के लिए सुरक्षित मानता है।"
+        "q": "FOIR क्या है और यह क्यों जरूरी है?",
+        "a": "FOIR का मतलब Fixed Obligation to Income Ratio है। यह बताता है कि खरीदार की आय का कितना हिस्सा लोन की EMI में जा सकता है। अधिक FOIR से बड़ी EMI मिलती है।"
       },
       {
-        "q": "क्या बैंक प्रॉपर्टी की पूरी कीमत का लोन देते हैं?",
-        "a": "नहीं। बैंक प्रॉपर्टी की वैल्यू के एक निश्चित हिस्से तक ही लोन देते हैं। बाकी रकम और रजिस्ट्री का खर्च खरीदार को खुद देना होता है।"
+        "q": "क्या मुझे मौजूदा EMI डालनी चाहिए?",
+        "a": "हां। खरीदार के अन्य लोन की किस्तें भी शामिल करें। अगर कोई नहीं है तो 0 डालें। इससे बची हुई EMI कम होगी।"
       },
       {
-        "q": "क्या पहले से चल रहे लोन से पात्रता पर असर पड़ता है?",
-        "a": "हाँ। पहले से चल रही कोई भी EMI खरीदार की मासिक बचत को कम करती है, जिससे बैंक से मिलने वाली अधिकतम लोन राशि कम हो जाती है।"
+        "q": "ब्याज दर बदलने से परिणाम कैसे बदलता है?",
+        "a": "ब्याज दर को वर्तमान या बैंक की पेशकश के अनुसार बदलें और फिर गणना करें। दर बदलने से लोन राशि में अंतर आएगा।"
+      },
+      {
+        "q": "बैंक कैलकुलेटर से कम लोन क्यों दे सकता है?",
+        "a": "बैंक क्रेडिट स्कोर, प्रॉपर्टी मूल्य सीमा, उम्र, नौकरी की स्थिरता आदि देखता है। यह टूल केवल आय और FOIR के आधार पर अधिकतम दिखाता है।"
       }
     ]
   },
@@ -45,8 +53,8 @@
       {
         "@context": "https://schema.org",
         "@type": "WebApplication",
-        "name": "Home Loan Eligibility Calculator for Buyers",
-        "description": "Calculate the maximum home loan your buyer can get based on their monthly income, FOIR, and interest rate.",
+        "name": "Home Loan Eligibility Calculator",
+        "description": "Calculate the maximum home loan amount a buyer can get based on income, FOIR, rate and tenure.",
         "url": "https://tools.changelense.in/tools/eligibility/",
         "inLanguage": "en-IN",
         "applicationCategory": "FinanceApplication",
@@ -60,26 +68,34 @@
         "mainEntity": [
           {
             "@type": "Question",
-            "name": "What is FOIR in home loans?",
+            "name": "What does FOIR mean and why does it matter?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "FOIR stands for Fixed Obligation to Income Ratio. It is the percentage of monthly take-home income that banks allow a borrower to spend on all EMIs combined."
+              "text": "FOIR is the Fixed Obligation to Income Ratio. It tells the bank what share of the buyer’s take‑home income can go to loan EMIs. A higher FOIR allows a larger EMI."
             }
           },
           {
             "@type": "Question",
-            "name": "Can a buyer get a loan for the entire property cost?",
+            "name": "Should I enter existing EMIs in the calculator?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "No. Banks only fund a specific percentage of the property value. The buyer must arrange the remaining amount, including stamp duty and registration fees, from their own savings."
+              "text": "Yes. Include any other loan repayments the buyer is already paying. If there are none, enter zero. This reduces the EMI the buyer can still take."
             }
           },
           {
             "@type": "Question",
-            "name": "Does an existing loan affect eligibility?",
+            "name": "Can I change the interest rate to see its impact?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "Yes. Any active EMIs reduce the monthly repayment capacity, which lowers the maximum home loan amount the bank will approve."
+              "text": "Absolutely. Adjust the rate field to the current market rate or the rate offered by a specific bank and recalculate. The loan amount will change accordingly."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Why might the bank offer less than the calculator shows?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Banks also look at credit score, property price caps, age, job stability and other criteria. The calculator shows the theoretical maximum based on income and FOIR only."
             }
           }
         ]
@@ -89,8 +105,8 @@
       {
         "@context": "https://schema.org",
         "@type": "WebApplication",
-        "name": "होम लोन पात्रता कैलकुलेटर - खरीदार के लिए लोन सीमा",
-        "description": "खरीदार की मासिक आय और बैंक नियमों के आधार पर अधिकतम होम लोन राशि की गणना करें।",
+        "name": "होम लोन पात्रता कैलकुलेटर",
+        "description": "आय, FOIR, ब्याज दर और अवधि के आधार पर खरीदार के लिए अधिकतम लोन राशि निकालें।",
         "url": "https://tools.changelense.in/hi/tools/eligibility/",
         "inLanguage": "hi-IN",
         "applicationCategory": "FinanceApplication",
@@ -104,31 +120,39 @@
         "mainEntity": [
           {
             "@type": "Question",
-            "name": "होम लोन में FOIR क्या होता है?",
+            "name": "FOIR क्या है और यह क्यों जरूरी है?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "FOIR का मतलब फिक्स्ड ऑब्लिगेशन टू इनकम रेशियो है। यह आपकी मासिक टेक-होम आय का वह प्रतिशत है जिसे बैंक सभी EMI चुकाने के लिए सुरक्षित मानता है।"
+              "text": "FOIR का मतलब Fixed Obligation to Income Ratio है। यह बताता है कि खरीदार की आय का कितना हिस्सा लोन की EMI में जा सकता है। अधिक FOIR से बड़ी EMI मिलती है।"
             }
           },
           {
             "@type": "Question",
-            "name": "क्या बैंक प्रॉपर्टी की पूरी कीमत का लोन देते हैं?",
+            "name": "क्या मुझे मौजूदा EMI डालनी चाहिए?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "नहीं। बैंक प्रॉपर्टी की वैल्यू के एक निश्चित हिस्से तक ही लोन देते हैं। बाकी रकम और रजिस्ट्री का खर्च खरीदार को खुद देना होता है।"
+              "text": "हां। खरीदार के अन्य लोन की किस्तें भी शामिल करें। अगर कोई नहीं है तो 0 डालें। इससे बची हुई EMI कम होगी।"
             }
           },
           {
             "@type": "Question",
-            "name": "क्या पहले से चल रहे लोन से पात्रता पर असर पड़ता है?",
+            "name": "ब्याज दर बदलने से परिणाम कैसे बदलता है?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "हाँ। पहले से चल रही कोई भी EMI खरीदार की मासिक बचत को कम करती है, जिससे बैंक से मिलने वाली अधिकतम लोन राशि कम हो जाती है।"
+              "text": "ब्याज दर को वर्तमान या बैंक की पेशकश के अनुसार बदलें और फिर गणना करें। दर बदलने से लोन राशि में अंतर आएगा।"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "बैंक कैलकुलेटर से कम लोन क्यों दे सकता है?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "बैंक क्रेडिट स्कोर, प्रॉपर्टी मूल्य सीमा, उम्र, नौकरी की स्थिरता आदि देखता है। यह टूल केवल आय और FOIR के आधार पर अधिकतम दिखाता है।"
             }
           }
         ]
       }
     ]
   },
-  "producer_family": "gemini"
+  "producer_family": "gpt"
 }
