@@ -14,6 +14,9 @@ templates "coming soon".
 
 ## Done
 
+- 2026-10-09 — **Guides on the site** (ADR-042): merged SEO articles now appear at
+  `/guides/<slug>/` (EN) and `/hi/guides/<slug>/`, on the home page and in the sitemap.
+  Agent PR fixes merged (asha-116/AI-Tools#55).
 - 2026-10-09 — **Agent PRs fixed** (ADR-041): the first live SEO/Social runs (#44–#54) all failed
   CI (formatting, offline link check, three Verifier false alarms). Agents now commit
   Prettier-formatted files, articles carry a Sources list, the link check skips generated
