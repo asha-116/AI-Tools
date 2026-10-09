@@ -55,6 +55,7 @@ describe('selectEntries', () => {
       'commission',
       'prepayment',
       'eligibility',
+      'loading',
       'area',
     ]);
   });
@@ -235,5 +236,17 @@ describe('eligibility entry', () => {
     expect(e.fields(cases[0]?.input ?? {})).toEqual(['maxTotalEmi', 'availableEmi', 'maxLoan']);
     const ours = runOurs(e, cases[0]?.input ?? {});
     expect('values' in ours && Math.round(ours.values.maxLoan ?? 0)).toBe(5761542);
+  });
+});
+
+describe('loading entry', () => {
+  it('asks for rates only when a total price is given; our run matches the published rate', () => {
+    const e = entry('loading');
+    const cases = loadCases(e, read);
+    expect(cases.map((c) => e.fields(c.input).length)).toEqual([3, 3, 5]);
+    const ours = runOurs(e, cases[2]?.input ?? {});
+    expect('values' in ours && Math.round(ours.values.ratePerCarpet ?? 0)).toBe(17143);
+    const plain = runOurs(e, cases[0]?.input ?? {});
+    expect('values' in plain && Object.keys(plain.values)).toHaveLength(3);
   });
 });

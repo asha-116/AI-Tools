@@ -1,0 +1,7 @@
+{
+  "slug": "carpet-area",
+  "kind": "free",
+  "formula": "Loading = (super built-up − carpet) ÷ carpet × 100; price per carpet sq ft = total price ÷ carpet area",
+  "knownAnswers": "tools-core/test/fixtures/loading-known-answers.json",
+  "lastReviewed": "2026-10-09"
+}

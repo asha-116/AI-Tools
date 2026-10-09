@@ -1,0 +1,11 @@
+---
+import Base from '../../../layouts/Base.astro';
+import CarpetAreaCalculator from '../../../tools/carpet-area/CarpetAreaCalculator.astro';
+import { carpetStrings } from '../../../tools/carpet-area/strings';
+
+const t = carpetStrings.en;
+---
+
+<Base lang="en" title={t.metaTitle} description={t.metaDescription} path="/tools/carpet-area/">
+  <CarpetAreaCalculator lang="en" />
+</Base>

@@ -50,6 +50,8 @@ const en = {
   prepaymentCardSummary: 'How much interest and how many years a prepayment saves.',
   eligibilityCardTitle: 'Home loan eligibility calculator',
   eligibilityCardSummary: 'The largest loan and EMI a buyer can get on their income.',
+  carpetCardTitle: 'Carpet area and real price per sq ft',
+  carpetCardSummary: 'Loading %, common area and what each usable sq ft really costs.',
   openTool: 'Open',
 };
 
@@ -102,6 +104,8 @@ const hi: Strings = {
   prepaymentCardSummary: 'प्रीपेमेंट से कितना ब्याज और कितने साल बचते हैं।',
   eligibilityCardTitle: 'होम लोन पात्रता कैलकुलेटर',
   eligibilityCardSummary: 'खरीदार को उसकी आय पर मिलने वाला सबसे बड़ा लोन और EMI।',
+  carpetCardTitle: 'कारपेट एरिया और प्रति वर्ग फ़ुट असली कीमत',
+  carpetCardSummary: 'लोडिंग %, कॉमन एरिया और इस्तेमाल लायक हर वर्ग फ़ुट की असली कीमत।',
   openTool: 'खोलें',
 };
 

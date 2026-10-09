@@ -1,0 +1,285 @@
+---
+import { strings, type Lang } from '../../i18n/strings';
+import meta from './meta.json';
+import {
+  DEFAULT_STATE,
+  evaluate,
+  formatInr,
+  formatNumber,
+  formatPercent,
+  SQ_M_PER_SQ_FT,
+  type CarpetField,
+} from './logic';
+import { carpetStrings } from './strings';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = carpetStrings[lang];
+const common = strings[lang];
+// Server-render the default result so the page is useful before (or without) JavaScript.
+const initial = evaluate(DEFAULT_STATE);
+const r = initial.ok ? initial.result : null;
+const priced = r?.ratePerCarpet !== undefined;
+const clientStrings = { share: t.share, shareCopied: t.shareCopied, sqFt: t.sqFt, sqM: t.sqM };
+const area = (sqFt: number) =>
+  `${formatNumber(sqFt)} ${t.sqFt} (${formatNumber(sqFt * SQ_M_PER_SQ_FT)} ${t.sqM})`;
+
+type Field = { name: CarpetField; label: string; error: string; mode: string };
+const areaFields: Field[] = [
+  { name: 'superBuiltUp', label: t.sbaLabel, error: t.errorSba, mode: 'decimal' },
+  { name: 'carpet', label: t.carpetLabel, error: t.errorCarpet, mode: 'decimal' },
+  { name: 'loading', label: t.loadingLabel, error: t.errorLoading, mode: 'decimal' },
+];
+const priceField: Field = {
+  name: 'priceValue',
+  label: t.priceLabel,
+  error: t.errorPrice,
+  mode: 'numeric',
+};
+---
+
+<article class="tool">
+  <p class="crumb"><a href={lang === 'en' ? '/' : '/hi/'}>← {t.backHome}</a></p>
+  <h1>{t.h1}</h1>
+  <p class="lead">{t.lead}</p>
+
+  <form id="carpet-form" class="card" data-strings={JSON.stringify(clientStrings)} novalidate>
+    <fieldset>
+      <legend>{t.areaLegend}</legend>
+      {
+        areaFields.map((f) => (
+          <div class="field">
+            <label for={`carpet-${f.name}`}>{f.label}</label>
+            <input
+              id={`carpet-${f.name}`}
+              name={f.name}
+              inputmode={f.mode as 'numeric' | 'decimal'}
+              autocomplete="off"
+              value={DEFAULT_STATE[f.name]}
+              aria-describedby={`carpet-${f.name}-error`}
+            />
+            <p id={`carpet-${f.name}-error`} class="error" data-error={f.name} hidden>
+              {f.error}
+            </p>
+          </div>
+        ))
+      }
+      <div class="field">
+        <label for="carpet-loadingBase">{t.baseLabel}</label>
+        <select id="carpet-loadingBase" name="loadingBase">
+          <option value="carpet" selected={DEFAULT_STATE.loadingBase === 'carpet'}>
+            {t.baseCarpet}
+          </option>
+          <option value="superBuiltUp" selected={DEFAULT_STATE.loadingBase === 'superBuiltUp'}>
+            {t.baseSba}
+          </option>
+        </select>
+      </div>
+    </fieldset>
+    <fieldset>
+      <legend>{t.priceLegend}</legend>
+      <div class="field">
+        <label for="carpet-priceMode">{t.modeLabel}</label>
+        <select id="carpet-priceMode" name="priceMode">
+          <option value="rate" selected={DEFAULT_STATE.priceMode === 'rate'}>{t.modeRate}</option>
+          <option value="total" selected={DEFAULT_STATE.priceMode === 'total'}>
+            {t.modeTotal}
+          </option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="carpet-priceValue">{priceField.label}</label>
+        <input
+          id="carpet-priceValue"
+          name="priceValue"
+          inputmode="numeric"
+          autocomplete="off"
+          value={DEFAULT_STATE.priceValue}
+          aria-describedby="carpet-priceValue-error"
+        />
+        <p id="carpet-priceValue-error" class="error" data-error="priceValue" hidden>
+          {priceField.error}
+        </p>
+      </div>
+    </fieldset>
+  </form>
+
+  <section class="card results" aria-live="polite">
+    <p class="result-main" data-row="carpet-rate" hidden={!priced}>
+      <span>{t.resultCarpetRate}</span>
+      <strong data-out="carpet-rate">{priced ? formatInr(r?.ratePerCarpet ?? 0) : '—'}</strong>
+    </p>
+    <p class="result-sub">
+      <span>{t.resultLoading}</span>
+      <strong data-out="loading">{r ? formatPercent(r.loadingOnCarpetPercent) : '—'}</strong>
+    </p>
+    <dl>
+      <div>
+        <dt>{t.rowCarpet}</dt>
+        <dd data-out="carpet">{r ? area(r.carpet) : '—'}</dd>
+      </div>
+      <div>
+        <dt>{t.rowCommon}</dt>
+        <dd data-out="common">{r ? area(r.commonArea) : '—'}</dd>
+      </div>
+      <div>
+        <dt>{t.rowShare}</dt>
+        <dd data-out="share">{r ? formatPercent(r.commonSharePercent) : '—'}</dd>
+      </div>
+      <div data-row="total" hidden={!priced}>
+        <dt>{t.rowTotal}</dt>
+        <dd data-out="total">{priced ? formatInr(r?.totalPrice ?? 0) : '—'}</dd>
+      </div>
+      <div data-row="sba-rate" hidden={!priced}>
+        <dt>{t.rowSbaRate}</dt>
+        <dd data-out="sba-rate">{priced ? formatInr(r?.ratePerSuperBuiltUp ?? 0) : '—'}</dd>
+      </div>
+    </dl>
+    <button type="button" class="button secondary" id="carpet-share">{t.share}</button>
+  </section>
+
+  <section class="card">
+    <h2>{t.formulaTitle}</h2>
+    <p class="formula"><code>{meta.formula}</code></p>
+    <p>{t.formulaWhere}</p>
+    <h2>{t.assumptionsTitle}</h2>
+    <ul>
+      {t.assumptions.map((a) => <li>{a}</li>)}
+    </ul>
+    <p class="disclaimer"><strong>{common.toolDisclaimer}</strong></p>
+  </section>
+</article>
+
+<script>
+  import { initCarpetArea } from './client';
+  initCarpetArea(document, window);
+</script>
+
+<style>
+  .tool {
+    max-width: 40rem;
+  }
+  .crumb {
+    margin: 16px 0 0;
+  }
+  h1 {
+    font-size: clamp(1.75rem, 6vw, 2.25rem);
+    line-height: 1.2;
+    margin: 8px 0;
+  }
+  h2 {
+    font-size: 1.1875rem;
+    margin: 0 0 8px;
+  }
+  .lead {
+    color: var(--muted);
+  }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+    margin: 16px 0;
+  }
+  .card h2 + p,
+  .card ul {
+    margin-top: 0;
+  }
+  fieldset {
+    border: 0;
+    margin: 0 0 8px;
+    padding: 0;
+    min-width: 0;
+  }
+  legend {
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+  .field {
+    display: grid;
+    gap: 4px;
+    margin-bottom: 12px;
+  }
+  input,
+  select {
+    min-height: 48px;
+    padding: 10px 12px;
+    font: inherit;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--bg);
+    color: var(--fg);
+    width: 100%;
+    min-width: 0;
+  }
+  input[aria-invalid='true'] {
+    border-color: var(--error);
+    border-width: 2px;
+  }
+  .error {
+    color: var(--error);
+    margin: 0;
+    font-size: 0.9375rem;
+  }
+  .result-main,
+  .result-sub {
+    display: flex;
+    flex-direction: column;
+    margin: 0 0 12px;
+  }
+  .result-main strong {
+    font-size: clamp(2rem, 9vw, 2.75rem);
+    line-height: 1.1;
+    color: var(--brand);
+  }
+  .result-sub strong {
+    font-size: 1.375rem;
+  }
+  .note {
+    margin: 0 0 12px;
+    color: var(--error);
+  }
+  dl {
+    display: grid;
+    gap: 6px;
+    margin: 0 0 12px;
+  }
+  dl div {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 4px 12px;
+    border-top: 1px solid var(--border);
+    padding-top: 6px;
+  }
+  dt {
+    flex: 1 1 9rem;
+  }
+  dd {
+    margin: 0 0 0 auto;
+    font-weight: 600;
+    text-align: right;
+    white-space: nowrap;
+  }
+  .formula code {
+    font-size: 1.0625rem;
+    overflow-wrap: anywhere;
+  }
+  .button {
+    min-height: 48px;
+    padding: 12px 20px;
+    border: 2px solid var(--brand);
+    border-radius: var(--radius);
+    background: transparent;
+    color: var(--brand);
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .disclaimer {
+    margin-bottom: 0;
+  }
+</style>

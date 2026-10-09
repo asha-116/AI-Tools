@@ -51,3 +51,11 @@ export {
   type EligibilityInput,
   type EligibilityResult,
 } from './eligibility.js';
+export {
+  carpetFromLoading,
+  computeLoading,
+  LOADING_LIMITS,
+  type LoadingBase,
+  type LoadingInput,
+  type LoadingResult,
+} from './loading.js';

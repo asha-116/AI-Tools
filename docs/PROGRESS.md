@@ -14,6 +14,10 @@ templates "coming soon".
 
 ## Done
 
+- 2026-10-09 — **Carpet area and real price per sq ft** (ADR-037): `/tools/carpet-area/` and
+  `/hi/tools/carpet-area/` — super built-up vs RERA carpet area, loading % both ways, common
+  area, and the price per sq ft of carpet. Next in the queue: rental yield.
+- 2026-10-09 — Home loan eligibility calculator merged (asha-116/AI-Tools#38).
 - 2026-10-09 — **Home loan eligibility calculator** (owner: "build other useful tools", ADR-036):
   `/tools/eligibility/` and `/hi/tools/eligibility/` — take-home income (plus co-applicant),
   existing EMIs and the bank's FOIR limit give the largest loan and its EMI; an optional
