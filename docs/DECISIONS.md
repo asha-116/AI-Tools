@@ -447,3 +447,18 @@ NOTHING`), so duplicates and both events for one payment are harmless. It stores
   one exact to the rupee (₹1 lakh, 50%, 8.5%, 20 years → ₹57,61,542). "FOIR" added to the
   QA list of English terms allowed in Hindi, as Indian bank sites use it in Hindi too.
 - **Status:** Accepted (2026-10-09). Hindi text needs a human review before it is promoted.
+
+### ADR-037 — Carpet area and real price per sq ft: loading is user data, both conventions shown
+
+- **Context:** second "useful tool" (owner, 2026-10-09). Flats are priced on super built-up area
+  (SBA), but RERA makes builders state the carpet area; the gap ("loading") averages about 40% in
+  big cities and is quoted two ways: on carpet, (SBA − carpet) ÷ carpet, or as a share of SBA,
+  (SBA − carpet) ÷ SBA. No law fixes how SBA is measured.
+- **Decision:** `tools-core/src/loading.ts` takes the two areas (and optionally the total price)
+  and returns the common area, both loading figures, and the price per sq ft of SBA and of
+  carpet. `carpetFromLoading` works out the carpet area when the buyer only knows SBA and the
+  builder's loading %, on either base. No loading or rate is held as data. Three published
+  cases (Housing.com 30%, Provident 20% of SBA, Sunteck ₹1.80 crore → ₹17,143 per carpet sq
+  ft). The page asks for sq ft only (sq m shown alongside); other units are in the area
+  converter. "RERA" added to the QA list of English terms allowed in Hindi.
+- **Status:** Accepted (2026-10-09). Hindi text needs a human review before it is promoted.

@@ -12,12 +12,14 @@ import {
   computeCommission,
   computeEligibility,
   computeEmi,
+  computeLoading,
   computePrepayment,
   convertArea,
   type AreaUnit,
   type CommissionInput,
   type EligibilityInput,
   type EmiInput,
+  type LoadingInput,
   type PrepaymentInput,
 } from '../../../tools-core/src/index.js';
 
@@ -179,6 +181,40 @@ export const FORMULAS: FormulaEntry[] = [
     run: (input) => {
       const r = computeEligibility(input as unknown as EligibilityInput);
       return { maxTotalEmi: r.maxTotalEmi, availableEmi: r.availableEmi, maxLoan: r.maxLoan };
+    },
+  },
+  {
+    id: 'loading',
+    functionName: 'computeLoading',
+    sourceFiles: ['tools-core/src/loading.ts'],
+    fixture: 'tools-core/test/fixtures/loading-known-answers.json',
+    description: [
+      'Apartment loading: super built-up area versus carpet area, and the price per sq ft of each',
+      '(source: https://housing.com/news/loading-factor-in-apartments/).',
+      'Inputs: carpet; superBuiltUp (same unit); optional totalPrice in rupees.',
+      'commonArea = superBuiltUp − carpet.',
+      'loadingOnCarpetPercent = commonArea / carpet × 100.',
+      'commonSharePercent = commonArea / superBuiltUp × 100.',
+      'When totalPrice is given: ratePerSuperBuiltUp = totalPrice / superBuiltUp and',
+      'ratePerCarpet = totalPrice / carpet. Do not round any output.',
+    ].join(' '),
+    toInput: (c) => (c.input ?? {}) as Record<string, unknown>,
+    fields: (input) => [
+      'commonArea',
+      'loadingOnCarpetPercent',
+      'commonSharePercent',
+      ...(input.totalPrice === undefined ? [] : ['ratePerSuperBuiltUp', 'ratePerCarpet']),
+    ],
+    run: (input) => {
+      const r = computeLoading(input as unknown as LoadingInput);
+      const out: Record<string, number> = {
+        commonArea: r.commonArea,
+        loadingOnCarpetPercent: r.loadingOnCarpetPercent,
+        commonSharePercent: r.commonSharePercent,
+      };
+      if (r.ratePerSuperBuiltUp !== undefined) out.ratePerSuperBuiltUp = r.ratePerSuperBuiltUp;
+      if (r.ratePerCarpet !== undefined) out.ratePerCarpet = r.ratePerCarpet;
+      return out;
     },
   },
   {

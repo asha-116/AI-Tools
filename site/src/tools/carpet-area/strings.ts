@@ -1,0 +1,96 @@
+/** Carpet area and real price per sq ft strings. `hi` must have exactly the keys of `en`. */
+const en = {
+  metaTitle: 'Carpet area calculator: loading % and real price per sq ft',
+  metaDescription:
+    'Compare super built-up area with RERA carpet area: see the loading %, the common area and what each sq ft of usable space really costs. Runs on your phone.',
+  h1: 'Carpet area and real price per sq ft',
+  lead: 'Flats are priced on super built-up area, but you live in the carpet area. See the loading and what each usable sq ft really costs. Everything is calculated on this device.',
+  areaLegend: 'Areas (sq ft)',
+  sbaLabel: 'Super built-up area (sq ft)',
+  carpetLabel: 'Carpet area as per RERA (sq ft)',
+  loadingLabel: 'Or, if you do not know the carpet area: loading (%)',
+  baseLabel: 'The loading % is worked out on',
+  baseCarpet: 'carpet area (usual)',
+  baseSba: 'super built-up area',
+  priceLegend: 'Price (optional)',
+  modeLabel: 'The price is',
+  modeRate: 'per sq ft (super built-up)',
+  modeTotal: 'total for the flat',
+  priceLabel: 'Price (₹)',
+  errorSba: 'Enter the super built-up area, above 0.',
+  errorCarpet:
+    'Enter a carpet area above 0 and not more than the super built-up area, or leave it empty and enter the loading %.',
+  errorLoading: 'Enter a loading % from 0 (on super built-up area: below 100).',
+  errorPrice: 'Enter a price above ₹0, or leave it empty.',
+  resultCarpetRate: 'Real price per sq ft of carpet area',
+  resultLoading: 'Loading on carpet area',
+  rowCarpet: 'Carpet area',
+  rowCommon: 'Common area you pay for',
+  rowShare: 'Common area as a share of super built-up',
+  rowTotal: 'Total price',
+  rowSbaRate: 'Quoted price per sq ft of super built-up',
+  sqFt: 'sq ft',
+  sqM: 'sq m',
+  share: 'Copy link to this result',
+  shareCopied: 'Link copied',
+  formulaTitle: 'How it is calculated',
+  formulaWhere:
+    'Common area = super built-up − carpet. Some builders quote loading as a share of super built-up instead: common area ÷ super built-up × 100. Both are shown.',
+  assumptionsTitle: 'Assumptions',
+  assumptions: [
+    'Carpet area is the RERA carpet area from the agreement or the RERA website; builders must state it.',
+    'There is no fixed rule for super built-up area, so builders count it differently. Compare flats by price per sq ft of carpet area.',
+    'The total price here is only area × rate. Parking, floor rise, club, GST, stamp duty and other charges are extra.',
+  ],
+  backHome: 'All tools',
+};
+
+export type CarpetStrings = typeof en;
+
+const hi: CarpetStrings = {
+  metaTitle: 'कारपेट एरिया कैलकुलेटर: लोडिंग % और प्रति वर्ग फ़ुट असली कीमत',
+  metaDescription:
+    'सुपर बिल्ट-अप एरिया की तुलना RERA कारपेट एरिया से करें: लोडिंग %, कॉमन एरिया और इस्तेमाल लायक हर वर्ग फ़ुट की असली कीमत देखें। आपके फ़ोन पर चलता है।',
+  h1: 'कारपेट एरिया और प्रति वर्ग फ़ुट असली कीमत',
+  lead: 'फ़्लैट की कीमत सुपर बिल्ट-अप एरिया पर लगती है, पर आप कारपेट एरिया में रहते हैं। लोडिंग देखें और जानें कि इस्तेमाल लायक हर वर्ग फ़ुट असल में कितने का पड़ता है। सारी गणना इसी डिवाइस पर होती है।',
+  areaLegend: 'एरिया (वर्ग फ़ुट)',
+  sbaLabel: 'सुपर बिल्ट-अप एरिया (वर्ग फ़ुट)',
+  carpetLabel: 'RERA के अनुसार कारपेट एरिया (वर्ग फ़ुट)',
+  loadingLabel: 'या, अगर कारपेट एरिया नहीं पता: लोडिंग (%)',
+  baseLabel: 'लोडिंग % किस पर निकाला गया है',
+  baseCarpet: 'कारपेट एरिया पर (आम तौर पर)',
+  baseSba: 'सुपर बिल्ट-अप एरिया पर',
+  priceLegend: 'कीमत (वैकल्पिक)',
+  modeLabel: 'कीमत है',
+  modeRate: 'प्रति वर्ग फ़ुट (सुपर बिल्ट-अप)',
+  modeTotal: 'पूरे फ़्लैट की',
+  priceLabel: 'कीमत (₹)',
+  errorSba: '0 से ज़्यादा सुपर बिल्ट-अप एरिया डालें।',
+  errorCarpet:
+    '0 से ज़्यादा और सुपर बिल्ट-अप एरिया से अधिक नहीं, ऐसा कारपेट एरिया डालें, या इसे खाली छोड़कर लोडिंग % डालें।',
+  errorLoading: '0 या उससे ज़्यादा लोडिंग % डालें (सुपर बिल्ट-अप एरिया पर: 100 से कम)।',
+  errorPrice: '₹0 से ज़्यादा कीमत डालें, या इसे खाली छोड़ें।',
+  resultCarpetRate: 'कारपेट एरिया के प्रति वर्ग फ़ुट असली कीमत',
+  resultLoading: 'कारपेट एरिया पर लोडिंग',
+  rowCarpet: 'कारपेट एरिया',
+  rowCommon: 'कॉमन एरिया जिसका आप पैसा देते हैं',
+  rowShare: 'सुपर बिल्ट-अप में कॉमन एरिया का हिस्सा',
+  rowTotal: 'कुल कीमत',
+  rowSbaRate: 'सुपर बिल्ट-अप पर बताई गई प्रति वर्ग फ़ुट कीमत',
+  sqFt: 'वर्ग फ़ुट',
+  sqM: 'वर्ग मीटर',
+  share: 'इस नतीजे का लिंक कॉपी करें',
+  shareCopied: 'लिंक कॉपी हो गया',
+  formulaTitle: 'गणना कैसे होती है',
+  formulaWhere:
+    'कॉमन एरिया = सुपर बिल्ट-अप − कारपेट। कुछ बिल्डर लोडिंग को सुपर बिल्ट-अप के हिस्से के रूप में बताते हैं: कॉमन एरिया ÷ सुपर बिल्ट-अप × 100। दोनों दिखाए गए हैं।',
+  assumptionsTitle: 'मान्यताएँ',
+  assumptions: [
+    'कारपेट एरिया वह RERA कारपेट एरिया है जो एग्रीमेंट या RERA वेबसाइट पर लिखा होता है; बिल्डर को इसे बताना ज़रूरी है।',
+    'सुपर बिल्ट-अप एरिया का कोई तय नियम नहीं है, इसलिए हर बिल्डर इसे अलग गिनता है। फ़्लैटों की तुलना कारपेट एरिया के प्रति वर्ग फ़ुट कीमत से करें।',
+    'यहाँ कुल कीमत सिर्फ़ एरिया × रेट है। पार्किंग, फ़्लोर राइज़, क्लब, GST, स्टांप ड्यूटी और दूसरे शुल्क अलग से।',
+  ],
+  backHome: 'सभी टूल',
+};
+
+export const carpetStrings = { en, hi } as const;

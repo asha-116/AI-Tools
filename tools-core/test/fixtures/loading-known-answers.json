@@ -1,0 +1,30 @@
+{
+  "$comment": "Known answers for carpet area vs super built-up area (loading) and the effective price per sq ft of carpet. Published worked examples found via web search on 2026-10-09 (direct fetch of the pages is blocked in the build environment). Loading is quoted two ways in India: on carpet area, (SBA − carpet) ÷ carpet, and as the common share of SBA, (SBA − carpet) ÷ SBA; every case states which figure it gives.",
+  "accessed": "2026-10-09",
+  "cases": [
+    {
+      "name": "1,300 sq ft super built-up, 1,000 sq ft carpet: 30% loading on carpet",
+      "input": { "carpet": 1000, "superBuiltUp": 1300 },
+      "expect": { "loadingOnCarpetPercent": 30 },
+      "sources": ["https://housing.com/news/loading-factor-in-apartments/"],
+      "quote": "If the carpet area of an apartment is 1,000 square foot (sqft) and the super built-up area is 1,300 sqft, the loading factor = {(1,300−1,000)/1,000} × 100 = 30%"
+    },
+    {
+      "name": "1,500 sq ft super built-up, 1,200 sq ft carpet: 20% of SBA is common area",
+      "input": { "carpet": 1200, "superBuiltUp": 1500 },
+      "expect": { "commonSharePercent": 20, "loadingOnCarpetPercent": 25 },
+      "sources": [
+        "https://www.providenthousing.com/blog/loading-factor-in-apartments-why-it-matters-for-homebuyers/"
+      ],
+      "quote": "Loading factor = 1 − (carpet area ÷ super built-up area): 1,500 sq ft super built-up and 1,200 sq ft carpet gives 20%"
+    },
+    {
+      "name": "₹1.80 crore for 1,500 sq ft super built-up with 1,050 sq ft carpet",
+      "input": { "carpet": 1050, "superBuiltUp": 1500, "totalPrice": 18000000 },
+      "expect": { "ratePerSuperBuiltUp": 12000, "ratePerCarpet": 17143 },
+      "tolerance": { "rate": 1 },
+      "sources": ["https://www.sunteckindia.com/blog/?p=1853"],
+      "quote": "Advertised area (super built-up) of 1,500 sq. ft. at an apartment price of ₹1.80 crore … ₹12,000 per sq. ft. But if the actual carpet area is only 1,050 sq. ft., the effective cost becomes ₹1.80 crore ÷ 1,050 sq. ft. = ₹17,143 per sq. ft."
+    }
+  ]
+}

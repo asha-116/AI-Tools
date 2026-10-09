@@ -138,6 +138,7 @@ describe('repo reader', () => {
     expect(repo.read('AGENTS.md')).toContain('AGENTS.md');
     expect(repo.list('site/src/tools')).toEqual([
       'area',
+      'carpet-area',
       'commission',
       'eligibility',
       'emi',
