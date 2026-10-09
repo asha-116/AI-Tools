@@ -25,7 +25,8 @@ PR diff; the producer's model family (from PR metadata / agent log); cited sourc
    cited source text; flag unsupported claims, advice-like language and missing disclaimers.
    A claim with no source, in a file that cites its own sources (e.g. a data file), is
    "unchecked" (check by hand) rather than unsourced; a URL the model invents stays unsourced.
-   Statements about this project's own code, tests or CI are not claims.
+   Statements about this project's own code, tests or CI are not claims; README files are not
+   claim-checked. The disclaimer check applies to published content (`site/src/content/`) only.
 4. **Prices/legal:** confirm the PR carries `approved-by-owner`; otherwise fail.
 5. Set status + post one comment with a table of cases and findings.
 

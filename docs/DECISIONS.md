@@ -357,7 +357,10 @@ NOTHING`), so duplicates and both events for one payment are harmless. It stores
   The verifier model now answers each field as an arithmetic expression that the Verifier
   evaluates exactly (`agents/verifier/src/expr.ts`, no identifiers or code). The model still
   derives the formula independently. Unsourced-claim noise was also cut: a claim with no source
-  in a file that cites sources is "check by hand", and repo-process statements are not claims.
+  in a file that cites sources is "check by hand", and repo-process statements are not claims. READMEs
+  are not claim-checked, and "missing disclaimer" applies only to `site/src/content/`. The
+  AI client now logs a provider's short error code (never its message) and retries Groq's
+  `json_validate_failed` once.
 
 ### ADR-031 — Support: templates only, every refund to the owner, no inbox yet
 

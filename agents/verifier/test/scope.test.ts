@@ -20,6 +20,7 @@ describe('classify', () => {
       f('tools-core/test/fixtures/emi-known-answers.json'),
       f('tools-core/test/emi.test.ts'),
       f('data/stamp-duty/mh.json', '+  "rate": 6'),
+      f('data/stamp-duty/README.md', '+CI fails stale files'),
       f('site/src/content/en/guide.md', '+Hello'),
       f('company/policies/refund-policy.md', '+x'),
       f('legal/terms.md', '+y'),

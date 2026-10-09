@@ -80,8 +80,12 @@ export function classify(files: readonly ChangedFile[]): Scope {
         (n.startsWith('tools-core/src/') && n.endsWith('.ts')) ||
         (n.startsWith('tools-core/test/fixtures/') && n.endsWith('.json')),
     );
+  // READMEs explain how the repo works; the facts they describe live in the files they document.
   const textFiles = live.filter(
-    (x) => !x.filename.startsWith('tools-core/') && isTextFile(x.filename),
+    (x) =>
+      !x.filename.startsWith('tools-core/') &&
+      isTextFile(x.filename) &&
+      !/(^|\/)README\.md$/i.test(x.filename),
   );
   const contentFiles = textFiles
     .map((x) => x.filename)

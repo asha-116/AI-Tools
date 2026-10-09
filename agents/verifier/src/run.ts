@@ -297,7 +297,9 @@ async function checkClaims(
     };
   });
   for (const a of data.advice) reasons.push(`advice-like language (${a.file}): ${a.text}`);
-  for (const m of data.missing_disclaimer) reasons.push(`missing disclaimer: ${m.file}`);
+  // Only published content needs the disclaimer (data files feed pages that show it).
+  for (const m of data.missing_disclaimer)
+    if (m.file.startsWith('site/src/content/')) reasons.push(`missing disclaimer: ${m.file}`);
   return { claims, reasons };
 }
 

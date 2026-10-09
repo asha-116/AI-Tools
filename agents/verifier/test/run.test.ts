@@ -543,6 +543,21 @@ describe('verify — claims and text (PROCEDURE step 3)', () => {
     ]);
   });
 
+  it('ignores model disclaimer findings outside published content', async () => {
+    const llm = scriptedLlm({
+      claims: {
+        claims: [],
+        advice: [],
+        missing_disclaimer: [{ file: 'data/x.json' }],
+      },
+    });
+    const { r } = await run([{ filename: 'data/x.json', status: 'added', patch: '+ "a": 1' }], {
+      llm,
+    });
+    expect(r.report.reasons).toEqual([]);
+    expect(r.status.state).toBe('success');
+  });
+
   it('accepts EN or HI disclaimers and passes clean text', async () => {
     const github = gh({
       'site/src/content/en/a.md': 'For estimation only — verify with a professional.',
