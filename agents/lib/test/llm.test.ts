@@ -82,6 +82,19 @@ describe('availableProviders', () => {
     expect(availableProviders(P, ENV, 'GEMINI').map((p) => p.id)).toEqual(['two']);
     expect(availableProviders(P, ENV, ['gemini', 'llama'])).toEqual([]);
   });
+  it('keeps a provider that also serves a model outside the excluded family', () => {
+    const groq: Provider = {
+      id: 'g',
+      baseUrl: 'https://g.test/v1',
+      keyEnv: 'TWO_KEY',
+      model: 'openai/gpt-oss-120b',
+      family: 'gpt',
+      limits: {},
+    };
+    expect(availableProviders([groq], ENV, 'gpt')).toEqual([]);
+    const both = { ...groq, models: ['llama-3.3-70b-versatile'] };
+    expect(availableProviders([both], ENV, 'gpt').map((p) => p.id)).toEqual(['g']);
+  });
   it('builds the chat/completions URL without double slashes', () => {
     expect(availableProviders(P, ENV)[0]?.url).toBe('https://one.test/v1/chat/completions');
   });
@@ -323,6 +336,29 @@ describe('createLlm().chat', () => {
     expect(r.family).toBe('llama');
   });
 
+  it("answers with the same provider's other-family model when the producer family is excluded", async () => {
+    const groq: Provider = {
+      id: 'groq',
+      baseUrl: 'https://groq.test/v1',
+      keyEnv: 'TWO_KEY',
+      model: 'openai/gpt-oss-120b',
+      models: ['openai/gpt-oss-20b', 'llama-3.3-70b-versatile'],
+      family: 'gpt',
+      limits: {},
+    };
+    const asked: string[] = [];
+    const f = fakeFetch((req) => {
+      asked.push((req.body as { model: string }).model);
+      return jsonResponse(completion('ok'));
+    });
+    const llm = createLlm({ env: ENV, providers: [groq], fetch: f });
+    const v = await llm.chat({ messages: msg, excludeFamily: 'gpt' });
+    expect(v).toMatchObject({ model: 'llama-3.3-70b-versatile', family: 'llama' });
+    // A request without the exclusion still uses the usual model.
+    expect(await llm.chat({ messages: msg })).toMatchObject({ family: 'gpt' });
+    expect(asked).toEqual(['llama-3.3-70b-versatile', 'openai/gpt-oss-120b']);
+  });
+
   it('sends no Authorization header to a keyless local provider; estimates missing usage', async () => {
     const f = fakeFetch(() => jsonResponse({ choices: [{ message: { content: 'abcdefgh' } }] }));
     const llm = createLlm({
@@ -537,5 +573,11 @@ describe('zero-cost rule during discovery', () => {
       GROQ_API_KEY: 'k',
     }).map((p) => familyOf(p.model, p.family));
     expect(new Set(fams).size).toBe(2);
+  });
+
+  it('a Groq gpt-oss producer can still be verified with only Gemini + Groq keys', () => {
+    const env = { GEMINI_API_KEY: 'k', GROQ_API_KEY: 'k' };
+    const ids = availableProviders(loadProviders(), env, 'gpt').map((p) => p.id);
+    expect(ids).toEqual(['gemini', 'groq']);
   });
 });

@@ -14,6 +14,13 @@ templates "coming soon".
 
 ## Done
 
+- 2026-10-09 — **Verifier no longer depends on Gemini alone** (ADR-043): articles written by
+  Groq's gpt-oss could only be verified by Gemini, and asha-116/AI-Tools#56 stayed blocked on
+  Gemini's free-tier 429. A provider whose usual model is the producer's family now answers with
+  another family it serves on the same key (Groq → Llama 3.3 70B). No new key or cost.
+- 2026-10-09 — **Guides on the site** (ADR-042): merged SEO articles now appear at
+  `/guides/<slug>/` (EN) and `/hi/guides/<slug>/`, on the home page and in the sitemap.
+  Agent PR fixes merged (asha-116/AI-Tools#55).
 - 2026-10-09 — **Agent PRs fixed** (ADR-041): the first live SEO/Social runs (#44–#54) all failed
   CI (formatting, offline link check, three Verifier false alarms). Agents now commit
   Prettier-formatted files, articles carry a Sources list, the link check skips generated
