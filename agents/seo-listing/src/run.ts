@@ -134,6 +134,7 @@ export async function seoListing(ctx: AgentContext, opts: SeoOptions): Promise<S
     related: TOOLS.filter((t) => t !== tool && pageExists(repo, t.path('en'))),
     lastVerified,
     date: ctx.now().toISOString().slice(0, 10),
+    sources: knownAnswerSources(repo, slug),
   };
   const product = liveProduct(repo.read('products/catalog.json'), slug);
   const exists = (p: string) => pageExists(repo, p);
@@ -260,4 +261,26 @@ export function main(options?: RunOptions, argv: readonly string[] = cliArgs()) 
     (ctx) => seoListing(ctx, { slug: slugArg(argv) }),
     options,
   );
+}
+
+/**
+ * Source URLs of the published worked examples behind a tool (its meta.json `knownAnswers`
+ * fixture, `cases[].sources`), so readers and the Verifier can check the article's numbers.
+ */
+export function knownAnswerSources(repo: RepoReader, slug: string): string[] {
+  try {
+    const meta = JSON.parse(readText(repo, `site/src/tools/${slug}/meta.json`)) as {
+      knownAnswers?: unknown;
+    };
+    if (typeof meta.knownAnswers !== 'string') return [];
+    const fixture = JSON.parse(readText(repo, meta.knownAnswers)) as {
+      cases?: { sources?: unknown }[];
+    };
+    const urls = (fixture.cases ?? []).flatMap((c) =>
+      Array.isArray(c.sources) ? c.sources.filter((u): u is string => typeof u === 'string') : [],
+    );
+    return [...new Set(urls.filter((u) => /^https:\/\/[^\s<>]+$/.test(u)))];
+  } catch {
+    return [];
+  }
 }

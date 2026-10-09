@@ -42,7 +42,9 @@ quotes cited in the pull request.
 
 1. List every factual claim: rates, percentages, amounts, laws, rules, dates, deadlines and
    other checkable numbers. Ignore opinions, marketing tone and UI labels, and statements about
-   this project's own code, tests, CI or working process.
+   this project's own code, tests, CI or working process. What this site's own calculator does
+   is not a claim either: its formula, its worked example's inputs and results, and the
+   assumptions it states (the formula is checked separately against cited sources).
    For each claim give the cited source URL (copy it exactly from the list below, or "" when
    none applies) and a status:
    - "supported": a quote or text in this pull request from that source states the same fact;
@@ -51,6 +53,8 @@ quotes cited in the pull request.
    - "unsourced": no source is cited for it.
 2. List advice-like language: telling the reader what they should do about tax, law,
    investments or loans (e.g. "you should claim", "best investment", "you must file").
+   Pointing the reader to a bank, CA, lawyer or other professional, or telling them to check a
+   figure with their lender, is not advice — the site is required to say that.
 3. List files that present calculations or money/legal rules to readers but lack a disclaimer
    such as "For estimation only — verify with a professional" (or the Hindi
    "केवल अनुमान के लिए — किसी विशेषज्ञ से पुष्टि करें").
