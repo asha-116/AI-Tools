@@ -14,6 +14,10 @@ templates "coming soon".
 
 ## Done
 
+- 2026-10-09 — Land units, Maharashtra + Karnataka first (owner's choice): the converter now
+  shows ares (Maharashtra 7/12 records area in hectare-are); guntha moved to
+  `data/land-units/guntha.json` with a verification checklist — it goes live once the owner
+  confirms against an RTC / 7/12 and signs `verified_by`.
 - 2026-10-09 — **Home loan prepayment calculator** (asha-116/AI-Tools#28, ADR-035):
   `/tools/prepayment/` and `/hi/tools/prepayment/` — one-time, monthly or yearly extra payments;
   shows interest saved and how much sooner the loan ends (EMI unchanged).

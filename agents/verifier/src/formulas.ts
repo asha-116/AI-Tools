@@ -5,6 +5,7 @@
 // Add an entry here when tools-core gains a function with a known-answer fixture. A changed
 // tools-core/src file without an entry fails the Verifier (it cannot be checked independently).
 
+import gunthaUnits from '../../../data/land-units/guntha.json' with { type: 'json' };
 import regionalUnits from '../../../data/land-units/regional.json' with { type: 'json' };
 import standardUnits from '../../../data/land-units/standard.json' with { type: 'json' };
 import {
@@ -43,7 +44,11 @@ export interface FormulaEntry {
 export const SHARED_SOURCES = ['tools-core/src/index.ts', 'tools-core/src/numbers.ts'];
 
 /** Unit sizes from data/land-units (our side only; the verifier model gets the description). */
-const AREA_UNITS: AreaUnit[] = [...standardUnits.units, ...regionalUnits.units].map((u) => ({
+const AREA_UNITS: AreaUnit[] = [
+  ...standardUnits.units,
+  ...gunthaUnits.units,
+  ...regionalUnits.units,
+].map((u) => ({
   id: u.id,
   sq_m: u.sq_m,
 }));
@@ -158,6 +163,7 @@ export const FORMULAS: FormulaEntry[] = [
     sourceFiles: [
       'tools-core/src/area.ts',
       'data/land-units/standard.json',
+      'data/land-units/guntha.json',
       'data/land-units/regional.json',
     ],
     fixture: 'tools-core/test/fixtures/area-known-answers.json',
@@ -166,7 +172,8 @@ export const FORMULAS: FormulaEntry[] = [
       'and https://1acre.in/land-unit-converter/guntha-to-sqft).',
       'Inputs: value, a non-negative area; from and to, unit ids.',
       'Unit sizes: sq_ft = 1 square foot (1 foot = 0.3048 m exactly); sq_yd = 1 square yard',
-      '(gaj) = 9 sq ft; sq_m = 1 square metre; acre = 43,560 sq ft; hectare = 10,000 sq m;',
+      '(gaj) = 9 sq ft; sq_m = 1 square metre; are = 100 sq m; acre = 43,560 sq ft;',
+      'hectare = 10,000 sq m;',
       'guntha = 1,089 sq ft; cent = 435.6 sq ft; ground = 2,400 sq ft; marla = 272.25 sq ft;',
       'kanal = 5,445 sq ft.',
       'result = value × (size of from unit) ÷ (size of to unit). Do not round.',

@@ -76,6 +76,7 @@ const AREA_SQ_FT: Record<string, number> = {
   sq_ft: 1,
   sq_yd: 9,
   sq_m: 1 / 0.09290304,
+  are: 100 / 0.09290304,
   acre: 43560,
   hectare: 10000 / 0.09290304,
   guntha: 1089,

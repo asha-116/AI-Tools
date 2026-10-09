@@ -1,5 +1,5 @@
 {
-  "$comment": "Standard area units. These are exact definitions, not rates: international yard (1959) = 0.9144 m, so 1 sq ft = 0.09290304 m², 1 sq yd (gaj) = 0.83612736 m², 1 acre = 4,840 sq yd = 4046.8564224 m²; 1 hectare = 10,000 m².",
+  "$comment": "Standard area units. These are exact definitions, not rates: international yard (1959) = 0.9144 m, so 1 sq ft = 0.09290304 m², 1 sq yd (gaj) = 0.83612736 m², 1 acre = 4,840 sq yd = 4046.8564224 m²; 1 hectare = 10,000 m²; 1 are = 100 m² (metric, as printed in hectare-are on Maharashtra 7/12 extracts).",
   "dataset": "land-units",
   "status": "verified",
   "verified_by": "exact definitions (no rate to look up); recomputed in tools-core/test/area.test.ts",
@@ -27,8 +27,29 @@
       "label_hi": "वर्ग गज़ / गज़",
       "sq_m": 0.83612736
     },
-    { "id": "sq_m", "label_en": "Square metres (sq m)", "label_hi": "वर्ग मीटर", "sq_m": 1 },
-    { "id": "acre", "label_en": "Acres", "label_hi": "एकड़", "sq_m": 4046.8564224 },
-    { "id": "hectare", "label_en": "Hectares", "label_hi": "हेक्टेयर", "sq_m": 10000 }
+    {
+      "id": "sq_m",
+      "label_en": "Square metres (sq m)",
+      "label_hi": "वर्ग मीटर",
+      "sq_m": 1
+    },
+    {
+      "id": "are",
+      "label_en": "Ares (used on Maharashtra 7/12 extracts)",
+      "label_hi": "आर (महाराष्ट्र 7/12 उतारे में प्रयुक्त)",
+      "sq_m": 100
+    },
+    {
+      "id": "acre",
+      "label_en": "Acres",
+      "label_hi": "एकड़",
+      "sq_m": 4046.8564224
+    },
+    {
+      "id": "hectare",
+      "label_en": "Hectares",
+      "label_hi": "हेक्टेयर",
+      "sq_m": 10000
+    }
   ]
 }

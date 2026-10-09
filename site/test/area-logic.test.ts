@@ -14,7 +14,7 @@ describe('area converter page logic', () => {
   const live = visibleUnits(ALL_UNITS, false);
 
   it('shows only verified units on the live site; drafts on owner review', () => {
-    expect(live.map((u) => u.id)).toEqual(['sq_ft', 'sq_yd', 'sq_m', 'acre', 'hectare']);
+    expect(live.map((u) => u.id)).toEqual(['sq_ft', 'sq_yd', 'sq_m', 'are', 'acre', 'hectare']);
     expect(visibleUnits(ALL_UNITS, true).length).toBeGreaterThan(live.length);
   });
 
@@ -27,6 +27,7 @@ describe('area converter page logic', () => {
       sq_ft: '43,560',
       sq_yd: '4,840',
       sq_m: '4,046.8564',
+      are: '40.4686',
       acre: '1',
       hectare: '0.4047',
     });

@@ -1,4 +1,5 @@
 import type { AreaUnit } from '@toolshop/tools-core';
+import guntha from '../../../../data/land-units/guntha.json' with { type: 'json' };
 import regional from '../../../../data/land-units/regional.json' with { type: 'json' };
 import standard from '../../../../data/land-units/standard.json' with { type: 'json' };
 
@@ -19,4 +20,8 @@ const withStatus = (file: { status: string; units: Omit<PageUnit, 'verified'>[] 
     verified: file.status === 'verified',
   }));
 
-export const ALL_UNITS: PageUnit[] = [...withStatus(standard), ...withStatus(regional)];
+export const ALL_UNITS: PageUnit[] = [
+  ...withStatus(standard),
+  ...withStatus(guntha),
+  ...withStatus(regional),
+];
