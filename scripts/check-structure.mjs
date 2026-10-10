@@ -3,6 +3,7 @@
 // Runs in CI. Zero dependencies on purpose.
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
 import { join } from 'node:path';
+import { checkFreeTierLimits, checkLandUnits } from './lib/data-schema.mjs';
 
 const root = new URL('..', import.meta.url).pathname;
 const errors = [];
@@ -22,6 +23,7 @@ const requiredFiles = [
   'docs/SETUP.md',
   'company/goals.md',
   'data/stamp-duty/schema.json',
+  'data/land-units/schema.json',
   '.github/PULL_REQUEST_TEMPLATE.md',
   '.github/labels.json',
   '.github/workflows/ci.yml',
@@ -172,6 +174,30 @@ if (existsSync(sdDir)) {
       errors.push(`data/stamp-duty/${f}: "last_verified" must be YYYY-MM-DD`);
     }
   }
+}
+
+// Other data files: land units and free-tier limits (scripts/lib/data-schema.mjs).
+const readJson = (/** @type {string} */ rel) => {
+  try {
+    return JSON.parse(readFileSync(join(root, rel), 'utf8'));
+  } catch (e) {
+    errors.push(`${rel}: invalid JSON (${e.message})`);
+    return undefined;
+  }
+};
+const luDir = join(root, 'data/land-units');
+if (existsSync(luDir)) {
+  const seen = new Set();
+  for (const f of readdirSync(luDir).sort()) {
+    if (!f.endsWith('.json') || f === 'schema.json') continue;
+    const rel = `data/land-units/${f}`;
+    const doc = readJson(rel);
+    if (doc !== undefined) errors.push(...checkLandUnits(doc, rel, seen));
+  }
+}
+if (existsSync(join(root, 'data/free-tier-limits.json'))) {
+  const doc = readJson('data/free-tier-limits.json');
+  if (doc !== undefined) errors.push(...checkFreeTierLimits(doc, 'data/free-tier-limits.json'));
 }
 
 if (errors.length > 0) {

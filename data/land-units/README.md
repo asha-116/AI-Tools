@@ -15,6 +15,8 @@ Rates and sizes are data, never code (AGENTS.md rule 6).
   records, add those sources, set `"status": "verified"`, put your name in `verified_by` and
   update `last_verified`. Open the PR with the `approved-by-owner` label.
 - Bigha, biswa and katha are left out on purpose: their size changes by state and even district.
+- The shape of every file is in `schema.json` and enforced by `npm run check:structure`
+  (`scripts/lib/data-schema.mjs`): required fields, https sources, Hindi labels, unique unit ids.
 - Every `sq_m` is checked against `sq_ft × 0.09290304` and against the known answers in
   `tools-core/test/fixtures/area-known-answers.json`. CI fails a `verified` file older than
   180 days (`scripts/check-data-freshness.mjs`).

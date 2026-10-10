@@ -14,6 +14,10 @@ templates "coming soon".
 
 ## Done
 
+- 2026-10-10 — **Data files checked in CI** (ADR-044, closes asha-116/AI-Tools#73): land units and
+  free-tier limits now have a structural check like stamp duty. Repo made public by the owner
+  (Actions minutes ran out on the private plan; ADR-009 settled). Guides for all six tools merged;
+  stale owner Issues #34 and #45 closed.
 - 2026-10-09 — **Verifier fallback, part 2** (ADR-043 follow-up): Groq had retired Llama 3.3
   70B, so the fallback found nothing. Model discovery now skips the producer's family and also
   matches Groq's `meta-llama/…` ids. Guides and part 1 merged (asha-116/AI-Tools#57).
@@ -243,8 +247,8 @@ templates "coming soon".
 
 ## Blockers
 
-- **Branch protection on a private repo** needs GitHub Pro/Team, or the repo must be public
-  (ADR-009).
+- None from ADR-009: the repo is public (2026-10-10), so branch protection and auto-merge are
+  available on GitHub Free if the owner wants them.
 
 ## Questions for owner
 
@@ -252,9 +256,8 @@ templates "coming soon".
    pages and a support address on the domain (e.g. `support@changelense.in`).
 2. **Profession:** confirm Indian real-estate agents (vs tuition teachers) as the first market.
 3. ~~Brand~~ → **answered:** ChangeLens (ADR-019).
-4. **Private repo protection (ADR-009):** (a) make repo public once confirmed secret/PII-free —
-   free protection + unlimited Actions minutes; (b) GitHub Pro (~US$4/month); (c) stay private
-   with convention-only enforcement. Recommendation: (a).
+4. ~~Private repo protection (ADR-009)~~ → **answered:** repo made public on 2026-10-10
+   (history scanned: no keys or tokens; the owner's commit email is visible in commit metadata).
 5. **Licence:** keep proprietary "All rights reserved"?
 6. **Delivery email (ADR-010):** free transactional email tier (needs a domain) or download
    link on the post-payment page only?
