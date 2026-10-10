@@ -10,6 +10,7 @@ import eligibilityMeta from '../../../site/src/tools/eligibility/meta.json' with
 import prepaymentMeta from '../../../site/src/tools/prepayment/meta.json' with { type: 'json' };
 import rvbMeta from '../../../site/src/tools/rent-vs-buy/meta.json' with { type: 'json' };
 import yieldMeta from '../../../site/src/tools/rental-yield/meta.json' with { type: 'json' };
+import btMeta from '../../../site/src/tools/balance-transfer/meta.json' with { type: 'json' };
 import standardUnits from '../../../data/land-units/standard.json' with { type: 'json' };
 import {
   computeCommission,
@@ -18,6 +19,7 @@ import {
   computeLoading,
   computePrepayment,
   computeRentalYield,
+  computeBalanceTransfer,
   computeRentVsBuy,
   computeStampDuty,
   convertArea,
@@ -33,6 +35,7 @@ import { emiStrings } from '../../../site/src/tools/emi/strings.js';
 import { prepayStrings } from '../../../site/src/tools/prepayment/strings.js';
 import { rvbStrings } from '../../../site/src/tools/rent-vs-buy/strings.js';
 import { yieldStrings } from '../../../site/src/tools/rental-yield/strings.js';
+import { transferStrings } from '../../../site/src/tools/balance-transfer/strings.js';
 import { sdStrings } from '../../../site/src/tools/stamp-duty/strings.js';
 
 export type Lang = 'en' | 'hi';
@@ -587,6 +590,50 @@ const rentVsBuy: ToolInfo = {
   },
 };
 
+// ---------- Balance transfer ----------
+
+// Published case (tools-core/test/fixtures/balance-transfer-known-answers.json, Kotak): ₹39.39
+// lakh outstanding, 15 years left, 8% → 7% gives a new EMI of ₹35,405 and ₹24.34 lakh interest.
+// The switching cost is the calculator's default example, not from the source.
+const BT_INPUT = {
+  outstanding: 3_939_000,
+  currentRatePercent: 8,
+  remainingMonths: 180,
+  newRatePercent: 7,
+  switchingCosts: 25_000,
+};
+
+const balanceTransfer: ToolInfo = {
+  slug: 'balance-transfer',
+  moneyTopic: true,
+  text: textOf(btMeta, transferStrings),
+  path: toolPath('balance-transfer'),
+  lastVerified: metaReviewed('balance-transfer'),
+  example() {
+    const r = computeBalanceTransfer(BT_INPUT);
+    return {
+      inputs: [
+        money('outstanding', { en: 'Loan outstanding', hi: 'बकाया लोन' }, 3_939_000),
+        percent('current_rate', { en: 'Current rate (per year)', hi: 'अभी की दर (सालाना)' }, 8),
+        amount('years', { en: 'Years left', hi: 'बचे साल' }, 15, YEARS),
+        percent('new_rate', { en: 'New rate (per year)', hi: 'नई दर (सालाना)' }, 7),
+        money('costs', { en: 'Switching costs (example)', hi: 'ट्रांसफ़र खर्च (उदाहरण)' }, 25_000),
+      ],
+      outputs: [
+        money('new_emi', { en: 'New EMI', hi: 'नई EMI' }, r.newEmi),
+        money(
+          'new_interest',
+          { en: 'Interest on the new loan', hi: 'नए लोन पर ब्याज' },
+          r.newInterest,
+        ),
+        money('saved', { en: 'Interest saved', hi: 'ब्याज की बचत' }, r.interestSaved),
+        money('net', { en: 'Net saving after costs', hi: 'खर्च के बाद कुल बचत' }, r.netSaving),
+      ],
+      source: SAME_CODE,
+    };
+  },
+};
+
 function pick(s: {
   metaTitle: string;
   metaDescription: string;
@@ -613,6 +660,7 @@ export const TOOLS: readonly ToolInfo[] = [
   carpetArea,
   rentalYield,
   rentVsBuy,
+  balanceTransfer,
 ];
 
 export function findTool(slug: string): ToolInfo | undefined {

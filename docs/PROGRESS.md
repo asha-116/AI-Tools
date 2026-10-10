@@ -14,6 +14,10 @@ templates "coming soon".
 
 ## Done
 
+- 2026-10-10 — **Home loan balance transfer calculator** (ADR-045, closes asha-116/AI-Tools#72):
+  `/tools/balance-transfer/` and `/hi/tools/balance-transfer/` — new EMI, interest saved and net
+  saving after switching costs; known answers from Kotak and Outlook Money; the SEO/Social
+  agents and the Verifier know the new tool. Owner: review the Hindi text and the RBI sentence.
 - 2026-10-10 — **Data files checked in CI** (ADR-044, closes asha-116/AI-Tools#73): land units and
   free-tier limits now have a structural check like stamp duty. Repo made public by the owner
   (Actions minutes ran out on the private plan; ADR-009 settled). Guides for all six tools merged;

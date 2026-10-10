@@ -71,3 +71,9 @@ export {
   type RentVsBuyInput,
   type RentVsBuyResult,
 } from './rentVsBuy.js';
+export {
+  BALANCE_TRANSFER_LIMITS,
+  computeBalanceTransfer,
+  type BalanceTransferInput,
+  type BalanceTransferResult,
+} from './balanceTransfer.js';
