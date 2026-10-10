@@ -14,6 +14,21 @@ templates "coming soon".
 
 ## Done
 
+- 2026-10-09 — **Verifier fallback, part 2** (ADR-043 follow-up): Groq had retired Llama 3.3
+  70B, so the fallback found nothing. Model discovery now skips the producer's family and also
+  matches Groq's `meta-llama/…` ids. Guides and part 1 merged (asha-116/AI-Tools#57).
+- 2026-10-09 — **Verifier no longer depends on Gemini alone** (ADR-043): articles written by
+  Groq's gpt-oss could only be verified by Gemini, and asha-116/AI-Tools#56 stayed blocked on
+  Gemini's free-tier 429. A provider whose usual model is the producer's family now answers with
+  another family it serves on the same key (Groq → Llama 3.3 70B). No new key or cost.
+- 2026-10-09 — **Guides on the site** (ADR-042): merged SEO articles now appear at
+  `/guides/<slug>/` (EN) and `/hi/guides/<slug>/`, on the home page and in the sitemap.
+  Agent PR fixes merged (asha-116/AI-Tools#55).
+- 2026-10-09 — **Agent PRs fixed** (ADR-041): the first live SEO/Social runs (#44–#54) all failed
+  CI (formatting, offline link check, three Verifier false alarms). Agents now commit
+  Prettier-formatted files, articles carry a Sources list, the link check skips generated
+  articles, and the Verifier's disclaimer/advice checks no longer misfire. Next: a page that
+  shows the articles on the site (they are not rendered yet).
 - 2026-10-09 — **Growth, step 2** (ADR-040): the SEO/Listing and Social agents now know all nine
   tools (worked examples computed by the real calculators) and run for every merged PR that
   changes a tool, without a label. Sitemap merged (asha-116/AI-Tools#42).

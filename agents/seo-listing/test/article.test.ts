@@ -9,6 +9,7 @@ import {
   type ArticleContext,
 } from '../src/article.js';
 import { parseDisclaimers } from '../src/disclaimer.js';
+import { knownAnswerSources } from '../src/run.js';
 import { wordCount } from '../src/policy.js';
 import { fsRepo, pageExists } from '../src/repo.js';
 import { findTool, TOOLS, type ToolInfo, type WorkedExample } from '../src/tools.js';
@@ -113,5 +114,28 @@ describe('draftProblems', () => {
     expect(draftProblems(goodDraft(), ctx, () => false)).toContain(
       'en: link /tools/emi/ does not resolve to a page on our site',
     );
+  });
+});
+
+describe('article sources', () => {
+  it('lists the published known-answer sources before the disclaimer', () => {
+    const repo = fsRepo(process.cwd());
+    const sources = knownAnswerSources(repo, 'eligibility');
+    expect(sources).toContain(
+      'https://homefirstindia.com/blog/article/home-loan-eligibility-on-a-100000-salary/',
+    );
+    expect(new Set(sources).size).toBe(sources.length);
+    const md = renderArticle(goodDraft(), 'hi', { ...emiContext(), sources }, 'llama');
+    const at = md.indexOf('## स्रोत');
+    expect(at).toBeGreaterThan(0);
+    expect(md.indexOf('<https://homefirstindia.com/')).toBeGreaterThan(at);
+    expect(md.lastIndexOf('> ')).toBeGreaterThan(at);
+    expect(renderArticle(goodDraft(), 'en', emiContext(), 'llama')).not.toContain('## Sources');
+  });
+
+  it('returns no sources for an unknown tool or a broken fixture', () => {
+    expect(knownAnswerSources(fsRepo(process.cwd()), 'nope')).toEqual([]);
+    const fake = { read: (p: string) => (p.endsWith('meta.json') ? '{"knownAnswers":1}' : null) };
+    expect(knownAnswerSources(fake as never, 'x')).toEqual([]);
   });
 });

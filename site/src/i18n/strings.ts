@@ -57,6 +57,9 @@ const en = {
   rvbCardTitle: 'Rent vs buy calculator',
   rvbCardSummary: 'What a buyer and a renter each have after the same years, with your numbers.',
   openTool: 'Open',
+  guidesTitle: 'Guides',
+  guidesBack: 'All tools and guides',
+  guidesOpenTool: 'Open the calculator',
 };
 
 export type Strings = typeof en;
@@ -115,6 +118,9 @@ const hi: Strings = {
   rvbCardTitle: 'किराया या खरीदें कैलकुलेटर',
   rvbCardSummary: 'एक जैसे सालों के बाद खरीदार और किरायेदार के पास कितना, आपके आँकड़ों के साथ।',
   openTool: 'खोलें',
+  guidesTitle: 'गाइड',
+  guidesBack: 'सभी टूल और गाइड',
+  guidesOpenTool: 'कैलकुलेटर खोलें',
 };
 
 export const strings = { en, hi } as const;

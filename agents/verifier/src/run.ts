@@ -301,9 +301,9 @@ async function checkClaims(
     };
   });
   for (const a of data.advice) reasons.push(`advice-like language (${a.file}): ${a.text}`);
-  // Only published content needs the disclaimer (data files feed pages that show it).
-  for (const m of data.missing_disclaimer)
-    if (m.file.startsWith('site/src/content/')) reasons.push(`missing disclaimer: ${m.file}`);
+  // The model's `missing_disclaimer` list is not used: the disclaimer is checked exactly, in
+  // code, on every published page (verify(), "Disclaimer check"). The model only saw the added
+  // lines and reported disclaimers that were there.
   return { claims, reasons };
 }
 
@@ -411,8 +411,9 @@ export async function verify(
     }))
     .filter((s) => s.cases.length > 0);
 
-  // Disclaimer check (deterministic) on published content.
-  for (const path of scope.contentFiles) {
+  // Disclaimer check (deterministic) on published pages. Markdown only: an article's
+  // `.seo.json` (meta tags, JSON-LD) is not a page readers see.
+  for (const path of scope.contentFiles.filter((p) => p.endsWith('.md'))) {
     const content = (await ctx.github.getFile(path, pr.headSha)) ?? '';
     if (!DISCLAIMERS.some((d) => content.includes(d)))
       report.reasons.push(`missing disclaimer: ${path}`);
