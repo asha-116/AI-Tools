@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "toolshop/data/land-units/units.schema.json",
+  "title": "Land area units",
+  "description": "One file per group of units: data/land-units/<name>.json. Unit sizes are data, never hard-coded in logic. Enforced in CI by scripts/lib/data-schema.mjs (checkLandUnits), which also checks that sq_ft × 0.09290304 equals sq_m and that unit ids are unique across files.",
+  "type": "object",
+  "required": ["dataset", "status", "verified_by", "last_verified", "sources", "units"],
+  "properties": {
+    "$comment": { "type": "string" },
+    "dataset": { "const": "land-units" },
+    "states": {
+      "type": "array",
+      "description": "Two-letter codes of the states where these units are used, e.g. [\"MH\", \"KA\"].",
+      "items": { "type": "string", "pattern": "^[A-Z]{2}$" }
+    },
+    "status": {
+      "enum": ["draft", "verified"],
+      "description": "The site shows only verified units."
+    },
+    "verified_by": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Who checked the sizes against the sources; must not say \"not verified\" when status is verified."
+    },
+    "last_verified": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$" },
+    "verification_checklist": { "type": "array", "items": { "type": "string" } },
+    "sources": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["url", "title"],
+        "properties": {
+          "url": { "type": "string", "pattern": "^https://" },
+          "title": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "units": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "label_en", "label_hi", "sq_m"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z][a-z0-9_]*$" },
+          "label_en": { "type": "string", "minLength": 1 },
+          "label_hi": { "type": "string", "minLength": 1 },
+          "sq_m": { "type": "number", "exclusiveMinimum": 0 },
+          "sq_ft": { "type": "number", "exclusiveMinimum": 0 }
+        }
+      }
+    }
+  }
+}

@@ -68,7 +68,8 @@ Statuses: **Accepted**, **Proposed** (engineer's recommendation, not yet exercis
   `contents: write` on `main`, agents push only to `agent/*` branches, owner merges by convention.
 - **Recommendation:** (a). Paid files live in R2, secrets in GitHub/Cloudflare, customer data in
   Razorpay/Cloudflare — nothing in git needs to be private.
-- **Status:** Needs owner.
+- **Status:** Accepted (2026-10-10): the owner made the repository public after GitHub Actions
+  minutes for the private plan ran out.
 
 ### ADR-010 — Buyer email delivery
 
@@ -568,3 +569,16 @@ NOTHING`), so duplicates and both events for one payment are harmless. It stores
   (HTTP 404), and model discovery then picked `gpt-oss` again. Discovery now also skips the
   excluded families, Groq's pattern also matches `meta-llama/…` ids, and the Verifier's model
   choice is cached separately from the provider's usual model.
+
+### ADR-044 — Every data file's shape is checked in CI
+
+- **Context:** only `data/stamp-duty/*.json` had a structural check; land units and free-tier
+  limits could lose a field, a Hindi label or an https source without CI noticing
+  (asha-116/AI-Tools#73, opened by the Orchestrator).
+- **Decision:** `data/land-units/schema.json` documents the land-unit shape, and
+  `scripts/lib/data-schema.mjs` enforces it and the free-tier limits in `npm run check:structure`
+  (already a CI step): required fields, `draft`/`verified` status with a named verifier, https
+  sources, bilingual labels, positive sizes, `sq_ft × 0.09290304 = sq_m`, and unit ids unique
+  across files. No new dependency (no JSON Schema library); `last_verified` dates are already
+  checked by `scripts/check-data-freshness.mjs`.
+- **Status:** Accepted (2026-10-10).
