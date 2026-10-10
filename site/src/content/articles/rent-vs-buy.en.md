@@ -18,10 +18,10 @@ This tool helps agents and their clients see which option – buying a home or r
 ## How to use the calculator
 
 1. Enter the property value ₹75,00,000 and down payment ₹15,00,000.
-2. Fill in the loan rate 8.5% and the calculated EMI ₹52,069.
+2. Fill in the loan rate 8.5% and the loan tenure 20 years. The calculator works out the EMI (₹52,069).
 3. Provide the current monthly rent ₹25,000 and the expected yearly increase 5%.
 4. Set the assumed property appreciation 5% and the investment return on saved money 8%.
-5. Choose the comparison period 10 years and tap Calculate. The result shows the buyer’s final amount ₹80,17,080 and the renter’s final amount ₹86,55,175, plus total rent paid ₹37,73,368.
+5. Choose the comparison period 10 years. The result updates as you type and shows the buyer’s final amount ₹80,17,080 and the renter’s final amount ₹86,55,175, plus total rent paid ₹37,73,368.
 
 [Open the calculator: Rent vs buy calculator](/tools/rent-vs-buy/)
 
