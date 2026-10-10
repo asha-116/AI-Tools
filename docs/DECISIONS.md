@@ -388,7 +388,8 @@ NOTHING`), so duplicates and both events for one payment are harmless. It stores
     waits for a verified state.
   - **Social** writes drafts to `company/social-queue/` via PR and never calls a social API
     (tested). News, politics, regulation and competitor topics go to the owner.
-- **Open:** wiring `site/src/content/articles/` into pages (no content collection yet).
+- **Open:** wiring `site/src/content/articles/` into pages (no content collection yet) — done in
+  ADR-042.
 - **Status:** Accepted for dry-run (2026-10-06).
 
 ### ADR-033 — Rate freshness is enforced in CI
@@ -536,3 +537,34 @@ NOTHING`), so duplicates and both events for one payment are harmless. It stores
   lawyer is not advice. Other factual claims in articles (e.g. "FOIR is often 40–60%") are
   "unchecked" for the owner to confirm against the listed sources.
 - **Status:** Accepted (2026-10-09). The ten failing agent PRs are closed and the agents re-run.
+
+### ADR-042 — Help articles are published at /guides/<slug>/
+
+- **Context:** the SEO/Listing agent writes `site/src/content/articles/<slug>.{en,hi}.md`, but
+  the site had no page for them (ADR-032 "Open"), so merged articles would bring no visitors.
+- **Decision:** an Astro content collection (`site/src/content.config.ts`, glob loader, id =
+  file name so EN and HI do not collide on the shared `slug`) renders each article at
+  `/guides/<slug>/` and `/hi/guides/<slug>/` with the site layout (canonical, hreflang). The
+  home page lists the guides in its language once any exist, and `sitemap.xml` lists every guide
+  that exists in both languages. Merging an article PR is the owner's approval to publish it
+  (AGENTS.md rule 3); the Verifier has already checked it. The front-matter `status` field is
+  not used for publishing.
+- **Status:** Accepted (2026-10-09).
+
+### ADR-043 — Verifier may use another model family from the producer's provider
+
+- **Context:** the Verifier must use a model family different from the producer's (AGENTS.md §3).
+  The agents mostly write with Groq's `openai/gpt-oss-120b` (family `gpt`), and the LLM client
+  dropped every provider whose configured family was excluded — so with the two free keys
+  (Gemini + Groq) only Gemini could verify. When Gemini's free quota ran out
+  (asha-116/AI-Tools#56, HTTP 429 on every re-run) no article could be verified, although Groq
+  also serves `llama-3.3-70b-versatile` on the same key.
+- **Decision:** a provider is skipped only when none of its configured models (`model`, then
+  `models`) is outside the excluded families; when its usual model is excluded, the request uses
+  the first configured model that is not. The family recorded is still inferred from the model
+  that actually answered (`familyOf`), so a gpt-oss answer can never verify gpt-oss output.
+- **Status:** Accepted (2026-10-09). No new provider, key or cost.
+- **Follow-up (same day):** the first live run showed Groq has retired `llama-3.3-70b-versatile`
+  (HTTP 404), and model discovery then picked `gpt-oss` again. Discovery now also skips the
+  excluded families, Groq's pattern also matches `meta-llama/…` ids, and the Verifier's model
+  choice is cached separately from the provider's usual model.
