@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { robotsTxt, routesFromPages, sitemapXml } from '../src/lib/sitemap.js';
+import { guideRoutes, robotsTxt, routesFromPages, sitemapXml } from '../src/lib/sitemap.js';
 
 describe('routesFromPages', () => {
   it('lists English routes once, skips Hindi twins, non-index files and excluded pages', () => {
@@ -35,5 +35,20 @@ describe('robotsTxt', () => {
     expect(robotsTxt('https://tools.example.in/')).toBe(
       'User-agent: *\nAllow: /\n\nSitemap: https://tools.example.in/sitemap.xml\n',
     );
+  });
+});
+
+describe('guideRoutes', () => {
+  it('lists guides that exist in both languages, sorted', () => {
+    expect(
+      guideRoutes([
+        { slug: 'emi', lang: 'en' },
+        { slug: 'emi', lang: 'hi' },
+        { slug: 'area', lang: 'hi' },
+        { slug: 'area', lang: 'en' },
+        { slug: 'only-en', lang: 'en' },
+      ]),
+    ).toEqual(['/guides/area/', '/guides/emi/']);
+    expect(guideRoutes([])).toEqual([]);
   });
 });

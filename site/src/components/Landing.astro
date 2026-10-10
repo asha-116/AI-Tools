@@ -1,4 +1,5 @@
 ---
+import { getCollection } from 'astro:content';
 import { config } from '../config';
 import { ideas } from '../i18n/ideas';
 import { strings, type Lang } from '../i18n/strings';
@@ -11,6 +12,11 @@ interface Props {
 const { lang } = Astro.props;
 const t = strings[lang];
 const open = config.waitlistUrl.length > 0;
+// Merged help articles in this language (empty until the first SEO article PR is merged).
+const guides = (await getCollection('articles', (e) => e.data.lang === lang)).sort((a, b) =>
+  a.data.title.localeCompare(b.data.title),
+);
+const guidePath = (slug: string) => (lang === 'en' ? `/guides/${slug}/` : `/hi/guides/${slug}/`);
 // Only the strings the browser script needs, so the page ships as little JS/data as possible.
 const clientStrings = {
   sending: t.formSending,
@@ -94,6 +100,21 @@ const clientStrings = {
     </li>
   </ul>
 </section>
+
+{
+  guides.length > 0 && (
+    <section aria-labelledby="guides-title">
+      <h2 id="guides-title">{t.guidesTitle}</h2>
+      <ul class="guides">
+        {guides.map((g) => (
+          <li>
+            <a href={guidePath(g.data.slug)}>{g.data.title}</a>
+          </li>
+        ))}
+      </ul>
+    </section>
+  )
+}
 
 <section aria-labelledby="ideas-title">
   <h2 id="ideas-title">{t.ideasTitle}</h2>
@@ -226,6 +247,13 @@ const clientStrings = {
   .button[disabled] {
     opacity: 0.6;
     cursor: progress;
+  }
+  .guides {
+    padding-left: 20px;
+    margin: 0 0 24px;
+  }
+  .guides li {
+    margin: 8px 0;
   }
   .ideas {
     list-style: none;

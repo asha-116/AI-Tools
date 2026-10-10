@@ -45,3 +45,14 @@ export function sitemapXml(site: string, routes: readonly string[]): string {
 export function robotsTxt(site: string): string {
   return `User-agent: *\nAllow: /\n\nSitemap: ${site.replace(/\/+$/, '')}/sitemap.xml\n`;
 }
+
+/** Guide routes (/guides/<slug>/) for articles that exist in both languages. */
+export function guideRoutes(articles: readonly { slug: string; lang: string }[]): string[] {
+  const slugs = (lang: string) =>
+    new Set(articles.filter((a) => a.lang === lang).map((a) => a.slug));
+  const hi = slugs('hi');
+  return [...slugs('en')]
+    .filter((s) => hi.has(s))
+    .sort()
+    .map((s) => `/guides/${s}/`);
+}

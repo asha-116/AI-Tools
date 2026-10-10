@@ -1,0 +1,158 @@
+{
+  "slug": "eligibility",
+  "meta": {
+    "en": {
+      "title": "Home loan eligibility calculator",
+      "description": "Calculate the maximum home loan a buyer can get based on income, FOIR and interest rate."
+    },
+    "hi": {
+      "title": "होम लोन पात्रता कैलकुलेटर",
+      "description": "आय, FOIR और ब्याज दर के आधार पर खरीदार के अधिकतम लोन की गणना करें।"
+    }
+  },
+  "faq": {
+    "en": [
+      {
+        "q": "How is the eligible loan amount calculated?",
+        "a": "The tool uses the borrower’s monthly take‑home [[income]], the bank’s FOIR limit [[foir]], existing EMIs and the loan interest [[rate]] over the chosen [[tenure]] to compute the maximum EMI ([[emi]]) and the corresponding loan amount ([[loan]])."
+      },
+      {
+        "q": "What does FOIR mean?",
+        "a": "FOIR is the fraction of take‑home income that banks allow for EMI repayment; it varies by bank and borrower profile."
+      },
+      {
+        "q": "Can I include other debts in the calculation?",
+        "a": "Enter the total of all existing EMIs; the tool subtracts them from the allowable EMI before computing the loan."
+      },
+      {
+        "q": "Does the calculator consider property price?",
+        "a": "It shows the loan you can afford; the buyer must still provide the difference between property price and the loan as down payment."
+      }
+    ],
+    "hi": [
+      {
+        "q": "लोन की पात्रता कैसे निकाली जाती है?",
+        "a": "टूल खरीदार की मासिक आय [[income]], बैंक की FOIR सीमा [[foir]], मौजूदा EMI, ब्याज दर [[rate]] और अवधि [[tenure]] को लेकर अधिकतम EMI [[emi]] और उससे मिलती‑जुलती लोन राशि [[loan]] निकालता है।"
+      },
+      {
+        "q": "FOIR क्या है?",
+        "a": "FOIR का मतलब है वह भाग जो बैंक EMI के रूप में आय का स्वीकार करता है; यह बैंक और प्रोफ़ाइल के अनुसार बदलता है।"
+      },
+      {
+        "q": "क्या मैं अन्य ऋणों को शामिल कर सकता हूँ?",
+        "a": "हाँ, सभी मौजूदा EMI को जोड़ें; टूल उन्हें घटा कर शेष EMI की गणना करता है।"
+      },
+      {
+        "q": "क्या प्रॉपर्टी की कीमत इस कैलकुलेटर में आती है?",
+        "a": "कैलकुलेटर केवल वह लोन दिखाता है जो खरीदार वहन कर सकता है; खरीदार को प्रॉपर्टी कीमत और लोन के अंतर को डाउन पेमेंट के रूप में देना होगा।"
+      }
+    ]
+  },
+  "jsonld": {
+    "en": [
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Home loan eligibility calculator",
+        "description": "Calculate the maximum home loan a buyer can get based on income, FOIR and interest rate.",
+        "url": "https://tools.changelense.in/tools/eligibility/",
+        "inLanguage": "en-IN",
+        "applicationCategory": "FinanceApplication",
+        "operatingSystem": "Any",
+        "isAccessibleForFree": true
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "inLanguage": "en-IN",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "How is the eligible loan amount calculated?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "The tool uses the borrower’s monthly take‑home [[income]], the bank’s FOIR limit [[foir]], existing EMIs and the loan interest [[rate]] over the chosen [[tenure]] to compute the maximum EMI ([[emi]]) and the corresponding loan amount ([[loan]])."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "What does FOIR mean?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "FOIR is the fraction of take‑home income that banks allow for EMI repayment; it varies by bank and borrower profile."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Can I include other debts in the calculation?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Enter the total of all existing EMIs; the tool subtracts them from the allowable EMI before computing the loan."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Does the calculator consider property price?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "It shows the loan you can afford; the buyer must still provide the difference between property price and the loan as down payment."
+            }
+          }
+        ]
+      }
+    ],
+    "hi": [
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "होम लोन पात्रता कैलकुलेटर",
+        "description": "आय, FOIR और ब्याज दर के आधार पर खरीदार के अधिकतम लोन की गणना करें।",
+        "url": "https://tools.changelense.in/hi/tools/eligibility/",
+        "inLanguage": "hi-IN",
+        "applicationCategory": "FinanceApplication",
+        "operatingSystem": "Any",
+        "isAccessibleForFree": true
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "inLanguage": "hi-IN",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "लोन की पात्रता कैसे निकाली जाती है?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "टूल खरीदार की मासिक आय [[income]], बैंक की FOIR सीमा [[foir]], मौजूदा EMI, ब्याज दर [[rate]] और अवधि [[tenure]] को लेकर अधिकतम EMI [[emi]] और उससे मिलती‑जुलती लोन राशि [[loan]] निकालता है।"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "FOIR क्या है?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "FOIR का मतलब है वह भाग जो बैंक EMI के रूप में आय का स्वीकार करता है; यह बैंक और प्रोफ़ाइल के अनुसार बदलता है।"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "क्या मैं अन्य ऋणों को शामिल कर सकता हूँ?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "हाँ, सभी मौजूदा EMI को जोड़ें; टूल उन्हें घटा कर शेष EMI की गणना करता है।"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "क्या प्रॉपर्टी की कीमत इस कैलकुलेटर में आती है?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "कैलकुलेटर केवल वह लोन दिखाता है जो खरीदार वहन कर सकता है; खरीदार को प्रॉपर्टी कीमत और लोन के अंतर को डाउन पेमेंट के रूप में देना होगा।"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "producer_family": "gpt"
+}
