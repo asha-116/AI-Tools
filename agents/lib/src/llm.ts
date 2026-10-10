@@ -66,10 +66,17 @@ const NOT_FOR_CHAT =
 
 /**
  * Pick the model to use from what the provider lists: the configured model, then `models` in
- * order, then the first listed id matching `modelPattern`. Returns undefined when none fits.
+ * order, then the first listed id matching `modelPattern`, never one of the `excluded`
+ * families. Returns undefined when none fits.
  */
-export function chooseModel(p: Provider, listed: readonly string[]): string | undefined {
-  let ids = listed.map((id) => id.replace(/^models\//, ''));
+export function chooseModel(
+  p: Provider,
+  listed: readonly string[],
+  excluded: ReadonlySet<string> = new Set(),
+): string | undefined {
+  let ids = listed
+    .map((id) => id.replace(/^models\//, ''))
+    .filter((id) => !excluded.has(familyOf(id, p.family)));
   // Zero-cost rule (AGENTS.md): on OpenRouter only `:free` models may ever be chosen.
   if (p.baseUrl?.includes('openrouter.ai')) ids = ids.filter((id) => id.endsWith(':free'));
   const available = new Set(ids);
@@ -135,7 +142,16 @@ interface ResolvedProvider extends Provider {
   key: string | undefined;
 }
 
-/** Providers with a key (and base URL) set, in order, minus excluded families. */
+/**
+ * The first configured model (`model`, then `models`) outside the excluded families. One key
+ * often serves several families — Groq runs gpt-oss and Llama — so the Verifier can still use
+ * that provider when the producer's family is excluded (ADR-043).
+ */
+export function modelOutside(p: Provider, excluded: ReadonlySet<string>): string | undefined {
+  return [p.model, ...(p.models ?? [])].find((m) => !excluded.has(familyOf(m, p.family)));
+}
+
+/** Providers with a key (and base URL) set, in order, minus those with only excluded families. */
 export function availableProviders(
   providers: Provider[],
   env: Env,
@@ -148,7 +164,7 @@ export function availableProviders(
   );
   const out: ResolvedProvider[] = [];
   for (const p of providers) {
-    if (excluded.has(p.family.toLowerCase())) continue;
+    if (!modelOutside(p, excluded)) continue;
     const key = p.keyEnv ? env[p.keyEnv] : undefined;
     if (p.keyEnv && !key) continue;
     const base = p.baseUrl ?? (p.baseUrlEnv ? env[p.baseUrlEnv] : undefined);
@@ -236,7 +252,10 @@ export function createLlm(options: LlmOptions): LlmClient {
   const ListSchema = z.object({ data: z.array(z.object({ id: z.string() })) });
 
   /** Ask the provider which models exist and pick one (logged; ids are not secret). */
-  async function discoverModel(p: ResolvedProvider): Promise<string | undefined> {
+  async function discoverModel(
+    p: ResolvedProvider,
+    excluded: ReadonlySet<string>,
+  ): Promise<string | undefined> {
     let listed: string[];
     try {
       const res = await doFetch(p.modelsUrl, {
@@ -248,7 +267,7 @@ export function createLlm(options: LlmOptions): LlmClient {
     } catch {
       listed = [];
     }
-    const chosen = chooseModel(p, listed);
+    const chosen = chooseModel(p, listed, excluded);
     if (chosen) {
       log?.warn('llm.model_switched', { provider: p.id, from: p.model, to: chosen });
     } else {
@@ -357,22 +376,27 @@ export function createLlm(options: LlmOptions): LlmClient {
         ).map((f) => f.toLowerCase()),
       );
       for (const p of candidates) {
-        let model = resolvedModel.get(p.id);
-        if (model === null) continue; // discovery already found nothing usable this run
         if (down.has(p.id)) continue;
-        model ??= p.model;
-        if (excluded.has(familyOf(model, p.family))) continue;
+        const usual = resolvedModel.get(p.id);
+        // The usual model is the producer's family: use another one from the same provider, and
+        // remember that choice separately from the usual one (ADR-043).
+        const other = excluded.has(familyOf(usual ?? p.model, p.family));
+        const key = other ? `${p.id}|${[...excluded].sort().join(',')}` : p.id;
+        const cached = resolvedModel.get(key);
+        if (cached === null) continue; // discovery already found nothing usable this run
+        let model = cached ?? (other ? modelOutside(p, excluded) : p.model);
+        if (!model) continue;
         let r = await callProvider(p, model, req);
-        if (!r.ok && r.status === 404 && !resolvedModel.has(p.id)) {
+        if (!r.ok && r.status === 404 && !resolvedModel.has(key)) {
           // The model was renamed or retired: look up what the provider serves now, once.
-          const found = await discoverModel(p);
-          resolvedModel.set(p.id, found ?? null);
-          if (found && found !== model && !excluded.has(familyOf(found, p.family))) {
+          const found = await discoverModel(p, excluded);
+          resolvedModel.set(key, found ?? null);
+          if (found && found !== model) {
             model = found;
             r = await callProvider(p, model, req);
           }
         } else if (r.ok) {
-          resolvedModel.set(p.id, model);
+          resolvedModel.set(key, model);
         }
         if (r.ok) {
           families.add(r.res.family);
