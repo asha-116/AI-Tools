@@ -1,0 +1,11 @@
+---
+import Base from '../../../layouts/Base.astro';
+import BalanceTransferCalculator from '../../../tools/balance-transfer/BalanceTransferCalculator.astro';
+import { transferStrings } from '../../../tools/balance-transfer/strings';
+
+const t = transferStrings.en;
+---
+
+<Base lang="en" title={t.metaTitle} description={t.metaDescription} path="/tools/balance-transfer/">
+  <BalanceTransferCalculator lang="en" />
+</Base>

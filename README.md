@@ -3,7 +3,8 @@
 **Live at https://tools.changelense.in**
 
 Small, practical digital tools for **Indian real-estate agents**: free web calculators
-(EMI, stamp duty + registration, commission split, rental yield, loan eligibility) and low-cost
+(EMI, stamp duty + registration, commission split, rental yield, loan eligibility, balance
+transfer) and low-cost
 paid templates (₹99–₹999) — in English and Hindi.
 
 The business is run by **AI agents** defined in this repository. One human, the **owner**,

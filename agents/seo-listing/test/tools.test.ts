@@ -177,6 +177,13 @@ describe('worked examples for the newer tools match their published answers', ()
     expect(out(e, 'renter')?.value).toBeGreaterThan(0);
   });
 
+  it('Balance transfer: Kotak example → new EMI ₹35,405, ₹24.34 lakh interest (published)', () => {
+    const e = example('balance-transfer');
+    expect(out(e, 'new_emi')?.display.en).toBe('₹35,405');
+    expect(Math.round((out(e, 'new_interest')?.value ?? 0) / 1000) / 100).toBe(24.34);
+    expect(out(e, 'net')?.value).toBeCloseTo((out(e, 'saved')?.value ?? 0) - 25_000, 6);
+  });
+
   it('every tool page on the site has an adapter, and every adapter has text and a formula', () => {
     expect(TOOLS.map((t) => t.slug).sort()).toEqual(
       readdirSync(join(ROOT, 'site/src/tools')).sort(),

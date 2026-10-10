@@ -58,6 +58,7 @@ describe('selectEntries', () => {
       'loading',
       'rental-yield',
       'rent-vs-buy',
+      'balance-transfer',
       'area',
     ]);
   });
@@ -272,5 +273,16 @@ describe('rent-vs-buy entry', () => {
     const ours = runOurs(e, cases[0]?.input ?? {});
     expect('values' in ours && Math.round((ours.values.rentPaid ?? 0) / 1e5)).toBe(149);
     expect('values' in ours && ours.values.emi).toBe(0);
+  });
+});
+
+describe('balance-transfer entry', () => {
+  it('our run matches the published Kotak case (new EMI ₹35,405)', () => {
+    const e = entry('balance-transfer');
+    const cases = loadCases(e, read);
+    expect(cases).toHaveLength(5);
+    const ours = runOurs(e, cases[0]?.input ?? {});
+    expect('values' in ours && Math.round(ours.values.newEmi ?? 0)).toBe(35405);
+    expect('values' in ours && Object.keys(ours.values)).toHaveLength(7);
   });
 });

@@ -1,0 +1,82 @@
+{
+  "$comment": "Known answers for home loan balance transfer, fetched and recomputed on 2026-10-10. EMI = P·r·(1+r)^n / ((1+r)^n − 1), r = annual % ÷ 1200; interest left = EMI × months − outstanding. Published figures are rounded (₹ to the rupee, lakh to 2 decimals), so each case allows a small relative tolerance. Not used: Business Standard's ₹50 lakh example (its EMI difference 44,986 − 43,433 is printed as 1,533) and Outlook Money's interest saved (its outstanding after one year, ₹98,60,858, does not follow from its own ₹1 crore loan; only the new-loan side, which is computed from that outstanding, is used).",
+  "accessed": "2026-10-10",
+  "cases": [
+    {
+      "name": "Kotak: ₹39.39 lakh left, 15 years, moved from 8% to 7% → EMI ₹35,405, interest ₹24.34 lakh",
+      "input": {
+        "outstanding": 3939000,
+        "currentRatePercent": 8,
+        "remainingMonths": 180,
+        "newRatePercent": 7
+      },
+      "expect": { "newEmi": 35405, "newInterest": 2434000 },
+      "tolerance": { "percent": 0.03 },
+      "sources": [
+        "https://www.kotak.bank.in/en/stories-in-focus/loans/home-loan/ensure-big-savings-by-availing-home-loan-balance-transfer-from-kotak-mahindra-bank.html"
+      ],
+      "quote": "an outstanding amount of nearly Rs 39.39 lakh with a loan repayment tenure of 15 years left … 7% p.a. for the remaining repayment tenure of 15 years, the EMI will come down to Rs 35,405 and your overall interest outgo will reduce to Rs 24.34 lakh"
+    },
+    {
+      "name": "Kotak: same loan stretched to 25 years at 7% → EMI ₹27,840, interest ₹44.13 lakh",
+      "input": {
+        "outstanding": 3939000,
+        "currentRatePercent": 8,
+        "remainingMonths": 180,
+        "newRatePercent": 7,
+        "newTenureMonths": 300
+      },
+      "expect": { "newEmi": 27840, "newInterest": 4413000 },
+      "tolerance": { "percent": 0.03 },
+      "sources": [
+        "https://www.kotak.bank.in/en/stories-in-focus/loans/home-loan/ensure-big-savings-by-availing-home-loan-balance-transfer-from-kotak-mahindra-bank.html"
+      ],
+      "quote": "if you avail a higher repayment tenure of 25 years, while your EMI burden will further fall to Rs 27,840, your overall interest outgo will increase to Rs 44.13 lakh"
+    },
+    {
+      "name": "Kotak: the original ₹45 lakh at 8% for 20 years → EMI ₹37,640, interest ₹45.34 lakh",
+      "input": {
+        "outstanding": 4500000,
+        "currentRatePercent": 8,
+        "remainingMonths": 240,
+        "newRatePercent": 8
+      },
+      "expect": { "currentEmi": 37640, "currentInterestLeft": 4534000, "interestSaved": 0 },
+      "tolerance": { "percent": 0.03 },
+      "sources": [
+        "https://www.kotak.bank.in/en/stories-in-focus/loans/home-loan/ensure-big-savings-by-availing-home-loan-balance-transfer-from-kotak-mahindra-bank.html"
+      ],
+      "quote": "a home loan of Rs 45 lakh, five years ago at 8% p.a. for a repayment tenure of 20 years with an EMI of Rs 37,640 and overall interest outgo of Rs 45.34 lakh"
+    },
+    {
+      "name": "Outlook Money: ₹1 crore at 8.75% for 20 years → EMI ₹88,371, interest ₹1,12,09,057",
+      "input": {
+        "outstanding": 10000000,
+        "currentRatePercent": 8.75,
+        "remainingMonths": 240,
+        "newRatePercent": 8.75
+      },
+      "expect": { "currentEmi": 88371, "currentInterestLeft": 11209057 },
+      "tolerance": { "percent": 0.001 },
+      "sources": [
+        "https://www.outlookmoney.com/personal-finance/how-balance-transfer-loans-can-help-you-save-lakhs-in-interest"
+      ],
+      "quote": "EMI: Rs 88,371 Total paid = 88,371 × 240 = Rs 2,12,09,057 Total interest = Rs 1,12,09,057"
+    },
+    {
+      "name": "Outlook Money: ₹98,60,858 moved to 8% for 19 years → EMI ₹84,261, interest ₹93,50,688",
+      "input": {
+        "outstanding": 9860858,
+        "currentRatePercent": 8.75,
+        "remainingMonths": 228,
+        "newRatePercent": 8
+      },
+      "expect": { "newEmi": 84261, "newInterest": 9350688 },
+      "tolerance": { "percent": 0.001 },
+      "sources": [
+        "https://www.outlookmoney.com/personal-finance/how-balance-transfer-loans-can-help-you-save-lakhs-in-interest"
+      ],
+      "quote": "Balance transfer at 8 per cent for the remaining 19 years (228 months) on Rs 98,60,858: New EMI ≈ Rs 84,261 Total interest going forward ≈ Rs 93,50,688"
+    }
+  ]
+}

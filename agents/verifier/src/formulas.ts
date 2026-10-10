@@ -9,6 +9,7 @@ import gunthaUnits from '../../../data/land-units/guntha.json' with { type: 'jso
 import regionalUnits from '../../../data/land-units/regional.json' with { type: 'json' };
 import standardUnits from '../../../data/land-units/standard.json' with { type: 'json' };
 import {
+  computeBalanceTransfer,
   computeCommission,
   computeEligibility,
   computeEmi,
@@ -18,6 +19,7 @@ import {
   computeRentVsBuy,
   convertArea,
   type AreaUnit,
+  type BalanceTransferInput,
   type CommissionInput,
   type EligibilityInput,
   type EmiInput,
@@ -281,6 +283,47 @@ export const FORMULAS: FormulaEntry[] = [
         loanLeft: r.loanLeft,
         rentPaid: r.rentPaid,
         propertyEnd: r.propertyEnd,
+      };
+    },
+  },
+  {
+    id: 'balance-transfer',
+    functionName: 'computeBalanceTransfer',
+    sourceFiles: ['tools-core/src/balanceTransfer.ts'],
+    fixture: 'tools-core/test/fixtures/balance-transfer-known-answers.json',
+    description: [
+      'Home loan balance transfer: the same outstanding loan at the current and the new rate',
+      '(sources: https://en.wikipedia.org/wiki/Mortgage_calculator and',
+      'https://www.kotak.bank.in/en/stories-in-focus/loans/home-loan/ensure-big-savings-by-availing-home-loan-balance-transfer-from-kotak-mahindra-bank.html).',
+      'Inputs: outstanding P; currentRatePercent; remainingMonths n; newRatePercent;',
+      'optional newTenureMonths m (n when missing) and switchingCosts C (0 when missing).',
+      'EMI(rate, months) = P × r × (1 + r)^months / ((1 + r)^months − 1) with r = rate / 1200;',
+      'P / months when the rate is 0.',
+      'currentEmi = EMI(currentRatePercent, n). newEmi = EMI(newRatePercent, m).',
+      'emiDrop = currentEmi − newEmi. currentInterestLeft = currentEmi × n − P.',
+      'newInterest = newEmi × m − P. interestSaved = currentInterestLeft − newInterest.',
+      'netSaving = interestSaved − C. Do not round any output.',
+    ].join(' '),
+    toInput: (c) => (c.input ?? {}) as Record<string, unknown>,
+    fields: () => [
+      'currentEmi',
+      'newEmi',
+      'emiDrop',
+      'currentInterestLeft',
+      'newInterest',
+      'interestSaved',
+      'netSaving',
+    ],
+    run: (input) => {
+      const r = computeBalanceTransfer(input as unknown as BalanceTransferInput);
+      return {
+        currentEmi: r.currentEmi,
+        newEmi: r.newEmi,
+        emiDrop: r.emiDrop,
+        currentInterestLeft: r.currentInterestLeft,
+        newInterest: r.newInterest,
+        interestSaved: r.interestSaved,
+        netSaving: r.netSaving,
       };
     },
   },

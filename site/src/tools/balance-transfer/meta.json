@@ -1,0 +1,7 @@
+{
+  "slug": "balance-transfer",
+  "kind": "free",
+  "formula": "Net saving = (current EMI × months left − outstanding) − (new EMI × new months − outstanding) − switching costs",
+  "knownAnswers": "tools-core/test/fixtures/balance-transfer-known-answers.json",
+  "lastReviewed": "2026-10-10"
+}

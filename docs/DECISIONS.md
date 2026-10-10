@@ -582,3 +582,21 @@ NOTHING`), so duplicates and both events for one payment are harmless. It stores
   across files. No new dependency (no JSON Schema library); `last_verified` dates are already
   checked by `scripts/check-data-freshness.mjs`.
 - **Status:** Accepted (2026-10-10).
+
+### ADR-045 — Home loan balance transfer calculator
+
+- **Context:** the Orchestrator opened asha-116/AI-Tools#72 ("Spec Home Loan Balance Transfer
+  Savings Calculator"). Agents are asked whether moving a loan to a cheaper lender is worth the
+  fees.
+- **Decision:** `/tools/balance-transfer/` (EN + HI) compares the outstanding loan at the current
+  rate and months left with the new rate and tenure: new EMI, interest saved, net saving after the
+  switching costs the user enters, and months to recover those costs (same tenure only). Every
+  rate and fee is the user's input — no bank's rates are stored, since they change often. Known
+  answers come from Kotak's published example (new EMI ₹35,405; ₹24.34 lakh interest; 25-year
+  variant ₹27,840) and Outlook Money's (₹88,371 EMI; ₹84,261 new EMI) — both fetched on
+  2026-10-10. Business Standard's example and Outlook's "interest saved" were left out because
+  their own numbers do not add up (see the fixture's comment). The page cites RBI/2019-20/29 (2
+  August 2019): no foreclosure charges on floating-rate term loans to individuals for
+  non-business purposes. Money saved later is not discounted, and the result is before tax.
+- **Status:** Accepted (2026-10-10). The Hindi text and the RBI sentence need the owner's review
+  before promotion.

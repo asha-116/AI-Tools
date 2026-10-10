@@ -92,6 +92,17 @@ const clientStrings = {
     </li>
     <li class="idea">
       <p class="kind kind-free">{t.kindFree}</p>
+      <h3>{t.btCardTitle}</h3>
+      <p>{t.btCardSummary}</p>
+      <a
+        class="button"
+        href={lang === 'en' ? '/tools/balance-transfer/' : '/hi/tools/balance-transfer/'}
+      >
+        {t.openTool}
+      </a>
+    </li>
+    <li class="idea">
+      <p class="kind kind-free">{t.kindFree}</p>
       <h3>{t.prepaymentCardTitle}</h3>
       <p>{t.prepaymentCardSummary}</p>
       <a class="button" href={lang === 'en' ? '/tools/prepayment/' : '/hi/tools/prepayment/'}>
