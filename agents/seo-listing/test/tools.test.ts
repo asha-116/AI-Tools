@@ -139,6 +139,9 @@ describe('worked examples for the newer tools match their published answers', ()
     expect(out(e, 'sq_ft')?.display.en).toBe('43,560 sq ft');
     expect(out(e, 'gaj')?.display.hi).toBe('4,840 गज़');
     expect(out(e, 'hectare')?.value).toBeCloseTo(0.4046856, 6);
+    // Same 4 decimals as the converter page, not 0.4.
+    expect(out(e, 'hectare')?.display.en).toBe('0.4047 hectare');
+    expect(out(e, 'sq_m')?.display.en).toBe('4,046.8564 sq m');
     expect(findTool('area')?.moneyTopic).toBe(false);
   });
 

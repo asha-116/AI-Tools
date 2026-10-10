@@ -22,8 +22,8 @@ The results are computed locally on the device, so no data leaves the phone.
 1. Enter the loan amount (₹25,00,000), annual interest rate (9%) and original tenure (20 years).
 2. Fill in the prepayment amount – either a one‑time sum (₹2,00,000) or a monthly extra.
 3. The calculator shows the unchanged EMI (₹22,493), the reduced months (195 months), how many months are saved (45 months) and the total interest saved (₹8,14,455).
-4. Review the numbers and discuss with the client. If there are any prepayment charges, add them manually.
-5. Export or share the result as a PDF for the client’s records.
+4. Review the numbers with the client. Prepayment charges, if your lender has any, are not included.
+5. To send the result, tap **Copy link to this result** and share the link.
 
 [Open the calculator: Home loan prepayment calculator](/tools/prepayment/)
 

@@ -282,15 +282,24 @@ const stampDuty: ToolInfo = {
 const grouped = new Intl.NumberFormat('en-IN', { maximumFractionDigits: 2 });
 
 /** A plain number with a unit, e.g. "43,560 sq ft" / "43,560 वर्ग फ़ुट". */
-const amount = (key: string, label: Bilingual, value: number, unit: Bilingual): ExampleValue => ({
+const amount = (
+  key: string,
+  label: Bilingual,
+  value: number,
+  unit: Bilingual,
+  format: Intl.NumberFormat = grouped,
+): ExampleValue => ({
   key,
   label,
   value,
   display: {
-    en: `${grouped.format(value)} ${unit.en}`.trim(),
-    hi: `${grouped.format(value)} ${unit.hi}`.trim(),
+    en: `${format.format(value)} ${unit.en}`.trim(),
+    hi: `${format.format(value)} ${unit.hi}`.trim(),
   },
 });
+
+/** The area converter shows up to 4 decimals (1 acre = 0.4047 hectare, not 0.4). */
+const grouped4 = new Intl.NumberFormat('en-IN', { maximumFractionDigits: 4 });
 
 const pct = (key: string, label: Bilingual, value: number): ExampleValue => {
   const v = Math.round(value * 100) / 100;
@@ -334,16 +343,18 @@ const area: ToolInfo = {
   example() {
     const acre = unit('acre');
     const to = (id: string) => convertArea(1, acre, unit(id));
+    const out = (key: string, label: Bilingual, id: string, u: Bilingual) =>
+      amount(key, label, to(id), u, grouped4);
     return {
       inputs: [amount('acres', { en: 'Area', hi: 'क्षेत्रफल' }, 1, { en: 'acre', hi: 'एकड़' })],
       outputs: [
-        amount('sq_ft', { en: 'Square feet', hi: 'वर्ग फ़ुट' }, to('sq_ft'), SQFT),
-        amount('gaj', { en: 'Gaj (sq yd)', hi: 'गज़' }, to('sq_yd'), { en: 'gaj', hi: 'गज़' }),
-        amount('sq_m', { en: 'Square metres', hi: 'वर्ग मीटर' }, to('sq_m'), {
+        out('sq_ft', { en: 'Square feet', hi: 'वर्ग फ़ुट' }, 'sq_ft', SQFT),
+        out('gaj', { en: 'Gaj (sq yd)', hi: 'गज़' }, 'sq_yd', { en: 'gaj', hi: 'गज़' }),
+        out('sq_m', { en: 'Square metres', hi: 'वर्ग मीटर' }, 'sq_m', {
           en: 'sq m',
           hi: 'वर्ग मीटर',
         }),
-        amount('hectare', { en: 'Hectare', hi: 'हेक्टेयर' }, to('hectare'), {
+        out('hectare', { en: 'Hectare', hi: 'हेक्टेयर' }, 'hectare', {
           en: 'hectare',
           hi: 'हेक्टेयर',
         }),
