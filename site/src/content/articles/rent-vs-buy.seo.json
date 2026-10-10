@@ -1,0 +1,158 @@
+{
+  "slug": "rent-vs-buy",
+  "meta": {
+    "en": {
+      "title": "Rent vs Buy Calculator – Compare monthly costs",
+      "description": "See how buying or renting a property compares over [[years]] using your own assumptions on EMI, rent increase and investment return."
+    },
+    "hi": {
+      "title": "किराया या खरीदें कैलकुलेटर – मासिक लागत तुलना",
+      "description": "[[years]] के दौरान खरीद बनाम किराया की तुलना देखें, अपने EMI, किराया बढ़ोतरी और निवेश रिटर्न के अनुमान के साथ।"
+    }
+  },
+  "faq": {
+    "en": [
+      {
+        "q": "What does this calculator compare?",
+        "a": "It shows how much the buyer and the renter have after [[years]] by accounting for EMI, rent, maintenance and the money saved each month."
+      },
+      {
+        "q": "Which inputs are needed?",
+        "a": "Enter the property value [[value]], down payment [[down]], loan rate [[rate]], rent [[rent]], rent increase [[rent_increase]], property appreciation [[appreciation]] and investment return [[return]]."
+      },
+      {
+        "q": "Are taxes or selling costs included?",
+        "a": "No. Home‑loan tax benefits and selling costs are not part of the calculation; ask your CA for tax impact."
+      },
+      {
+        "q": "Can I change assumptions like rent rise or investment return?",
+        "a": "Yes, adjust [[rent_increase]] and [[return]] to see how different scenarios affect the result."
+      }
+    ],
+    "hi": [
+      {
+        "q": "यह कैलकुलेटर क्या तुलना करता है?",
+        "a": "यह दिखाता है कि [[years]] के बाद खरीदार और किरायेदार के पास कितना पैसा रहेगा, EMI, किराया, रख‑रखाव और बचत को ध्यान में रखते हुए।"
+      },
+      {
+        "q": "कौन‑से इनपुट चाहिए?",
+        "a": "प्रॉपर्टी की कीमत [[value]], डाउन पेमेंट [[down]], लोन दर [[rate]], किराया [[rent]], किराया बढ़ोतरी [[rent_increase]], प्रॉपर्टी की कीमत बदलाव [[appreciation]] और निवेश रिटर्न [[return]] डालें।"
+      },
+      {
+        "q": "क्या इसमें टैक्स या बिक्री लागत शामिल है?",
+        "a": "नहीं। होम‑लोन टैक्स लाभ और बिक्री लागत गणना में नहीं ली गई हैं; टैक्स के लिए अपने CA से पूछें।"
+      },
+      {
+        "q": "क्या किराया बढ़ोतरी या निवेश रिटर्न बदल सकते हैं?",
+        "a": "हां, [[rent_increase]] और [[return]] को बदलकर अलग‑अलग परिदृश्य देख सकते हैं।"
+      }
+    ]
+  },
+  "jsonld": {
+    "en": [
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Rent vs Buy Calculator – Compare monthly costs",
+        "description": "See how buying or renting a property compares over [[years]] using your own assumptions on EMI, rent increase and investment return.",
+        "url": "https://tools.changelense.in/tools/rent-vs-buy/",
+        "inLanguage": "en-IN",
+        "applicationCategory": "FinanceApplication",
+        "operatingSystem": "Any",
+        "isAccessibleForFree": true
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "inLanguage": "en-IN",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "What does this calculator compare?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "It shows how much the buyer and the renter have after [[years]] by accounting for EMI, rent, maintenance and the money saved each month."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Which inputs are needed?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Enter the property value [[value]], down payment [[down]], loan rate [[rate]], rent [[rent]], rent increase [[rent_increase]], property appreciation [[appreciation]] and investment return [[return]]."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Are taxes or selling costs included?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "No. Home‑loan tax benefits and selling costs are not part of the calculation; ask your CA for tax impact."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Can I change assumptions like rent rise or investment return?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes, adjust [[rent_increase]] and [[return]] to see how different scenarios affect the result."
+            }
+          }
+        ]
+      }
+    ],
+    "hi": [
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "किराया या खरीदें कैलकुलेटर – मासिक लागत तुलना",
+        "description": "[[years]] के दौरान खरीद बनाम किराया की तुलना देखें, अपने EMI, किराया बढ़ोतरी और निवेश रिटर्न के अनुमान के साथ।",
+        "url": "https://tools.changelense.in/hi/tools/rent-vs-buy/",
+        "inLanguage": "hi-IN",
+        "applicationCategory": "FinanceApplication",
+        "operatingSystem": "Any",
+        "isAccessibleForFree": true
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "inLanguage": "hi-IN",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "यह कैलकुलेटर क्या तुलना करता है?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "यह दिखाता है कि [[years]] के बाद खरीदार और किरायेदार के पास कितना पैसा रहेगा, EMI, किराया, रख‑रखाव और बचत को ध्यान में रखते हुए।"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "कौन‑से इनपुट चाहिए?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "प्रॉपर्टी की कीमत [[value]], डाउन पेमेंट [[down]], लोन दर [[rate]], किराया [[rent]], किराया बढ़ोतरी [[rent_increase]], प्रॉपर्टी की कीमत बदलाव [[appreciation]] और निवेश रिटर्न [[return]] डालें।"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "क्या इसमें टैक्स या बिक्री लागत शामिल है?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "नहीं। होम‑लोन टैक्स लाभ और बिक्री लागत गणना में नहीं ली गई हैं; टैक्स के लिए अपने CA से पूछें।"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "क्या किराया बढ़ोतरी या निवेश रिटर्न बदल सकते हैं?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "हां, [[rent_increase]] और [[return]] को बदलकर अलग‑अलग परिदृश्य देख सकते हैं।"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "producer_family": "gpt"
+}
