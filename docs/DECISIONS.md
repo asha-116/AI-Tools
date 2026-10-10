@@ -564,3 +564,7 @@ NOTHING`), so duplicates and both events for one payment are harmless. It stores
   the first configured model that is not. The family recorded is still inferred from the model
   that actually answered (`familyOf`), so a gpt-oss answer can never verify gpt-oss output.
 - **Status:** Accepted (2026-10-09). No new provider, key or cost.
+- **Follow-up (same day):** the first live run showed Groq has retired `llama-3.3-70b-versatile`
+  (HTTP 404), and model discovery then picked `gpt-oss` again. Discovery now also skips the
+  excluded families, Groq's pattern also matches `meta-llama/…` ids, and the Verifier's model
+  choice is cached separately from the provider's usual model.
