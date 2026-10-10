@@ -6,6 +6,7 @@
 //   `agent/<agent>/<slug>`, checked even in dry-run so tests catch misuse.
 
 import { GitHubError } from './errors.js';
+import { formatFiles } from './format.js';
 import type { Logger } from './log.js';
 
 export interface IssueSummary {
@@ -368,6 +369,8 @@ export class GitHub implements GitHubClient {
       files: pr.files.map((f) => f.path),
     });
     if (fake) return fake;
+    // Same formatting as a person's commit, so CI's `prettier --check` passes.
+    const files = await formatFiles(pr.files);
 
     // One commit for all files via the git data API: ref → commit → tree → new commit → ref.
     type Ref = { object: { sha: string } };
@@ -383,7 +386,7 @@ export class GitHub implements GitHubClient {
     );
     const tree = await this.request<{ sha: string }>('POST', this.repoPath('/git/trees'), {
       base_tree: parentCommit.tree.sha,
-      tree: pr.files.map((f) => ({
+      tree: files.map((f) => ({
         path: f.path,
         mode: '100644',
         type: 'blob',

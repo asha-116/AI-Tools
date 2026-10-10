@@ -31,6 +31,8 @@ export interface ArticleContext {
   lastVerified: string;
   /** Today (YYYY-MM-DD). */
   date: string;
+  /** Published sources behind the tool's known answers (the worked example's numbers). */
+  sources?: string[];
 }
 
 const HEAD: Record<string, Bilingual> = {
@@ -46,6 +48,7 @@ const HEAD: Record<string, Bilingual> = {
   value: { en: 'Value', hi: 'मान' },
   open: { en: 'Open the calculator', hi: 'कैलकुलेटर खोलें' },
   home: { en: 'All tools', hi: 'सभी टूल' },
+  sources: { en: 'Sources', hi: 'स्रोत' },
 };
 
 function exampleTable(example: WorkedExample, lang: Lang): string {
@@ -130,6 +133,9 @@ export function renderArticle(
     ...ctx.related.map((r) => `- [${r.text[lang].h1}](${r.path(lang)})`),
     `- [${HEAD.home?.[lang]}](${home})`,
     '',
+    ...(ctx.sources?.length
+      ? [`## ${HEAD.sources?.[lang]}`, '', ...ctx.sources.map((u) => `- <${u}>`), '']
+      : []),
     `> ${ctx.disclaimer[lang]}`,
     '',
   ];
