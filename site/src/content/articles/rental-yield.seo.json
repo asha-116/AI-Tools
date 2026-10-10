@@ -1,0 +1,134 @@
+{
+  "slug": "rental-yield",
+  "meta": {
+    "en": {
+      "title": "Rental Yield Calculator – Net & Gross Yield",
+      "description": "Calculate property rental yield instantly. Get net and gross percentages and yearly net income using rent, vacancy months and yearly costs."
+    },
+    "hi": {
+      "title": "रेंटल यील्ड कैलकुलेटर – नेट और ग्रॉस यील्ड",
+      "description": "प्रॉपर्टी रेंटल यील्ड तुरंत निकालें। किराया, खाली महीने और सालाना खर्च से नेट व ग्रॉस प्रतिशत और सालाना नेट आय देखें।"
+    }
+  },
+  "faq": {
+    "en": [
+      {
+        "q": "How is net rental yield different from gross yield?",
+        "a": "Gross yield uses full yearly rent divided by total money spent. Net yield reduces the rent by vacant months and subtracts yearly costs before dividing."
+      },
+      {
+        "q": "What costs should I include in the calculation?",
+        "a": "Include society maintenance, property tax, insurance, repair costs and any broker fee paid for a new tenant. These are the yearly costs."
+      },
+      {
+        "q": "Can I use the calculator for a property with a home loan?",
+        "a": "The calculator works on the total money you have put in, not on loan interest. For tax impact, ask your CA."
+      }
+    ],
+    "hi": [
+      {
+        "q": "नेट यील्ड और ग्रॉस यील्ड में क्या अंतर है?",
+        "a": "ग्रॉस यील्ड पूरी साल की किराया को कुल खर्च से भाग देता है। नेट यील्ड में खाली महीने घटाए जाते हैं और सालाना खर्च घटाकर भाग दिया जाता है।"
+      },
+      {
+        "q": "कौन‑से खर्च को शामिल करना चाहिए?",
+        "a": "समाज रखरखाव, प्रॉपर्टी टैक्स, बीमा, मरम्मत और नए किरायेदार के लिए ब्रोकर फीस को सालाना खर्च में जोड़ें।"
+      },
+      {
+        "q": "क्या मैं होम लोन वाले प्रॉपर्टी के लिए भी उपयोग कर सकता हूँ?",
+        "a": "कैलकुलेटर आपके कुल निवेश पर काम करता है, लोन ब्याज नहीं। टैक्स के लिए अपने सीए से पूछें।"
+      }
+    ]
+  },
+  "jsonld": {
+    "en": [
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Rental Yield Calculator – Net & Gross Yield",
+        "description": "Calculate property rental yield instantly. Get net and gross percentages and yearly net income using rent, vacancy months and yearly costs.",
+        "url": "https://tools.changelense.in/tools/rental-yield/",
+        "inLanguage": "en-IN",
+        "applicationCategory": "FinanceApplication",
+        "operatingSystem": "Any",
+        "isAccessibleForFree": true
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "inLanguage": "en-IN",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "How is net rental yield different from gross yield?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Gross yield uses full yearly rent divided by total money spent. Net yield reduces the rent by vacant months and subtracts yearly costs before dividing."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "What costs should I include in the calculation?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Include society maintenance, property tax, insurance, repair costs and any broker fee paid for a new tenant. These are the yearly costs."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Can I use the calculator for a property with a home loan?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "The calculator works on the total money you have put in, not on loan interest. For tax impact, ask your CA."
+            }
+          }
+        ]
+      }
+    ],
+    "hi": [
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "रेंटल यील्ड कैलकुलेटर – नेट और ग्रॉस यील्ड",
+        "description": "प्रॉपर्टी रेंटल यील्ड तुरंत निकालें। किराया, खाली महीने और सालाना खर्च से नेट व ग्रॉस प्रतिशत और सालाना नेट आय देखें।",
+        "url": "https://tools.changelense.in/hi/tools/rental-yield/",
+        "inLanguage": "hi-IN",
+        "applicationCategory": "FinanceApplication",
+        "operatingSystem": "Any",
+        "isAccessibleForFree": true
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "inLanguage": "hi-IN",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "नेट यील्ड और ग्रॉस यील्ड में क्या अंतर है?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "ग्रॉस यील्ड पूरी साल की किराया को कुल खर्च से भाग देता है। नेट यील्ड में खाली महीने घटाए जाते हैं और सालाना खर्च घटाकर भाग दिया जाता है।"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "कौन‑से खर्च को शामिल करना चाहिए?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "समाज रखरखाव, प्रॉपर्टी टैक्स, बीमा, मरम्मत और नए किरायेदार के लिए ब्रोकर फीस को सालाना खर्च में जोड़ें।"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "क्या मैं होम लोन वाले प्रॉपर्टी के लिए भी उपयोग कर सकता हूँ?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "कैलकुलेटर आपके कुल निवेश पर काम करता है, लोन ब्याज नहीं। टैक्स के लिए अपने सीए से पूछें।"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "producer_family": "gpt"
+}
