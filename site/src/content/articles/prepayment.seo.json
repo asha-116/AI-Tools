@@ -1,0 +1,182 @@
+{
+  "slug": "prepayment",
+  "meta": {
+    "en": {
+      "title": "Home loan prepayment calculator – saved interest",
+      "description": "Calculate how a one‑time prepayment changes your EMI schedule, reduces months and saves interest using the loan amount, rate and tenure you enter."
+    },
+    "hi": {
+      "title": "होम लोन प्रीपेमेंट कैलकुलेटर – बचा ब्याज देखें",
+      "description": "एक बार की प्रीपेमेंट से EMI, अवधि और बचा ब्याज कैसे बदलता है, यह टूल आपके लोन राशि, दर और साल के आधार पर दिखाता है।"
+    }
+  },
+  "faq": {
+    "en": [
+      {
+        "q": "What happens to my EMI after I make a prepayment?",
+        "a": "The EMI remains unchanged; the prepayment amount is applied directly to the principal, which shortens the loan term."
+      },
+      {
+        "q": "How does the calculator show interest saved?",
+        "a": "It recomputes monthly interest on the reduced balance and totals the difference from the original schedule, giving [[saved]]."
+      },
+      {
+        "q": "Are prepayment fees included in the result?",
+        "a": "No. Any charges from the lender are not part of the calculation – ask your lender for those details."
+      },
+      {
+        "q": "Can I enter a monthly extra payment instead of a one‑time amount?",
+        "a": "Yes. The tool treats a regular extra payment the same way, reducing principal each month and lowering the total tenure."
+      },
+      {
+        "q": "Does the tool assume the interest rate stays the same?",
+        "a": "Yes. The rate you enter is used for the whole loan period."
+      }
+    ],
+    "hi": [
+      {
+        "q": "प्रीपेमेंट करने के बाद मेरा EMI कैसे रहता है?",
+        "a": "EMI वही रहता है; प्रीपेमेंट सीधा प्रिंसिपल में जाता है, जिससे लोन की अवधि कम हो जाती है।"
+      },
+      {
+        "q": "कैलकुलेटर ब्याज की बचत कैसे दिखाता है?",
+        "a": "हर महीने घटे हुए बैलेंस पर ब्याज फिर से निकालता है और मूल शेड्यूल से अंतर जोड़कर [[saved]] दिखाता है।"
+      },
+      {
+        "q": "क्या प्रीपेमेंट शुल्क इस परिणाम में शामिल हैं?",
+        "a": "नहीं। लेंडर के किसी भी शुल्क को अलग से पूछें – यहाँ केवल मूल गणना है।"
+      },
+      {
+        "q": "एक बार की बजाय हर महीने अतिरिक्त भुगतान कर सकता हूँ?",
+        "a": "हां। नियमित अतिरिक्त भुगतान भी प्रिंसिपल घटाता है और कुल अवधि को कम करता है।"
+      },
+      {
+        "q": "क्या ब्याज दर पूरे लोन में स्थिर मानी जाती है?",
+        "a": "हां, आप जो दर डालते हैं वह पूरी अवधि के लिए उपयोग होती है।"
+      }
+    ]
+  },
+  "jsonld": {
+    "en": [
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Home loan prepayment calculator – saved interest",
+        "description": "Calculate how a one‑time prepayment changes your EMI schedule, reduces months and saves interest using the loan amount, rate and tenure you enter.",
+        "url": "https://tools.changelense.in/tools/prepayment/",
+        "inLanguage": "en-IN",
+        "applicationCategory": "FinanceApplication",
+        "operatingSystem": "Any",
+        "isAccessibleForFree": true
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "inLanguage": "en-IN",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "What happens to my EMI after I make a prepayment?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "The EMI remains unchanged; the prepayment amount is applied directly to the principal, which shortens the loan term."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "How does the calculator show interest saved?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "It recomputes monthly interest on the reduced balance and totals the difference from the original schedule, giving [[saved]]."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Are prepayment fees included in the result?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "No. Any charges from the lender are not part of the calculation – ask your lender for those details."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Can I enter a monthly extra payment instead of a one‑time amount?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes. The tool treats a regular extra payment the same way, reducing principal each month and lowering the total tenure."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Does the tool assume the interest rate stays the same?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes. The rate you enter is used for the whole loan period."
+            }
+          }
+        ]
+      }
+    ],
+    "hi": [
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "होम लोन प्रीपेमेंट कैलकुलेटर – बचा ब्याज देखें",
+        "description": "एक बार की प्रीपेमेंट से EMI, अवधि और बचा ब्याज कैसे बदलता है, यह टूल आपके लोन राशि, दर और साल के आधार पर दिखाता है।",
+        "url": "https://tools.changelense.in/hi/tools/prepayment/",
+        "inLanguage": "hi-IN",
+        "applicationCategory": "FinanceApplication",
+        "operatingSystem": "Any",
+        "isAccessibleForFree": true
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "inLanguage": "hi-IN",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "प्रीपेमेंट करने के बाद मेरा EMI कैसे रहता है?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "EMI वही रहता है; प्रीपेमेंट सीधा प्रिंसिपल में जाता है, जिससे लोन की अवधि कम हो जाती है।"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "कैलकुलेटर ब्याज की बचत कैसे दिखाता है?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "हर महीने घटे हुए बैलेंस पर ब्याज फिर से निकालता है और मूल शेड्यूल से अंतर जोड़कर [[saved]] दिखाता है।"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "क्या प्रीपेमेंट शुल्क इस परिणाम में शामिल हैं?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "नहीं। लेंडर के किसी भी शुल्क को अलग से पूछें – यहाँ केवल मूल गणना है।"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "एक बार की बजाय हर महीने अतिरिक्त भुगतान कर सकता हूँ?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "हां। नियमित अतिरिक्त भुगतान भी प्रिंसिपल घटाता है और कुल अवधि को कम करता है।"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "क्या ब्याज दर पूरे लोन में स्थिर मानी जाती है?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "हां, आप जो दर डालते हैं वह पूरी अवधि के लिए उपयोग होती है।"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "producer_family": "gpt"
+}
