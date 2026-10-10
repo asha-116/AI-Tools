@@ -17,7 +17,7 @@ Agents often receive area details in different units – a buyer may say 2 acres
 
 ## How to use the calculator
 
-1. Choose the unit of the value you have (acre, gaj, sq ft, sq m or hectare). 2. Enter the numeric amount in the input box. 3. The page automatically updates and shows the converted values for the other four units. 4. If you need to copy a result, tap the value to copy it to the clipboard. 5. Clear the fields to start a new conversion.
+1. Choose the unit of the value you have (acre, gaj, sq ft, sq m or hectare). 2. Enter the numeric amount in the input box. 3. The page automatically updates and shows the converted values for the other four units. 4. To share the result, tap **Copy link to this result** and paste the link. 5. Clear the fields to start a new conversion.
 
 [Open the calculator: Land area converter](/tools/area/)
 
@@ -27,12 +27,12 @@ Agents often receive area details in different units – a buyer may say 2 acres
 | ----- | -----: |
 | Area  | 1 acre |
 
-| Result        |         Value |
-| ------------- | ------------: |
-| Square feet   |  43,560 sq ft |
-| Gaj (sq yd)   |     4,840 gaj |
-| Square metres | 4,046.86 sq m |
-| Hectare       |   0.4 hectare |
+| Result        |          Value |
+| ------------- | -------------: |
+| Square feet   |   43,560 sq ft |
+| Gaj (sq yd)   |      4,840 gaj |
+| Square metres |  4,046.86 sq m |
+| Hectare       | 0.4047 hectare |
 
 _Unit sizes from data/land-units/standard.json (exact definitions); results computed by the converter’s own code._
 
