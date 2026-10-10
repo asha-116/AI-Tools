@@ -14,6 +14,9 @@ templates "coming soon".
 
 ## Done
 
+- 2026-10-09 — **Verifier fallback, part 2** (ADR-043 follow-up): Groq had retired Llama 3.3
+  70B, so the fallback found nothing. Model discovery now skips the producer's family and also
+  matches Groq's `meta-llama/…` ids. Guides and part 1 merged (asha-116/AI-Tools#57).
 - 2026-10-09 — **Verifier no longer depends on Gemini alone** (ADR-043): articles written by
   Groq's gpt-oss could only be verified by Gemini, and asha-116/AI-Tools#56 stayed blocked on
   Gemini's free-tier 429. A provider whose usual model is the producer's family now answers with
