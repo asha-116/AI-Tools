@@ -14,6 +14,12 @@ templates "coming soon".
 
 ## Done
 
+- 2026-10-11 — **Tamil Nadu and West Bengal land units** (asha-116/AI-Tools#71): katha (720 sq ft)
+  and chatak (45 sq ft) for West Bengal added to `data/land-units/regional.json` next to cent and
+  ground, all still **draft** (hidden on the site). No state government page defines these
+  customary units, and sources disagree (ground 2,400 vs 2,400.35 sq ft; katha 720 vs 360/1,361/
+  1,500 sq ft); the file now has a `verification_checklist` for the owner to confirm them on a
+  registered deed or land record. Balance transfer calculator merged (asha-116/AI-Tools#76).
 - 2026-10-10 — **Home loan balance transfer calculator** (ADR-045, closes asha-116/AI-Tools#72):
   `/tools/balance-transfer/` and `/hi/tools/balance-transfer/` — new EMI, interest saved and net
   saving after switching costs; known answers from Kotak and Outlook Money; the SEO/Social

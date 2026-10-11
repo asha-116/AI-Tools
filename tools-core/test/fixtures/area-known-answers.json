@@ -166,6 +166,35 @@
         "https://bhulekh.mahabhumi.gov.in"
       ],
       "quote": "1 Guntha = 1,089 sq.ft (101.17 sq.m)"
+    },
+    {
+      "name": "1 katha in square feet (West Bengal)",
+      "value": 1,
+      "from": "katha",
+      "to": "sq_ft",
+      "expect": 720,
+      "sources": ["https://en.wikipedia.org/wiki/Katha_(unit)"],
+      "quote": "In West Bengal, 1 Katha is equal to 720 ft2"
+    },
+    {
+      "name": "1 katha in chatak (West Bengal)",
+      "value": 1,
+      "from": "katha",
+      "to": "chatak",
+      "expect": 16,
+      "sources": ["https://indialandconverter.in/west-bengal/howrah/convert-katha-to-chatak"],
+      "quote": "1 Katha equals 16 Chatak"
+    },
+    {
+      "name": "1 chatak in square feet (West Bengal)",
+      "value": 1,
+      "from": "chatak",
+      "to": "sq_ft",
+      "expect": 45,
+      "sources": [
+        "https://indialandconverter.in/west-bengal/north-24-parganas/convert-chatak-to-sqft"
+      ],
+      "quote": "1 Chatak equals 45 Square Feet"
     }
   ]
 }
