@@ -1,0 +1,134 @@
+{
+  "slug": "balance-transfer",
+  "meta": {
+    "en": {
+      "title": "Home loan balance transfer calculator",
+      "description": "Calculate EMI, interest and net saving when switching a home loan to a lower rate, including all fees, on your phone."
+    },
+    "hi": {
+      "title": "होम लोन बैलेंस ट्रांसफ़र कैलकुलेटर",
+      "description": "नया दर, शुल्क और बचत को जोड़कर लोन ट्रांसफ़र की कुल बचत आसानी से देखें।"
+    }
+  },
+  "faq": {
+    "en": [
+      {
+        "q": "क्या मैं केवल शुल्कों को बदलकर बचत देख सकता हूँ?",
+        "a": "हाँ, टूल मौजूदा EMI, नई EMI और आपके द्वारा दर्ज किए गए ट्रांसफ़र खर्च को घटाकर शुद्ध बचत दिखाता है।"
+      },
+      {
+        "q": "क्या यह टूल टैक्स या कानूनी सलाह देता है?",
+        "a": "नहीं, यह केवल संख्यात्मक तुलना देता है। टैक्स या कानूनी सवालों के लिए अपने CA या वकील से पूछें।"
+      },
+      {
+        "q": "क्या फ्लोटिंग‑रेट लोन पर फोरक्लोज़र चार्ज शामिल हो सकता है?",
+        "a": "RBI के नियम के अनुसार व्यक्तिगत फ्लोटिंग‑रेट लोन पर फोरक्लोज़र चार्ज नहीं लगते; टूल इसे ध्यान में नहीं रखता।"
+      }
+    ],
+    "hi": [
+      {
+        "q": "क्या मैं केवल खर्चों को बदलकर बचत देख सकता हूँ?",
+        "a": "हां, टूल मौजूदा EMI, नई EMI और आपके द्वारा दर्ज किए गए ट्रांसफ़र खर्च को घटाकर शुद्ध बचत दिखाता है।"
+      },
+      {
+        "q": "क्या यह टूल टैक्स या कानूनी सलाह देता है?",
+        "a": "नहीं, यह केवल संख्यात्मक तुलना देता है। टैक्स या कानूनी सवालों के लिए अपने CA या वकील से पूछें।"
+      },
+      {
+        "q": "क्या फ्लोटिंग‑रेट लोन पर फोरक्लोज़र चार्ज शामिल हो सकता है?",
+        "a": "RBI के नियम के अनुसार व्यक्तिगत फ्लोटिंग‑रेट लोन पर फोरक्लोज़र चार्ज नहीं लगते; टूल इसे ध्यान में नहीं रखता।"
+      }
+    ]
+  },
+  "jsonld": {
+    "en": [
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Home loan balance transfer calculator",
+        "description": "Calculate EMI, interest and net saving when switching a home loan to a lower rate, including all fees, on your phone.",
+        "url": "https://tools.changelense.in/tools/balance-transfer/",
+        "inLanguage": "en-IN",
+        "applicationCategory": "FinanceApplication",
+        "operatingSystem": "Any",
+        "isAccessibleForFree": true
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "inLanguage": "en-IN",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "क्या मैं केवल शुल्कों को बदलकर बचत देख सकता हूँ?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "हाँ, टूल मौजूदा EMI, नई EMI और आपके द्वारा दर्ज किए गए ट्रांसफ़र खर्च को घटाकर शुद्ध बचत दिखाता है।"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "क्या यह टूल टैक्स या कानूनी सलाह देता है?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "नहीं, यह केवल संख्यात्मक तुलना देता है। टैक्स या कानूनी सवालों के लिए अपने CA या वकील से पूछें।"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "क्या फ्लोटिंग‑रेट लोन पर फोरक्लोज़र चार्ज शामिल हो सकता है?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "RBI के नियम के अनुसार व्यक्तिगत फ्लोटिंग‑रेट लोन पर फोरक्लोज़र चार्ज नहीं लगते; टूल इसे ध्यान में नहीं रखता।"
+            }
+          }
+        ]
+      }
+    ],
+    "hi": [
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "होम लोन बैलेंस ट्रांसफ़र कैलकुलेटर",
+        "description": "नया दर, शुल्क और बचत को जोड़कर लोन ट्रांसफ़र की कुल बचत आसानी से देखें।",
+        "url": "https://tools.changelense.in/hi/tools/balance-transfer/",
+        "inLanguage": "hi-IN",
+        "applicationCategory": "FinanceApplication",
+        "operatingSystem": "Any",
+        "isAccessibleForFree": true
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "inLanguage": "hi-IN",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "क्या मैं केवल खर्चों को बदलकर बचत देख सकता हूँ?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "हां, टूल मौजूदा EMI, नई EMI और आपके द्वारा दर्ज किए गए ट्रांसफ़र खर्च को घटाकर शुद्ध बचत दिखाता है।"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "क्या यह टूल टैक्स या कानूनी सलाह देता है?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "नहीं, यह केवल संख्यात्मक तुलना देता है। टैक्स या कानूनी सवालों के लिए अपने CA या वकील से पूछें।"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "क्या फ्लोटिंग‑रेट लोन पर फोरक्लोज़र चार्ज शामिल हो सकता है?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "RBI के नियम के अनुसार व्यक्तिगत फ्लोटिंग‑रेट लोन पर फोरक्लोज़र चार्ज नहीं लगते; टूल इसे ध्यान में नहीं रखता।"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "producer_family": "gpt"
+}
