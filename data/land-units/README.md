@@ -7,14 +7,17 @@ Rates and sizes are data, never code (AGENTS.md rule 6).
 | --------------- | ---------- | ----------------------------------------------------------------------------------- |
 | `standard.json` | `verified` | sq ft, sq yd (gaj), sq m, are, acre, hectare: exact definitions (yard = 0.9144 m)   |
 | `guntha.json`   | `verified` | guntha for Maharashtra and Karnataka; owner-checked against RTC / 7/12 (2026-10-09) |
-| `regional.json` | `draft`    | cent, ground, marla, kanal: from commercial converter sites, not checked            |
+| `regional.json` | `draft`    | cent, ground, marla, kanal, katha, chatak: customary units, not yet checked         |
 
 - The live site shows only units from a `verified` file. Draft units appear on the owner-review
   link `/tools/area/#drafts=1`, marked "being verified".
 - To verify `guntha.json`, follow its `verification_checklist`. To verify `regional.json`: check each unit against the state's revenue department or land
   records, add those sources, set `"status": "verified"`, put your name in `verified_by` and
   update `last_verified`. Open the PR with the `approved-by-owner` label.
-- Bigha, biswa and katha are left out on purpose: their size changes by state and even district.
+- No state government page defines these customary units (searched 2026-10-11). Check them on
+  a registered deed or land record, following `verification_checklist` in `regional.json`.
+- Bigha and biswa are left out on purpose: their size changes by state and even district. Katha
+  is included only as the West Bengal katha (720 sq ft).
 - The shape of every file is in `schema.json` and enforced by `npm run check:structure`
   (`scripts/lib/data-schema.mjs`): required fields, https sources, Hindi labels, unique unit ids.
 - Every `sq_m` is checked against `sq_ft × 0.09290304` and against the known answers in

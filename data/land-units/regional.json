@@ -1,9 +1,15 @@
 {
-  "$comment": "Regional land units (guntha moved to guntha.json for Maharashtra and Karnataka). Values are from commercial converter sites found via web search on 2026-10-09; no state government source has been checked yet, so the file stays draft and the site hides these units. Before setting status to verified, a person must check each unit against the state's revenue department or land records and name themselves in verified_by. Bigha, biswa and katha are left out on purpose: their size changes from state to state and even district to district.",
+  "$comment": "Regional land units (guntha moved to guntha.json for Maharashtra and Karnataka). These are customary units: no state government page found (searched tnreginet, Banglarbhumi, CMDA and gov.in on 2026-10-11) defines their size — government records use square metres, hectares or decimals. Values come from converter sites and encyclopedias; the file stays draft and the site hides these units until a person checks them as in verification_checklist and names themselves in verified_by. Known disagreements: ground is 2,400 sq ft on most sites but 2,400.35 sq ft (≈ 223 sq m) on Housing.com and Tata Capital; katha is 720 sq ft in West Bengal on most sources, but one Kolkata calculator says 360 sq ft and Bajaj Finserv pages say about 1,361 or 1,500 sq ft (katha differs by state: Bihar, Assam and others use other sizes, so the label says West Bengal). Bigha and biswa are left out: their size changes from state to state and even district to district.",
   "dataset": "land-units",
   "status": "draft",
   "verified_by": "not verified",
-  "last_verified": "2026-10-09",
+  "last_verified": "2026-10-11",
+  "verification_checklist": [
+    "Tamil Nadu (cent, ground): take a recent registered sale deed or patta from Chennai or another TN district that states the extent in both cents/grounds and sq ft or sq m, and confirm 1 cent = 435.6 sq ft and 1 ground = 2,400 sq ft. If the deed uses 2,400.35 sq ft (223 sq m) for a ground, change the value instead.",
+    "West Bengal (katha, chatak): take a recent registered deed or a Banglarbhumi record of rights (https://banglarbhumi.gov.in) from Kolkata or a WB district that states an area in katha/chatak and in sq ft, decimal or acre, and confirm 1 katha = 720 sq ft = 16 chatak (1 decimal = 435.6 sq ft, so 1 katha ≈ 1.653 decimal).",
+    "Marla, kanal (Punjab, Haryana): confirm 1 marla = 272.25 sq ft and 1 kanal = 20 marla on a jamabandi or registered deed.",
+    "Units you confirm can move to a verified file (as guntha did); set status to verified, put your name in verified_by, update last_verified, and open the PR with the approved-by-owner label."
+  ],
   "sources": [
     {
       "url": "https://1acre.in/land-unit-converter/guntha-to-sqft",
@@ -20,6 +26,22 @@
     {
       "url": "https://www.tatacapital.com/calculator/guntha-to-square-feet.html",
       "title": "Tata Capital: guntha to square feet"
+    },
+    {
+      "url": "https://en.wikipedia.org/wiki/Katha_(unit)",
+      "title": "Wikipedia: Katha — 720 sq ft in West Bengal"
+    },
+    {
+      "url": "https://indialandconverter.in/west-bengal/howrah/convert-katha-to-chatak",
+      "title": "indialandconverter: 1 katha = 16 chatak (Howrah)"
+    },
+    {
+      "url": "https://indialandconverter.in/west-bengal/north-24-parganas/convert-chatak-to-sqft",
+      "title": "indialandconverter: 1 chatak = 45 sq ft (North 24 Parganas)"
+    },
+    {
+      "url": "https://community.verified.realestate/article/land-measurement-units-in-tamil-nadu-ground-cent-acre-hectare-kuzhi-ma-veli-and-official-record-conversions-explained/",
+      "title": "verified.realestate: Tamil Nadu ground, cent and official record units"
     }
   ],
   "units": [
@@ -50,6 +72,20 @@
       "label_hi": "कनाल (पंजाब, हरियाणा)",
       "sq_ft": 5445,
       "sq_m": 505.8570528
+    },
+    {
+      "id": "katha",
+      "label_en": "Katha (West Bengal)",
+      "label_hi": "कट्ठा (पश्चिम बंगाल)",
+      "sq_ft": 720,
+      "sq_m": 66.8901888
+    },
+    {
+      "id": "chatak",
+      "label_en": "Chatak / chhatak (West Bengal)",
+      "label_hi": "छटाँक (पश्चिम बंगाल)",
+      "sq_ft": 45,
+      "sq_m": 4.1806368
     }
   ]
 }
