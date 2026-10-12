@@ -331,6 +331,10 @@ Each agent runs through `.github/workflows/agent-run.yml`. Three switches, all o
 3. `AGENTS_LIVE=true` (variable) **and** the GitHub App (§3.4) — agents may then open Issues and
    PRs. Without both, every run is a dry run: it reads, thinks and logs, but writes nothing.
 
+The **Agents config check** workflow (`scripts/check-agents-config.mjs`) fails on `main` and on PRs
+when these switches don't fit together — for example `AGENTS_LIVE=true` without the GitHub App,
+or `AGENTS_ENABLED=true` with no LLM key. Its log ends with "Config OK" when they do.
+
 Start with `AGENTS_ENABLED=true` only and read a few run logs (artifact `agent-log-*`) before
 going live. Agents can never merge, publish, change prices or legal text, or refund money.
 Try one locally without keys: `npm run agent -- orchestrator`.

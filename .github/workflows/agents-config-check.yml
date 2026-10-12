@@ -1,0 +1,45 @@
+name: Agents config check
+
+# Fails when the agent switches don't fit together, e.g. AGENTS_LIVE=true without the GitHub App
+# (scripts/check-agents-config.mjs, docs/SETUP.md §3.4 and §8). Secrets are passed only as
+# "is it set" flags; their values never reach the script or the log.
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    name: Agent switches fit together
+    # Fork PRs get no secrets, so the check would report them as missing.
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+      - name: Check
+        env:
+          AGENTS_ENABLED: ${{ vars.AGENTS_ENABLED }}
+          AGENTS_LIVE: ${{ vars.AGENTS_LIVE }}
+          AGENT_APP_ID: ${{ vars.AGENT_APP_ID }}
+          HAS_AGENT_APP_PRIVATE_KEY: ${{ secrets.AGENT_APP_PRIVATE_KEY != '' }}
+          GEMINI: ${{ secrets.GEMINI_API_KEY != '' }}
+          GROQ: ${{ secrets.GROQ_API_KEY != '' }}
+          CEREBRAS: ${{ secrets.CEREBRAS_API_KEY != '' }}
+          OPENROUTER: ${{ secrets.OPENROUTER_API_KEY != '' }}
+        run: |
+          HAS_LLM_KEYS=0
+          for k in "$GEMINI" "$GROQ" "$CEREBRAS" "$OPENROUTER"; do
+            if [ "$k" = "true" ]; then HAS_LLM_KEYS=$((HAS_LLM_KEYS + 1)); fi
+          done
+          export HAS_LLM_KEYS
+          node scripts/check-agents-config.mjs
