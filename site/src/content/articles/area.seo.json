@@ -2,57 +2,41 @@
   "slug": "area",
   "meta": {
     "en": {
-      "title": "Land Area Converter – Acres, Gaj, Sq Ft, Sq M, Hectare",
-      "description": "Enter an area in any unit and instantly see the equivalent in acres, gaj, square feet, square metres and hectares. All calculations happen on your device."
+      "title": "Land Area Converter for Real Estate Agents",
+      "description": "Convert land area between sq ft, gaj, acres, hectares, and sq metres instantly on mobile."
     },
     "hi": {
-      "title": "ज़मीन क्षेत्रफल कन्वर्टर – एकड़, गज़, फ़ुट, मीटर, हेक्टेयर",
-      "description": "कोई भी इकाई में क्षेत्रफल डालें, तुरंत एकड़, गज़, वर्ग फ़ुट, वर्ग मीटर और हेक्टेयर में बदलें। सभी गणना आपके फोन पर होती है।"
+      "title": "ज़मीन का क्षेत्रफल कन्वर्टर - Land Area Converter",
+      "description": "वर्ग फ़ुट, गज़, एकड़, हेक्टेयर और वर्ग मीटर में ज़मीन का क्षेत्रफल आसानी से बदलें।"
     }
   },
   "faq": {
     "en": [
       {
-        "q": "How accurate are the conversions?",
-        "a": "The tool uses the exact metric definitions (1 foot = 0.3048 m, 1 gaj = 9 sq ft, 1 acre = 43,560 sq ft, 1 hectare = 10,000 sq m) and rounds results to four decimal places."
+        "q": "Why do local land unit sizes vary across states?",
+        "a": "Different states in India historically used different regional standards for land measurement. For exact legal boundaries, always check local land records or consult a lawyer."
       },
       {
-        "q": "Can I convert more than one unit at a time?",
-        "a": "Enter the value in the source unit you have; the tool instantly shows the same area in all other supported units."
+        "q": "Can I convert [[acres]] into sq ft or gaj instantly?",
+        "a": "Yes, typing [[acres]] in the tool shows [[sq_ft]] or [[gaj]] immediately."
       },
       {
-        "q": "Does the converter work without internet?",
-        "a": "Yes, all calculations are performed locally on the device, so you can use it offline."
-      },
-      {
-        "q": "What if local units differ from the standard sizes?",
-        "a": "The converter follows the standard definitions. For local variations, verify with the land record or sale deed."
-      },
-      {
-        "q": "Is there a maximum size I can enter?",
-        "a": "You can enter any numeric value; the tool will compute the conversion as long as the number fits in the device’s calculator."
+        "q": "Is this area calculation suitable for final sale deeds?",
+        "a": "This tool provides quick mathematical conversions for daily work. For registered sale deeds, always confirm exact dimensions with registry papers or a legal expert."
       }
     ],
     "hi": [
       {
-        "q": "परिवर्तन की सटीकता कितनी है?",
-        "a": "टूल सटीक परिभाषाओं (1 फुट = 0.3048 m, 1 गज़ = 9 वर्ग फ़ुट, 1 एकड़ = 43,560 वर्ग फ़ुट, 1 हेक्टेयर = 10,000 वर्ग मीटर) का उपयोग करता है और परिणाम चार दशमलव तक दिखाता है।"
+        "q": "क्या अलग-अलग राज्यों में ज़मीन के माप अलग होते हैं?",
+        "a": "हां, भारत के अलग-अलग राज्यों में स्थानीय इकाइयों के माप में अंतर हो सकता है। सटीक कानूनी माप के लिए ज़मीन के कागज़ात देखें या वकील से सलाह लें।"
       },
       {
-        "q": "क्या एक साथ कई इकाइयाँ बदल सकती हूँ?",
-        "a": "आपके पास जो स्रोत इकाई है, उसमें मान डालें; टूल तुरंत उसी क्षेत्रफल को सभी अन्य इकाइयों में दिखाएगा।"
+        "q": "क्या [[acres]] को तुरंत वर्ग फ़ुट या गज़ में बदला जा सकता है?",
+        "a": "हां, टूल में [[acres]] दर्ज करते ही आपको [[sq_ft]] या [[gaj]] तुरंत दिखाई देगा।"
       },
       {
-        "q": "क्या यह बिना इंटरनेट के काम करता है?",
-        "a": "हाँ, सभी गणना आपके डिवाइस पर होती है, इसलिए ऑफ़लाइन भी इस्तेमाल कर सकते हैं।"
-      },
-      {
-        "q": "अगर स्थानीय इकाइयाँ मानक से अलग हों तो?",
-        "a": "कन्वर्टर मानक परिभाषा का उपयोग करता है। स्थानीय अंतर के लिए जमीन के रिकॉर्ड या डीड देखें।"
-      },
-      {
-        "q": "क्या इनपुट की कोई सीमा है?",
-        "a": "कोई भी संख्यात्मक मान डाल सकते हैं; जब तक डिवाइस की गणना सीमा में है, टूल परिणाम देगा।"
+        "q": "क्या यह कैलकुलेशन रजिस्ट्री या सेल डीड के लिए इस्तेमाल की जा सकती है?",
+        "a": "यह टूल आपके दैनिक काम को आसान बनाने के लिए त्वरित गणितीय गणना देता है। सेल डीड के लिए हमेशा रजिस्ट्री ऑफिस के दस्तावेज़ या वकील से पुष्टि करें।"
       }
     ]
   },
@@ -61,8 +45,8 @@
       {
         "@context": "https://schema.org",
         "@type": "WebApplication",
-        "name": "Land Area Converter – Acres, Gaj, Sq Ft, Sq M, Hectare",
-        "description": "Enter an area in any unit and instantly see the equivalent in acres, gaj, square feet, square metres and hectares. All calculations happen on your device.",
+        "name": "Land Area Converter for Real Estate Agents",
+        "description": "Convert land area between sq ft, gaj, acres, hectares, and sq metres instantly on mobile.",
         "url": "https://tools.changelense.in/tools/area/",
         "inLanguage": "en-IN",
         "applicationCategory": "FinanceApplication",
@@ -76,42 +60,26 @@
         "mainEntity": [
           {
             "@type": "Question",
-            "name": "How accurate are the conversions?",
+            "name": "Why do local land unit sizes vary across states?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "The tool uses the exact metric definitions (1 foot = 0.3048 m, 1 gaj = 9 sq ft, 1 acre = 43,560 sq ft, 1 hectare = 10,000 sq m) and rounds results to four decimal places."
+              "text": "Different states in India historically used different regional standards for land measurement. For exact legal boundaries, always check local land records or consult a lawyer."
             }
           },
           {
             "@type": "Question",
-            "name": "Can I convert more than one unit at a time?",
+            "name": "Can I convert [[acres]] into sq ft or gaj instantly?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "Enter the value in the source unit you have; the tool instantly shows the same area in all other supported units."
+              "text": "Yes, typing [[acres]] in the tool shows [[sq_ft]] or [[gaj]] immediately."
             }
           },
           {
             "@type": "Question",
-            "name": "Does the converter work without internet?",
+            "name": "Is this area calculation suitable for final sale deeds?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "Yes, all calculations are performed locally on the device, so you can use it offline."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "What if local units differ from the standard sizes?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "The converter follows the standard definitions. For local variations, verify with the land record or sale deed."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "Is there a maximum size I can enter?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "You can enter any numeric value; the tool will compute the conversion as long as the number fits in the device’s calculator."
+              "text": "This tool provides quick mathematical conversions for daily work. For registered sale deeds, always confirm exact dimensions with registry papers or a legal expert."
             }
           }
         ]
@@ -121,8 +89,8 @@
       {
         "@context": "https://schema.org",
         "@type": "WebApplication",
-        "name": "ज़मीन क्षेत्रफल कन्वर्टर – एकड़, गज़, फ़ुट, मीटर, हेक्टेयर",
-        "description": "कोई भी इकाई में क्षेत्रफल डालें, तुरंत एकड़, गज़, वर्ग फ़ुट, वर्ग मीटर और हेक्टेयर में बदलें। सभी गणना आपके फोन पर होती है।",
+        "name": "ज़मीन का क्षेत्रफल कन्वर्टर - Land Area Converter",
+        "description": "वर्ग फ़ुट, गज़, एकड़, हेक्टेयर और वर्ग मीटर में ज़मीन का क्षेत्रफल आसानी से बदलें।",
         "url": "https://tools.changelense.in/hi/tools/area/",
         "inLanguage": "hi-IN",
         "applicationCategory": "FinanceApplication",
@@ -136,47 +104,31 @@
         "mainEntity": [
           {
             "@type": "Question",
-            "name": "परिवर्तन की सटीकता कितनी है?",
+            "name": "क्या अलग-अलग राज्यों में ज़मीन के माप अलग होते हैं?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "टूल सटीक परिभाषाओं (1 फुट = 0.3048 m, 1 गज़ = 9 वर्ग फ़ुट, 1 एकड़ = 43,560 वर्ग फ़ुट, 1 हेक्टेयर = 10,000 वर्ग मीटर) का उपयोग करता है और परिणाम चार दशमलव तक दिखाता है।"
+              "text": "हां, भारत के अलग-अलग राज्यों में स्थानीय इकाइयों के माप में अंतर हो सकता है। सटीक कानूनी माप के लिए ज़मीन के कागज़ात देखें या वकील से सलाह लें।"
             }
           },
           {
             "@type": "Question",
-            "name": "क्या एक साथ कई इकाइयाँ बदल सकती हूँ?",
+            "name": "क्या [[acres]] को तुरंत वर्ग फ़ुट या गज़ में बदला जा सकता है?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "आपके पास जो स्रोत इकाई है, उसमें मान डालें; टूल तुरंत उसी क्षेत्रफल को सभी अन्य इकाइयों में दिखाएगा।"
+              "text": "हां, टूल में [[acres]] दर्ज करते ही आपको [[sq_ft]] या [[gaj]] तुरंत दिखाई देगा।"
             }
           },
           {
             "@type": "Question",
-            "name": "क्या यह बिना इंटरनेट के काम करता है?",
+            "name": "क्या यह कैलकुलेशन रजिस्ट्री या सेल डीड के लिए इस्तेमाल की जा सकती है?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "हाँ, सभी गणना आपके डिवाइस पर होती है, इसलिए ऑफ़लाइन भी इस्तेमाल कर सकते हैं।"
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "अगर स्थानीय इकाइयाँ मानक से अलग हों तो?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "कन्वर्टर मानक परिभाषा का उपयोग करता है। स्थानीय अंतर के लिए जमीन के रिकॉर्ड या डीड देखें।"
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "क्या इनपुट की कोई सीमा है?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "कोई भी संख्यात्मक मान डाल सकते हैं; जब तक डिवाइस की गणना सीमा में है, टूल परिणाम देगा।"
+              "text": "यह टूल आपके दैनिक काम को आसान बनाने के लिए त्वरित गणितीय गणना देता है। सेल डीड के लिए हमेशा रजिस्ट्री ऑफिस के दस्तावेज़ या वकील से पुष्टि करें।"
             }
           }
         ]
       }
     ]
   },
-  "producer_family": "gpt"
+  "producer_family": "gemini"
 }
