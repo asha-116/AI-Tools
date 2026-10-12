@@ -86,3 +86,8 @@ automation. To keep a copy, on your own computer run
 `npx wrangler@4.143.0 d1 export toolshop-waitlist --remote --output waitlist-$(date +%F).sql`.
 Keep it only on your device or encrypted storage. Never commit it, attach it to an Issue or paste
 it into an AI tool. Delete old copies.
+
+**Waitlist progress (automatic, counts only).** The **Waitlist report** workflow runs daily and
+writes sign-ups per idea and language, and progress towards the goal of 50, to its run summary
+(Actions → Waitlist report). It runs a `COUNT(*)` query only — it never reads an email address —
+and needs the variable `WAITLIST_D1_ID` plus the Cloudflare secrets used by the deploy.
