@@ -14,6 +14,11 @@ templates "coming soon".
 
 ## Done
 
+- 2026-10-12 — **Agents config check** (closes asha-116/AI-Tools#81): a workflow fails when the
+  agent switches don't fit together (e.g. `AGENTS_LIVE=true` without the GitHub App). Closed #80
+  (duplicate; owner steps are in SETUP §3.4/§8) and #82 (bumping `last_verified` without
+  re-verifying would falsify the data; dates are already checked in CI). TN/WB units merged as
+  drafts (asha-116/AI-Tools#79).
 - 2026-10-11 — **Tamil Nadu and West Bengal land units** (asha-116/AI-Tools#71): katha (720 sq ft)
   and chatak (45 sq ft) for West Bengal added to `data/land-units/regional.json` next to cent and
   ground, all still **draft** (hidden on the site). No state government page defines these
