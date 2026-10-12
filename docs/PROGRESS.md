@@ -14,6 +14,9 @@ templates "coming soon".
 
 ## Done
 
+- 2026-10-12 — **Waitlist report** (closes asha-116/AI-Tools#83): a daily workflow counts sign-ups
+  per idea and language (COUNT only; no email is read) and shows progress to the goal of 50 in the
+  run summary. Agents config check merged (asha-116/AI-Tools#87).
 - 2026-10-12 — **Agents config check** (closes asha-116/AI-Tools#81): a workflow fails when the
   agent switches don't fit together (e.g. `AGENTS_LIVE=true` without the GitHub App). Closed #80
   (duplicate; owner steps are in SETUP §3.4/§8) and #82 (bumping `last_verified` without
