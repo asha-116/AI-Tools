@@ -146,7 +146,7 @@ jobs:
         with:
           sparse-checkout: agents/qa/src
       - name: Post or update the QA comment
-        uses: actions/github-script@v8
+        uses: actions/github-script@v9
         # A failed comment must never turn a green PR red.
         continue-on-error: true
         env:
