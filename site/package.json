@@ -11,10 +11,10 @@
     "check": "astro check"
   },
   "dependencies": {
-    "astro": "7.3.5",
+    "astro": "7.4.4",
     "@toolshop/tools-core": "0.0.0"
   },
   "devDependencies": {
-    "@astrojs/check": "0.9.10"
+    "@astrojs/check": "0.9.12"
   }
 }
