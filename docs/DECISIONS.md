@@ -600,3 +600,18 @@ NOTHING`), so duplicates and both events for one payment are harmless. It stores
   non-business purposes. Money saved later is not discounted, and the result is before tax.
 - **Status:** Accepted (2026-10-10). The Hindi text and the RBI sentence need the owner's review
   before promotion.
+
+### ADR-046 — Google AdSense on the tools site
+
+- **Context:** the owner asked (2026-11-02) for the AdSense script in the `<head>` of every page
+  on all changelense.in subdomains. The CSP allowed scripts only from this site and Cloudflare, and
+  the draft privacy policy said "we do not show ads".
+- **Decision:** one inline async `<script>` in `Base.astro` (every page uses it). CSP adds Google's
+  documented AdSense origins (`*.googlesyndication.com`, `*.doubleclick.net`, `*.google.com`,
+  `*.gstatic.com`, `*.googletagservices.com`, `*.adtrafficquality.google`) to `script-src`,
+  `connect-src` and a new `frame-src`; `img-src` allows `https:` because ad images come from many
+  hosts. Calculators stay client-side: the ad script never reads form input (rule 5 unchanged).
+  AdSense is free, so no `docs/COSTS.md` entry. Privacy drafts (EN + HI) disclose Google's ad
+  cookies and the opt-out link.
+- **Status:** Accepted (2026-11-02), owner request. Before showing ads to visitors in the EU/UK,
+  Google requires a certified consent banner — not needed for India-only traffic today.
