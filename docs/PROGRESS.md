@@ -14,6 +14,12 @@ templates "coming soon".
 
 ## Done
 
+- 2026-11-02 — **Google AdSense on every page** (ADR-046, owner request): the AdSense script
+  (`ca-pub-8402347091085774`) is in the `<head>` of `site/src/layouts/Base.astro`, so all 42 pages
+  load it. `site/public/_headers` CSP now allows Google's ad origins (script, img, connect, frame);
+  without that the browser would block the ads. Draft privacy policy (EN + HI) no longer says "we do
+  not show ads" — it discloses AdSense cookies and the opt-out link. `ads.txt` is served from
+  `changelense.in`, which covers this subdomain. Owner: Hindi privacy line needs human review.
 - 2026-10-12 — **Waitlist report** (closes asha-116/AI-Tools#83): a daily workflow counts sign-ups
   per idea and language (COUNT only; no email is read) and shows progress to the goal of 50 in the
   run summary. Agents config check merged (asha-116/AI-Tools#87).

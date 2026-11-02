@@ -32,7 +32,11 @@ else. We do not save them.
 We may use **Cloudflare Web Analytics**, which counts page visits without cookies and without
 identifying you.
 
-**We do not set cookies.** We do not show ads. We do not track you across other websites.
+**Ads.** We show ads from **Google AdSense**. Google and its partners may use cookies to show ads
+based on your visits to this and other websites. You can turn off personalised ads at
+[Google Ad Settings](https://adssettings.google.com), and read how Google uses data at
+[policies.google.com/technologies/partner-sites](https://policies.google.com/technologies/partner-sites).
+We do not set cookies of our own, and the ads never see what you type into a calculator.
 
 ## 3. Payments
 
