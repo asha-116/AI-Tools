@@ -333,3 +333,7 @@ templates "coming soon".
     Razorpay's `fee` includes GST; settlement checks may raise false alarms around weekends.
 29. **Cloudflare token** (new): add "Account Analytics · Read" so the usage report can read
     Cloudflare numbers.
+
+## 2026-11-08 — Owner-authorized support address update
+
+Public support email changed to contact@changelense.in in the shared English/Hindi footer and download support. Owner confirmed domain routing active. Login/admin identities unchanged. Built 42 pages; built-page QA passed (3 tests). Deployed to the existing toolshop Cloudflare Pages project. Live English/Hindi landing pages and EMI page verified with the new email; old public Gmail absent. Independent same-family review found no issues; a different-family verifier was unavailable.

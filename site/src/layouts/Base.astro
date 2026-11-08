@@ -66,6 +66,7 @@ const canonical = new URL(hrefFor(lang), Astro.site);
       <div class="wrap">
         <p>{t.disclaimer}</p>
         <p>{t.footerNote}</p>
+        <p><a href={`mailto:${config.supportEmail}`}>{config.supportEmail}</a></p>
       </div>
     </footer>
     {
