@@ -44,7 +44,7 @@ jobs:
           format: markdown
           fail: false
       - name: Open, update or close the broken-links Issue
-        uses: actions/github-script@v8
+        uses: actions/github-script@v9
         env:
           EXIT_CODE: ${{ steps.lychee.outputs.exit_code }}
         with:
